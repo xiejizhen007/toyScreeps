@@ -82,6 +82,19 @@ export const roleKing = {
             creep.memory.work = false;
         }
 
+        if (storage && terminal) {
+            if (terminal.store.getUsedCapacity(RESOURCE_ENERGY) >= 100000) {
+                if (creep.memory.work) {
+                    creep.transfer(storage, RESOURCE_ENERGY);
+                }
+                else {
+                    creep.withdraw(terminal, RESOURCE_ENERGY);
+                }
+            }
+
+            return;
+        }
+
         if (containerController && linkCenter && linkController) {
             if (containerController.store.getFreeCapacity(RESOURCE_ENERGY) >= 1200) {
                 if (creep.memory.work) {
@@ -99,24 +112,5 @@ export const roleKing = {
             }
         }
 
-        if (storage && terminal) {
-            let orderBuys = Game.market.getAllOrders({
-                type: ORDER_BUY,
-                resourceType: RESOURCE_ENERGY,
-                roomName: creep.room.name
-            });
-
-            // console.log('king: ' + orderBuys.length);
-            if (orderBuys.length > 0 || terminal.store.getUsedCapacity(RESOURCE_ENERGY) >= 100000) {
-                if (creep.memory.work) {
-                    creep.transfer(storage, RESOURCE_ENERGY);
-                }
-                else {
-                    creep.withdraw(terminal, RESOURCE_ENERGY);
-                }
-            }
-
-            return;
-        }        
     }
 };

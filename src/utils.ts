@@ -14,7 +14,7 @@ export const newCreep = function() {
 
             for (let i = 0; i < spawn.length; i++) {
                 let tmp = spawn[i].spawnCreep(getCreepBodys(roomSpawn[room.controller.level][iter.role]), roleName,
-                    { memory: {role: iter.role, room: iter.room, isNeeded: iter.isNeeded, task: iter.task}});
+                    { memory: {role: iter.role, room: iter.room ? iter.room : roomName, isNeeded: iter.isNeeded ? true : false, task: iter.task}});
                 
                 if (tmp == OK) {
                     console.log('new creep: ' + roleName);

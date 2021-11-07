@@ -35,7 +35,6 @@ export const creepLab = {
             transferTask = creep.room.memory.transferTasks[0];
         }
 
-
         let terminal = creep.room.terminal;
         if (!terminal || !transferTask) {
             return;
@@ -46,23 +45,27 @@ export const creepLab = {
         }
 
         if (creep.store.getFreeCapacity() == 0) {
+            // console.log('set true');
             creep.memory.work = true;
         }
         else if (creep.store.getUsedCapacity() == 0) {
             creep.memory.work = false;
         }
 
+        // console.log('creepLab: work' + creep.memory.work);
+
         if (creep.memory.work) {
+            // console.log('creepLab: work');
             if (transferTask.type == ROOM_TRANSFER_TASK.LAB_IN) {
                 let flag = Game.flags[creep.room.name + 'Lab'];
                 if (flag) {
                     let resource = transferTask.resource;
                     if (creep.pos.isEqualTo(flag.pos)) {
-                        if (creep.store.getUsedCapacity(resource[0]) > 0) {
-                            creep.transfer(lab1, resource[0]);
+                        if (creep.store.getUsedCapacity(resource[0].type) > 0) {
+                            creep.transfer(lab1, resource[0].type);
                         }
-                        else if (creep.store.getUsedCapacity(resource[1]) > 0) {
-                            creep.transfer(lab2, resource[1]);
+                        else if (creep.store.getUsedCapacity(resource[1].type) > 0) {
+                            creep.transfer(lab2, resource[1].type);
                         }
                         else {
                             creep.memory.work = false;
@@ -88,7 +91,7 @@ export const creepLab = {
         else {
             let resource = transferTask.resource;
             if (transferTask.type == ROOM_TRANSFER_TASK.LAB_IN) {
-                if (terminal.store[resource[0]] == 0 || terminal.store[resource[1]] == 0 || (lab1.store[resource[0]] > 1500 && lab2.store[resource[1]] > 1500)) {
+                if (terminal.store[resource[0].type] == 0 || terminal.store[resource[1].type] == 0 || (lab1.store[resource[0].type] > 1500 && lab2.store[resource[1].type] > 1500)) {
                     creep.room.memory.transferTasks.shift();
                     return;
                 }
@@ -107,14 +110,17 @@ export const creepLab = {
                     return;
                 }
 
-                let lab = lab1.store[resource[0]] < lab2.store[resource[1]] ? lab1 : lab2;
-
+                let lab = lab1.store[resource[0].type] < lab2.store[resource[1].type] ? lab1 : lab2;
                 if (lab == lab1) {
-                    let tmp = creep.withdraw(terminal, resource[0]);
+                    let tmp = creep.withdraw(terminal, resource[0].type);
+                    // console.log(creep.room.name + ' lab1 ' + tmp);
                 }
                 else if (lab == lab2) {
-                    let tmp = creep.withdraw(terminal, resource[1]);
+                    let tmp = creep.withdraw(terminal, resource[1].type);
+                    // console.log(creep.room.name + ' lab2 ' + tmp);
                 }
+
+                // console.log('creepLab store: ' + creep.store.getFreeCapacity());
             }
             else if (transferTask.type == ROOM_TRANSFER_TASK.LAB_OUT) {
                 let labsID = creep.room.memory.lab.labsID;
@@ -192,7 +198,9 @@ export const clearLab = function(creep: Creep) {
         return false;
     }
 
-    if (transferTask.type == ROOM_TRANSFER_TASK.LAB_IN && lab1.mineralType && transferTask.resource[0] != lab1.mineralType) {
+    // console.log('resourceType: ' + transferTask.resource[0].type);
+
+    if (transferTask.type == ROOM_TRANSFER_TASK.LAB_IN && lab1.mineralType && transferTask.resource[0].type != lab1.mineralType) {
         if (creep.store.getFreeCapacity() > 0) {
             if (creep.pos.inRangeTo(lab1, 1)) {
                 let amount = lab1.store[lab1.mineralType] < creep.store.getFreeCapacity() ? lab1.store[lab1.mineralType] : creep.store.getFreeCapacity();
@@ -215,7 +223,7 @@ export const clearLab = function(creep: Creep) {
         }
         return true;
     }
-    else if (transferTask.type == ROOM_TRANSFER_TASK.LAB_IN && lab2.mineralType && transferTask.resource[1] != lab2.mineralType) {
+    else if (transferTask.type == ROOM_TRANSFER_TASK.LAB_IN && lab2.mineralType && transferTask.resource[1].type != lab2.mineralType) {
         if (creep.store.getFreeCapacity() > 0) {
             if (creep.pos.inRangeTo(lab2, 1)) {
                 let amount = lab2.store[lab2.mineralType] < creep.store.getFreeCapacity() ? lab2.store[lab2.mineralType] : creep.store.getFreeCapacity();
@@ -240,7 +248,8 @@ export const clearLab = function(creep: Creep) {
     }
     else if (transferTask.type == ROOM_TRANSFER_TASK.LAB_IN) { 
         for (let type in creep.store) {
-            if (transferTask.resource.includes(type)) {
+            // console.log('transferTask ' + transferTask.resource.find(resourceType => resourceType.type == RESOURCE_CATALYST));
+            if (transferTask.resource.find(resourceType => resourceType.type == type)) {
                 return false;
             }
             else {

@@ -51,10 +51,10 @@ export const BOOST_RESOURCE = {
 
 export const labTarget = [
     // 基础化合物
-    { target: RESOURCE_UTRIUM_LEMERGITE, number: 1000},
-    { target: RESOURCE_ZYNTHIUM_KEANITE, number: 1000},
+    { target: RESOURCE_UTRIUM_LEMERGITE, number: 2000},
+    { target: RESOURCE_ZYNTHIUM_KEANITE, number: 2000},
     { target: RESOURCE_HYDROXIDE, number: 2000},
-    { target: RESOURCE_GHODIUM, number: 1000},
+    { target: RESOURCE_GHODIUM, number: 2000},
 
     // attack
     { target: RESOURCE_CATALYZED_UTRIUM_ACID, number: 6000},  
@@ -69,27 +69,27 @@ export const labTarget = [
     // move
     { target: RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE, number: 6000}, 
     { target: RESOURCE_ZYNTHIUM_ALKALIDE, number: 1000}, 
-    { target: RESOURCE_ZYNTHIUM_OXIDE, number: 500},
+    { target: RESOURCE_ZYNTHIUM_OXIDE, number: 1000},
 
     // tough
-    { target: RESOURCE_CATALYZED_GHODIUM_ALKALIDE, number: 4000}, 
+    { target: RESOURCE_CATALYZED_GHODIUM_ALKALIDE, number: 6000}, 
     { target: RESOURCE_GHODIUM_ALKALIDE, number: 2000}, 
-    { target: RESOURCE_GHODIUM_OXIDE, number: 500},
+    { target: RESOURCE_GHODIUM_OXIDE, number: 1000},
 
     // heal
     { target: RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE, number: 6000},
     { target: RESOURCE_LEMERGIUM_ALKALIDE, number: 2000}, 
-    { target: RESOURCE_LEMERGIUM_OXIDE, number: 500},
+    { target: RESOURCE_LEMERGIUM_OXIDE, number: 1000},
 
     // dismantle
     { target: RESOURCE_CATALYZED_ZYNTHIUM_ACID, number: 4000},
     { target: RESOURCE_ZYNTHIUM_ACID, number: 1000}, 
-    { target: RESOURCE_ZYNTHIUM_HYDRIDE, number: 500},
+    { target: RESOURCE_ZYNTHIUM_HYDRIDE, number: 1000},
 
     // upgrader
     { target: RESOURCE_CATALYZED_GHODIUM_ACID, number: 4000},   
     { target: RESOURCE_GHODIUM_ACID, number: 1000}, 
-    { target: RESOURCE_GHODIUM_HYDRIDE, number: 500},
+    { target: RESOURCE_GHODIUM_HYDRIDE, number: 1000},
 
     // { target: RESOURCE_CATALYZED_UTRIUM_ALKALIDE, number: 3000},    // harvester
     // { target: RESOURCE_CATALYZED_KEANIUM_ACID, number: 3000},       // carry

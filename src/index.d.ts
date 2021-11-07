@@ -15,7 +15,8 @@ interface RoomMemory {
         labsID?: any,
     },
 
-    transferTasks?: any,
+    transferTasks?: any[],
+    exeTransferTasks?: any[],
     war?: boolean,
 }
 
@@ -41,4 +42,27 @@ interface CreepMemory {
     boostType?: string,
     labsID?: any,
 
+    exeTask?: any,
+}
+
+type roomTransferTask = iLabIn | iLabOut;
+
+interface Room {
+    // 传输任务
+    addTransferTask(task: roomTransferTask) : number
+    hasTransferTask(taskType: string) : boolean
+}
+
+interface iLabIn {
+    type: string,
+    resource: {
+        id: string,
+        type: ResourceConstant,
+        amount: number,
+    }[],
+}
+
+interface iLabOut {
+    type: string,
+    labsID: string[],
 }

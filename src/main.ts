@@ -14,6 +14,7 @@ import { roleTransfer } from './role/role.transfer';
 import { newCreep } from './utils';
 
 import { BOOST_RESOURCE, LAB_TRANSFER_TASK } from './setting';
+import { transfer } from 'creep/transfer';
 
 export const loop = errorMapper(() => {
     for (var name in Memory.creeps) {
@@ -53,6 +54,9 @@ export const loop = errorMapper(() => {
         }
         else if (creep.memory.role == 'creepLab') {
             creepLab.run(creep);
+        }
+        else if (creep.memory.role == 'creepTransfer') {
+            transfer(creep);   
         }
     }
 

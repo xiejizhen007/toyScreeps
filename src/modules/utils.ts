@@ -69,6 +69,7 @@ export const roomSpawn = {
         docter: {tough: 9, heal: 16, move: 25},
         creepLab: {carry: 10, move: 10},
         test: {attack: 1, heal: 1, move: 2},
+        creepTransfer: {carry: 4, move: 4},
     },
     8: {
         harvester: {work: 6, carry: 1, move: 3}, 
@@ -86,20 +87,33 @@ export const roomSpawn = {
         docter: {tough: 9, heal: 16, move: 25},
         creepLab: {carry: 10, move: 10},
         test: {attack: 1, heal: 1, move: 2},
+        creepTransfer: {carry: 4, move: 4},
     }
 }
 
 
 export const hasTransferTask = function (room: Room, taskType: string) : boolean {
-    if (!room.memory.transferTasks) { return false; }
+    if (!room.memory.transferTasks) { room.memory.transferTasks = []; }
+    if (!room.memory.exeTransferTasks) { room.memory.exeTransferTasks = []; }
 
+    let taskYes = false;
     for (let i = 0; i < room.memory.transferTasks.length; i++) {
-        if (room.memory.transferTasks[i].type == taskType) {
-            return true;
+        const task = room.memory.transferTasks[i];
+        if (task.type == taskType) {
+            taskYes = true;
+            break;
         }
     }
 
-    return false;
+    for (let i = 0; i < room.memory.exeTransferTasks.length; i++) {
+        const task = room.memory.exeTransferTasks[i];
+        if (task.type == taskType) {
+            taskYes = true;
+            break;
+        }
+    }
+
+    return taskYes;
 }
 
 export const addTransferTask = function (room: Room, task: any) {

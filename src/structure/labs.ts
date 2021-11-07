@@ -158,7 +158,7 @@ export const Lab = {
         }
 
         // 有底物传输的任务了
-        if (room.memory.lab.transferTasks && hasTransferTask(room, LAB_TRANSFER_TASK.LAB_IN)) {
+        if (hasTransferTask(room, ROOM_TRANSFER_TASK.LAB_IN)) {
             return;
         }
 
@@ -175,7 +175,18 @@ export const Lab = {
         else {
             addTransferTask(room, {
                 type: ROOM_TRANSFER_TASK.LAB_IN,
-                resource: enResource,
+                resource: [
+                    {
+                        id: lab1.id,
+                        type: enResource[0],
+                        amount: 500,
+                    },
+                    {
+                        id: lab2.id,
+                        type: enResource[1],
+                        amount: 500,
+                    }
+                ]
             });
         }
     },
@@ -188,7 +199,7 @@ export const Lab = {
         }
 
         // 已经有任务了
-        if (room.memory.lab.transferTasks && hasTransferTask(room, LAB_TRANSFER_TASK.LAB_OUT)) {
+        if (hasTransferTask(room, ROOM_TRANSFER_TASK.LAB_OUT)) {
             return;
         }
 
