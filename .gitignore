@@ -1,0 +1,9 @@
+.secret.json
+node_modules/
+
+// 游戏代码
+main.js
+main.js.map.js
+
+// 运行脚本
+run

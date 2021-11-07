@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "moduleResolution": "Node", 
+        "outDir": "./",
+        "baseUrl": "src/",
+        "sourceMap": true,
+        "allowSyntheticDefaultImports": true,
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "src/**/*.ts",
+        "src/*/*.ts",
+    ]
+}
