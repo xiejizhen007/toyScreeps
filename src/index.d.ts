@@ -18,6 +18,7 @@ interface RoomMemory {
     transferTasks?: any[],
     exeTransferTasks?: any[],
     war?: boolean,
+    powerSpawnID?: string,
 }
 
 interface CreepMemory {
@@ -41,8 +42,20 @@ interface CreepMemory {
     boost?: boolean,
     boostType?: string,
     labsID?: any,
-
     exeTask?: any,
+    powerSpawnID?: string,
+}
+
+interface Creep {
+    hello(): void,
+}
+
+interface PowerCreepMemory {
+    powerSpawnID?: string,
+}
+
+interface PowerCreep {
+    work() : void,
 }
 
 type roomTransferTask = iLabIn | iLabOut;

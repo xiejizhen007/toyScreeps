@@ -1,7 +1,6 @@
 export const getCreepBodys = function(bodySet) {
     let ret = new Array();
     for (let name in bodySet) {
-        // console.log(name);
         for (let i = 0; i < bodySet[name]; i++) {
             ret.push(name);
         }
@@ -34,10 +33,13 @@ export const roomSpawn = {
         transfer: {carry: 8, move: 8},
     },
     5: {
-        builder: {work: 1, carry: 2, move: 2},
-        harvester: { work: 2, carry: 1, move: 1},
-        queen: {carry: 3, move: 3},
-        upgrader: {work: 2, carry: 3, move: 3},
+        builder: {work: 5, carry: 5, move: 2},
+        harvester: { work: 5, carry: 1, move: 1},
+        queen: {carry: 5, move: 5},
+        upgrader: {work: 8, carry: 5, move: 3},
+        repairer: {work: 2, carry: 3, move: 3},
+        outputer: {carry: 4, move: 4},
+        transfer: {carry: 8, move: 8},
     },
     6: {
         upgrader: {work: 12, carry: 6, move: 4},
@@ -77,7 +79,7 @@ export const roomSpawn = {
         transferRoom: {carry: 20, move: 20},
         repairer: {work: 6, carry: 6, move: 6},
         repairerWall: {work: 5, carry: 10, move: 10},
-        upgrader: {work: 5, carry: 5, move: 5},
+        upgrader: {work: 1, carry: 1, move: 1},
         builder: {work: 15, carry: 20, move: 15},
         outputer: {carry: 10, move: 10},
         king: {carry: 10, move: 10},
@@ -88,6 +90,7 @@ export const roomSpawn = {
         creepLab: {carry: 10, move: 10},
         test: {attack: 1, heal: 1, move: 2},
         creepTransfer: {carry: 4, move: 4},
+        creepPS: {carry: 6, move: 6},
     }
 }
 

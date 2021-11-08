@@ -15,8 +15,13 @@ import { newCreep } from './utils';
 
 import { BOOST_RESOURCE, LAB_TRANSFER_TASK } from './setting';
 import { transfer } from 'creep/transfer';
+import { powerSpawnRun } from 'structure/powerSpawn';
+import { creepPS } from 'role/role.creepPS';
+import mountWork from './mount'
 
 export const loop = errorMapper(() => {
+    mountWork();
+
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
@@ -54,17 +59,31 @@ export const loop = errorMapper(() => {
         }
         else if (creep.memory.role == 'creepLab') {
             creepLab.run(creep);
+            // creep.hello();
         }
         else if (creep.memory.role == 'creepTransfer') {
             transfer(creep);   
+        }
+        else if (creep.memory.role == 'creepPS') {
+            creepPS(creep);
         }
     }
 
     newCreep();
 
+    for (let name in Game.powerCreeps) {
+        let powerCreep = Game.powerCreeps[name];
+        if (powerCreep) {
+            powerCreep.work();
+        }
+    }
+
+    
+
     for (let name in Game.rooms) {
         let room = Game.rooms[name];
         Lab.run(room);
+        powerSpawnRun(room);
     }
 
     if (Game.cpu.bucket >= 10000) {
@@ -78,3 +97,4 @@ export const loop = errorMapper(() => {
     //     console.log(BOOST_RESOURCE['war'][i]);
     // }
 });
+

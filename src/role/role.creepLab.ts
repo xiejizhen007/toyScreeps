@@ -21,8 +21,6 @@ export const creepLab = {
             console.log('new task by ' + creep.name);
         }
 
-        // 
-
         let lab1 = Game.getObjectById(creep.room.memory.lab.lab1ID) as StructureLab;
         let lab2 = Game.getObjectById(creep.room.memory.lab.lab2ID) as StructureLab;
         if (!lab1 || !lab2) {
@@ -113,14 +111,10 @@ export const creepLab = {
                 let lab = lab1.store[resource[0].type] < lab2.store[resource[1].type] ? lab1 : lab2;
                 if (lab == lab1) {
                     let tmp = creep.withdraw(terminal, resource[0].type);
-                    // console.log(creep.room.name + ' lab1 ' + tmp);
                 }
                 else if (lab == lab2) {
                     let tmp = creep.withdraw(terminal, resource[1].type);
-                    // console.log(creep.room.name + ' lab2 ' + tmp);
                 }
-
-                // console.log('creepLab store: ' + creep.store.getFreeCapacity());
             }
             else if (transferTask.type == ROOM_TRANSFER_TASK.LAB_OUT) {
                 let labsID = creep.room.memory.lab.labsID;

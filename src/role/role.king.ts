@@ -91,6 +91,14 @@ export const roleKing = {
                     creep.withdraw(terminal, RESOURCE_ENERGY);
                 }
             }
+            else if (terminal.store.getUsedCapacity(RESOURCE_ENERGY) <= 50000) {
+                if (creep.memory.work) {
+                    creep.transfer(terminal, RESOURCE_ENERGY);
+                }
+                else {
+                    creep.withdraw(storage, RESOURCE_ENERGY);
+                }
+            }
 
             return;
         }
