@@ -123,7 +123,7 @@ export default class creepExtension extends Creep {
                                     else if (xxx >= 60) xxx = 59;
                                     if (yyy <= 0) xxx = 1;
                                     else if (yyy >= 60) xxx = 59;
-                                    
+
                                     costs.set(xxx, yyy, 0x1f);
                                 }
                             }
