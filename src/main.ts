@@ -14,7 +14,7 @@ import { roleTransfer } from './role/role.transfer';
 import { newCreep } from './utils';
 
 import { BOOST_RESOURCE, LAB_TRANSFER_TASK } from './setting';
-import { transfer } from 'creep/transfer';
+// import { transfer } from 'creep/transfer';
 import { powerSpawnRun } from 'structure/powerSpawn';
 import { creepPS } from 'role/role.creepPS';
 import mountWork from './mount'
@@ -61,9 +61,9 @@ export const loop = errorMapper(() => {
             creepLab.run(creep);
             // creep.hello();
         }
-        else if (creep.memory.role == 'creepTransfer') {
-            transfer(creep);   
-        }
+        // else if (creep.memory.role == 'creepTransfer') {
+        //     transfer(creep);   
+        // }
         else if (creep.memory.role == 'creepPS') {
             creepPS(creep);
         }
