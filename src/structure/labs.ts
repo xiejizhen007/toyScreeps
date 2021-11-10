@@ -6,6 +6,7 @@ export const Lab = {
      * lab 集群干活入口
      */
     run: function(room : Room) {
+        if (!room || !room.controller || !room.controller.my) { return; }
         if (room.memory.lab == undefined) { room.memory.lab = {}; }
         if (room.memory.boost) { room.memory.lab.state = LAB_STATE.BOOST; }
         

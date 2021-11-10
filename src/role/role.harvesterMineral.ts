@@ -1,4 +1,4 @@
-var roleHarvesterMineral = {
+export const roleHarvesterMineral = {
     /**
      * 专门挖矿 harvest，然后放入箱子 container 中
      * @param {Creep} creep 
@@ -10,17 +10,17 @@ var roleHarvesterMineral = {
                 room = Game.spawns[creep.memory.spawn].room;
             }
 
-            room.memory.missions.push({
+            room.memory.spawnTasks.push({
                 role: creep.memory.role, room: creep.memory.room, isNeeded: true,
-                mission: creep.memory.mission
+                task: creep.memory.task,
             });
             creep.memory.isNeeded = false;
-            console.log('new mission by ' + creep.name);
+            console.log('new task by ' + creep.name);
         }
 
         // 先去到工作房间
-        if (creep.room.name != creep.memory.mission.workRoomName) {
-            creep.moveTo(new RoomPosition(25, 25, creep.memory.mission.workRoomName));
+        if (creep.room.name != creep.memory.task.workRoomName) {
+            creep.moveTo(new RoomPosition(25, 25, creep.memory.task.workRoomName));
             return;
         }
 
@@ -43,12 +43,12 @@ var roleHarvesterMineral = {
             }
         }
         else {
-            let mineral = Game.getObjectById(creep.memory.mission.mineralID);
+            let mineral = Game.getObjectById<Mineral>(creep.memory.task.mineralID);
             if (!mineral) {
                 mineral = creep.pos.findClosestByRange(FIND_MINERALS);
 
                 if (mineral) {
-                    creep.memory.mission.mineralID = mineral.id;
+                    creep.memory.task.mineralID = mineral.id;
                 }
             }
 
@@ -65,5 +65,3 @@ var roleHarvesterMineral = {
         }
     }
 };
-
-module.exports = roleHarvesterMineral;

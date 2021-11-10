@@ -48,3 +48,57 @@ export const assignPrototype = function(obj1: {[key: string]: any}, obj2: {[key:
         else obj1.prototype[key] = obj2.prototype[key]
     })
 }
+
+/**
+ * 叫一个预定者，配合外矿
+ * @param creep 呼叫预定者的角色，搭配外矿使用
+ */
+export function needReserver(creep: Creep) {
+    // 挖外矿的出生的房间
+    let room = Game.rooms[creep.memory.room];
+    if (!room) { return; }
+
+    addRoleSpawnTask('reserver', room.name, creep.memory.task.workRoomName);
+}
+
+export function addSpawnTask(creep: Creep): boolean {
+    let room = Game.rooms[creep.memory.room];
+    if (!room) { return false; }
+    if (!room.memory.spawnTasks) { room.memory.spawnTasks = []; }
+
+    room.memory.spawnTasks.push({
+        role: creep.memory.role,
+        room: creep.memory.room,
+        isNeeded: creep.memory.isNeeded,
+        task: creep.memory.task,
+    });
+
+    creep.memory.isNeeded = false;
+    console.log('add spawn task: ' + creep.name);
+    return true;
+}
+
+/**
+ * 
+ * @param role 角色类型
+ * @param roomName 孵化的房间
+ * @param workRoomName 工作房间
+ * @param isNeeded 是否需要再次孵化
+ */
+export function addRoleSpawnTask(role: string, roomName: string, workRoomName?: string, isNeeded?: boolean, flagName?: string): boolean {
+    let room = Game.rooms[roomName];
+    if (!room) { return false; }
+    if (!room.memory.spawnTasks) { room.memory.spawnTasks = []; }
+
+    room.memory.spawnTasks.push({
+        role: role,
+        room: room.name,
+        isNeeded: isNeeded ? true : false,
+        task: {
+            workRoomName: workRoomName ? workRoomName : room.name,
+            flagName: flagName ? flagName : undefined,
+        }
+    });
+    console.log('add role spawn task');
+    return true;
+}

@@ -18,6 +18,10 @@ import { BOOST_RESOURCE, LAB_TRANSFER_TASK } from './setting';
 import { powerSpawnRun } from 'structure/powerSpawn';
 import { creepPS } from 'role/role.creepPS';
 import mountWork from './mount'
+import { harvesterRoom } from 'role/harvesterRoom';
+import { roleHarvesterMineral } from 'role/role.harvesterMineral';
+
+import { addRoleSpawnTask } from './utils';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -67,6 +71,9 @@ export const loop = errorMapper(() => {
         else if (creep.memory.role == 'creepPS') {
             creepPS(creep);
         }
+        else if (creep.memory.role == 'harvesterMineral') {
+            roleHarvesterMineral.run(creep);
+        }
     }
 
     newCreep();
@@ -77,8 +84,6 @@ export const loop = errorMapper(() => {
             powerCreep.work();
         }
     }
-
-    
 
     for (let name in Game.rooms) {
         let room = Game.rooms[name];
@@ -96,5 +101,15 @@ export const loop = errorMapper(() => {
     // for (const i in BOOST_RESOURCE['war']) {
     //     console.log(BOOST_RESOURCE['war'][i]);
     // }
+
+    for (let name in Game.creeps) {
+        let creep = Game.creeps[name];
+
+        if (creep.memory.role && creep.memory.role == 'harvesterRoom') {
+            harvesterRoom(creep);
+            // console.log('harvesterRoom');
+        }
+    }
 });
 
+global._spawn = addRoleSpawnTask;

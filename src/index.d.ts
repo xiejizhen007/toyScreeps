@@ -1,3 +1,7 @@
+interface Memory {
+    enemyRoom?: string[],
+}
+
 interface RoomMemory {
     spawnTasks: any,
     lab?: {
@@ -36,18 +40,32 @@ interface CreepMemory {
         resourceID?: string,
         sourceID?: string,
         containerID?: string,
+        newContainerID?: string,
+        constructionSiteID?: string,
         linkID?: string,
         transferTask?: any,
+        targetID?: string,
+        mineralID?: string,
     },
     boost?: boolean,
     boostType?: string,
     labsID?: any,
     exeTask?: any,
     powerSpawnID?: string,
+    farMove?: {
+        index?: number,
+        paths?: RoomPosition[],
+        targetPos?: RoomPosition,
+    }
 }
 
 interface Creep {
     hello(): void,
+    work(): void,
+
+    farGoTo(target: RoomPosition): CreepMoveReturnCode,
+    findPath(target: RoomPosition): void,
+    getEnergyFrom(target: Structure | Source): ScreepsReturnCode,
 }
 
 interface PowerCreepMemory {

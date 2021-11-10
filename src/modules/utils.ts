@@ -91,9 +91,11 @@ export const roomSpawn = {
         test: {attack: 1, heal: 1, move: 2},
         creepTransfer: {carry: 4, move: 4},
         creepPS: {carry: 6, move: 6},
+        // test
+        harvesterRoom: {work: 1, carry: 1, move: 1},
+        reserver: {claim: 2, move: 10},
     }
 }
-
 
 export const hasTransferTask = function (room: Room, taskType: string) : boolean {
     if (!room.memory.transferTasks) { room.memory.transferTasks = []; }
