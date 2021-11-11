@@ -1,4 +1,4 @@
-import { addRoleSpawnTask, addSpawnTask } from "utils";
+import { addRoleSpawnTask, addSpawnTask, callReserver, removeReserverRoom } from "utils";
 
 export function harvesterRoom(creep: Creep) {
     // 没能力干活
@@ -22,15 +22,29 @@ export function harvesterRoom(creep: Creep) {
         addSpawnTask(creep);
     }
 
-    // 预定点数掉到 0 了，派一个预定者
-    if (creep.room.controller && !creep.room.controller.reservation) {
-        // addRoleSpawnTask('reserver', creep.memory.room, creep.room.name);
-        // console.log('call reserver');
-    }
+    // const reservation = creep.room.controller.reservation;
 
+    // 预定点数掉到 0 了，派一个预定者
+    // 是不是已经有预定者了，没有再添加添加
+    if (creep.room.controller && !creep.room.controller.reservation) {
+        if (callReserver(creep)) { console.log('call reserver'); }
+        // addRoleSpawnTask('reserver', creep.memory.room, creep.room.name);
+    }
+    else if (creep.room.controller && creep.room.controller.reservation) {
+        removeReserverRoom(creep.room.name);
+    }
     // 刷 npc 了，等 1500 tick 后重生，继续干活，（把 npc 耗死掉）
 
     // 有 npc 核心，记录消失时间，等到 npc core 消失才叫人去挖外矿
+    // 或者是派遣一个攻击的，把 core 给打了
+    if (creep.room.controller && creep.room.controller.reservation && creep.room.controller.reservation.username == 'Invader') {
+        // console.log('npc core');
+        let core = creep.room.find(FIND_STRUCTURES).find(s => s.structureType == STRUCTURE_INVADER_CORE);
+        if (core) {
+            // console.log('npc core');
+            // console.log(core.effects)
+        }
+    }
 
     // 到达指定位置之后就开始挖能量
     // 检查脚下的箱子，没事就修一下
@@ -56,6 +70,9 @@ export function harvesterRoom(creep: Creep) {
 
     // 开始挖能量
     creep.getEnergyFrom(target);
+
+    // 快死了，把身上的能量放到 container 里
+    if (creep.ticksToLive <= 5) { creep.drop(RESOURCE_ENERGY); }
 
     if (newContainer) { creep.build(newContainer); }
     else if (container && container.hits < container.hitsMax) { creep.repair(container); }

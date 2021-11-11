@@ -1,5 +1,6 @@
 interface Memory {
     enemyRoom?: string[],
+    reserverRoom?: string[],
 }
 
 interface RoomMemory {
@@ -23,6 +24,7 @@ interface RoomMemory {
     exeTransferTasks?: any[],
     war?: boolean,
     powerSpawnID?: string,
+    reserverRoom?: string[],
 }
 
 interface CreepMemory {
@@ -63,6 +65,8 @@ interface Creep {
     hello(): void,
     work(): void,
 
+    goTo(target: RoomPosition): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND,
+    transferTo(target: Structure, resourceType: ResourceConstant): ScreepsReturnCode,
     farGoTo(target: RoomPosition): CreepMoveReturnCode,
     findPath(target: RoomPosition): void,
     getEnergyFrom(target: Structure | Source): ScreepsReturnCode,

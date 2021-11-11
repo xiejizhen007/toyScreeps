@@ -1,5 +1,5 @@
 import { ROOM_TRANSFER_TASK } from "setting";
-import { addTransferTask } from "./utils";
+import { addTransferTask } from "utils";
 
 /**
  * 

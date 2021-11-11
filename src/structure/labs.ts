@@ -1,5 +1,5 @@
 import { LAB_STATE, labTarget, LAB_TRANSFER_TASK, reactionResource, BOOST_STATE, BOOST_RESOURCE, ROOM_TRANSFER_TASK } from "setting";
-import { hasTransferTask, addTransferTask } from "modules/utils";
+import { hasTransferTask, addTransferTask } from "utils";
 
 export const Lab = {
     /**

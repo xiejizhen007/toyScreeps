@@ -1,4 +1,4 @@
-import { getCreepBodys, roomSpawn } from "./modules/utils";
+import { roomSpawn } from "setting";
 
 export const newCreep = function() {
     for (let roomName in Game.rooms) {
@@ -23,8 +23,6 @@ export const newCreep = function() {
                 }
                 else if (tmp == ERR_NOT_ENOUGH_ENERGY && iter.role == 'queen') {
                     let en = room.energyAvailable / 100;
-                    // console.log('energy: ' + en % 1);
-                    // console.log('queen body parts: ' + getCreepBodys({carry: en, move: en}));
                     if (spawn[i].spawnCreep(getCreepBodys({carry: en, move: en}), roleName,
                         { memory: {role: iter.role, room: iter.room, isNeeded: iter.isNeeded, task: iter.task}}) == OK) {
                         room.memory.spawnTasks.shift();
@@ -53,12 +51,53 @@ export const assignPrototype = function(obj1: {[key: string]: any}, obj2: {[key:
  * 叫一个预定者，配合外矿
  * @param creep 呼叫预定者的角色，搭配外矿使用
  */
-export function needReserver(creep: Creep) {
+export function callReserver(creep: Creep) {
     // 挖外矿的出生的房间
     let room = Game.rooms[creep.memory.room];
     if (!room) { return; }
+    if (!room.memory.reserverRoom) { room.memory.reserverRoom = []; }
 
-    addRoleSpawnTask('reserver', room.name, creep.memory.task.workRoomName);
+    if (!room.memory.spawnTasks.find(task => task.role == 'reserver' && task.task.workRoomName == creep.memory.task.workRoomName)
+            && !includeReserverRoom(creep.memory.task.workRoomName)) {
+        // room.memory.reserverRoom.push(creep.memory.task.workRoomName);
+        addReserverRoom(creep.memory.task.workRoomName);
+        addRoleSpawnTask('reserver', room.name, creep.memory.task.workRoomName);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * 给房间添加预定
+ * @param workRoomName 需要预定的房间
+ */
+export function addReserverRoom(workRoomName: string) {
+    if (!Memory.reserverRoom) { Memory.reserverRoom = []; }
+
+    if (!Memory.reserverRoom.includes(workRoomName)) {
+        Memory.reserverRoom.push(workRoomName);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * 
+ * @param workRoomName 删除预定
+ */
+export function removeReserverRoom(workRoomName: string): boolean {
+    if (!Memory.reserverRoom) { return false; }
+
+    const index = Memory.reserverRoom.indexOf(workRoomName);
+    Memory.reserverRoom.splice(index);
+    return true;
+}
+
+export function includeReserverRoom(workRoomName: string): boolean {
+    if (!Memory.reserverRoom) { return false; }
+    return Memory.reserverRoom.includes(workRoomName);
 }
 
 export function addSpawnTask(creep: Creep): boolean {
@@ -101,4 +140,45 @@ export function addRoleSpawnTask(role: string, roomName: string, workRoomName?: 
     });
     console.log('add role spawn task');
     return true;
+}
+
+export const getCreepBodys = function(bodySet) {
+    let ret = new Array();
+    for (let name in bodySet) {
+        for (let i = 0; i < bodySet[name]; i++) {
+            ret.push(name);
+        }
+    }
+    return ret;
+}
+
+
+export const hasTransferTask = function (room: Room, taskType: string) : boolean {
+    if (!room.memory.transferTasks) { room.memory.transferTasks = []; }
+    if (!room.memory.exeTransferTasks) { room.memory.exeTransferTasks = []; }
+
+    let taskYes = false;
+    for (let i = 0; i < room.memory.transferTasks.length; i++) {
+        const task = room.memory.transferTasks[i];
+        if (task.type == taskType) {
+            taskYes = true;
+            break;
+        }
+    }
+
+    for (let i = 0; i < room.memory.exeTransferTasks.length; i++) {
+        const task = room.memory.exeTransferTasks[i];
+        if (task.type == taskType) {
+            taskYes = true;
+            break;
+        }
+    }
+
+    return taskYes;
+}
+
+export const addTransferTask = function (room: Room, task: any) {
+    if (!room.memory.transferTasks) { room.memory.transferTasks = new Array(); }
+
+    room.memory.transferTasks.push(task);
 }

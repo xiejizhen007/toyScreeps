@@ -22,6 +22,8 @@ import { harvesterRoom } from 'role/harvesterRoom';
 import { roleHarvesterMineral } from 'role/role.harvesterMineral';
 
 import { addRoleSpawnTask } from './utils';
+import { transferRoom } from 'role/transferRoom';
+import { reserverRoom } from 'role/reserver';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -63,16 +65,21 @@ export const loop = errorMapper(() => {
         }
         else if (creep.memory.role == 'creepLab') {
             creepLab.run(creep);
-            // creep.hello();
         }
-        // else if (creep.memory.role == 'creepTransfer') {
-        //     transfer(creep);   
-        // }
         else if (creep.memory.role == 'creepPS') {
             creepPS(creep);
         }
         else if (creep.memory.role == 'harvesterMineral') {
             roleHarvesterMineral.run(creep);
+        }
+        else if (creep.memory.role == 'transferRoom') {
+            transferRoom(creep);
+        }
+        else if (creep.memory.role && creep.memory.role == 'harvesterRoom') {
+            harvesterRoom(creep);
+        }
+        else if (creep.memory.role == 'reserver') {
+            reserverRoom(creep);
         }
     }
 
@@ -97,19 +104,8 @@ export const loop = errorMapper(() => {
     }
 
     Tower.run();
-
-    // for (const i in BOOST_RESOURCE['war']) {
-    //     console.log(BOOST_RESOURCE['war'][i]);
-    // }
-
-    for (let name in Game.creeps) {
-        let creep = Game.creeps[name];
-
-        if (creep.memory.role && creep.memory.role == 'harvesterRoom') {
-            harvesterRoom(creep);
-            // console.log('harvesterRoom');
-        }
-    }
 });
 
+
+// addRoleSpawnTask(role: string, roomName: string, workRoomName?: string, isNeeded?: boolean, flagName?: string)
 global._spawn = addRoleSpawnTask;

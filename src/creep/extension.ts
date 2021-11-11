@@ -128,6 +128,9 @@ export default class creepExtension extends Creep {
                                 }
                             }
                         }
+                        else if (creep.my) {
+                            costs.set(creep.pos.x, creep.pos.y, 0xff);
+                        }
                     });
                 }
                 return costs;
