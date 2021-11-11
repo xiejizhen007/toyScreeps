@@ -37,12 +37,11 @@ export function harvesterRoom(creep: Creep) {
 
     // 有 npc 核心，记录消失时间，等到 npc core 消失才叫人去挖外矿
     // 或者是派遣一个攻击的，把 core 给打了
+    // 暂定离家近的话，给他打了，远的话就先停下
     if (creep.room.controller && creep.room.controller.reservation && creep.room.controller.reservation.username == 'Invader') {
-        // console.log('npc core');
         let core = creep.room.find(FIND_STRUCTURES).find(s => s.structureType == STRUCTURE_INVADER_CORE);
         if (core) {
-            // console.log('npc core');
-            // console.log(core.effects)
+            // console.log(core.effects[0].ticksRemaining);
         }
     }
 

@@ -145,6 +145,10 @@ export const Lab = {
         // 够底物反应了，进行反应
         let lab1 = Game.getObjectById(room.memory.lab.lab1ID) as StructureLab;
         let lab2 = Game.getObjectById(room.memory.lab.lab2ID) as StructureLab;
+        if (!lab1 || !lab2) {
+            room.memory.lab.state = LAB_STATE.INIT;
+            return;
+        }
 
         if (lab1.mineralType && lab2.mineralType) {
             room.memory.lab.state = LAB_STATE.WORKING;

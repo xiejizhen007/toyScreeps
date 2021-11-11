@@ -56,20 +56,20 @@ export const roleBuilder = {
         }
         // 取能量
         else {
-            let resource = Game.getObjectById(creep.memory.task.resourceID) as Resource;
-            if (!resource) {
-                resource = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-                if (resource) {
-                    creep.memory.task.resourceID = resource.id;
-                }
-            }
+            // let resource = Game.getObjectById(creep.memory.task.resourceID) as Resource;
+            // if (!resource) {
+            //     resource = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+            //     if (resource) {
+            //         creep.memory.task.resourceID = resource.id;
+            //     }
+            // }
 
-            if (resource) {
-                if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(resource);
-                }
-                return;
-            }
+            // if (resource) {
+            //     if (creep.pickup(resource) == ERR_NOT_IN_RANGE) {
+            //         creep.moveTo(resource);
+            //     }
+            //     return;
+            // }
 
             let workRoom = Game.rooms[creep.memory.task.workRoomName];
             let storage = workRoom.storage;
