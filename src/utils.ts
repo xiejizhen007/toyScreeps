@@ -44,7 +44,7 @@ export const assignPrototype = function(obj1: {[key: string]: any}, obj2: {[key:
             })
         }
         else obj1.prototype[key] = obj2.prototype[key]
-    })
+    });
 }
 
 /**
@@ -61,7 +61,7 @@ export function callReserver(creep: Creep) {
             && !includeReserverRoom(creep.memory.task.workRoomName)) {
         // room.memory.reserverRoom.push(creep.memory.task.workRoomName);
         addReserverRoom(creep.memory.task.workRoomName);
-        addRoleSpawnTask('reserver', room.name, creep.memory.task.workRoomName);
+        addRoleSpawnTask('reserver', room.name, false, creep.memory.task.workRoomName);
         return true;
     }
 
@@ -124,7 +124,7 @@ export function addSpawnTask(creep: Creep): boolean {
  * @param workRoomName 工作房间
  * @param isNeeded 是否需要再次孵化
  */
-export function addRoleSpawnTask(role: string, roomName: string, workRoomName?: string, isNeeded?: boolean, flagName?: string): boolean {
+export function addRoleSpawnTask(role: string, roomName: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean {
     let room = Game.rooms[roomName];
     if (!room) { return false; }
     if (!room.memory.spawnTasks) { room.memory.spawnTasks = []; }
@@ -182,3 +182,10 @@ export const addTransferTask = function (room: Room, task: any) {
 
     room.memory.transferTasks.push(task);
 }
+
+// export function addRoom(roomName: string, addRoomName: string): boolean {
+//     let room = Game.rooms[roomName];
+//     if (!room) { return false; }
+
+//     // return room.addRo
+// }

@@ -27,7 +27,7 @@ export function harvesterRoom(creep: Creep) {
     // 预定点数掉到 0 了，派一个预定者
     // 是不是已经有预定者了，没有再添加添加
     if (creep.room.controller && !creep.room.controller.reservation) {
-        if (callReserver(creep)) { console.log('call reserver'); }
+        // if (callReserver(creep)) { console.log('call reserver'); }
         // addRoleSpawnTask('reserver', creep.memory.room, creep.room.name);
     }
     else if (creep.room.controller && creep.room.controller.reservation) {

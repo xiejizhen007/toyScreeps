@@ -1,6 +1,7 @@
 interface Memory {
     enemyRoom?: string[],
     reserverRoom?: string[],
+    harvestRoom?: iHarvestRoom[],
 }
 
 interface RoomMemory {
@@ -25,6 +26,13 @@ interface RoomMemory {
     war?: boolean,
     powerSpawnID?: string,
     reserverRoom?: string[],
+
+    harvestRoom?: iHarvestRoom[],
+}
+
+interface Room {
+    addHarvestRoom(roomName: string): boolean,
+    removeHarvestRoom(roomName: string): boolean,
 }
 
 interface CreepMemory {
@@ -100,4 +108,23 @@ interface iLabIn {
 interface iLabOut {
     type: string,
     labsID: string[],
+}
+
+type reserverRoomType = iReserverRoom;
+
+interface iReserverRoom {
+    roomName: string,       // 外矿房间
+    cooldown?: number,      // npc 的刷新时间
+    hasReserver?: boolean   // 当前有人预定了
+    sourceFlag?: {
+        id: string,
+        lock: boolean,
+    }[],
+}
+
+interface iHarvestRoom {
+    // sourceRoom: string,
+    roomName: string,
+    cooldown?: number,
+    hasReserver?: boolean,
 }

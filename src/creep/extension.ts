@@ -75,7 +75,9 @@ export default class creepExtension extends Creep {
 
         // 还没到目的地，继续前进
         let ret = this.move(this.pos.getDirectionTo(this.memory.farMove.paths[targetIndex]));
+        // if ()
         if (ret == OK) { this.memory.farMove.index++; }
+        // console.log(this.name + ' move: ' + ret);
         
         return ret;
     }

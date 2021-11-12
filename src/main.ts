@@ -98,14 +98,15 @@ export const loop = errorMapper(() => {
         powerSpawnRun(room);
     }
 
-    if (Game.cpu.bucket >= 10000) {
-        console.log('generating pixel');
-        Game.cpu.generatePixel();
-    }
+    // if (Game.cpu.bucket >= 10000) {
+    //     console.log('generating pixel');
+    //     Game.cpu.generatePixel();
+    // }
 
     Tower.run();
 });
 
 
-// addRoleSpawnTask(role: string, roomName: string, workRoomName?: string, isNeeded?: boolean, flagName?: string)
+// addRoleSpawnTask(role: string, roomName: string, isNeeded?: boolean, workRoomName?: string, flagName?: string)
 global._spawn = addRoleSpawnTask;
+// global._addRoom = 

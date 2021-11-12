@@ -42,9 +42,9 @@ export const roomSpawn = {
         harvesterMineral: {work: 5, carry: 6, move: 6},
         repairer: {work: 4, carry: 4, move: 4},
         transfer: {carry: 8, move: 8},
-        transferRoom: {carry: 12, move: 12}, 
+        transferRoom: {carry: 15, move: 15}, 
         claimer: {claim: 1, move: 4},
-        reserver: {claim: 1, move: 5},
+        reserver: {claim: 2, move: 2},
     },
     7: {
         harvester: {work: 6, carry: 1, move: 3}, 
@@ -64,7 +64,7 @@ export const roomSpawn = {
         creepLab: {carry: 10, move: 10},
         test: {attack: 1, heal: 1, move: 2},
         creepTransfer: {carry: 4, move: 4},
-        reserver: {claim: 2, move: 10},
+        reserver: {claim: 2, move: 2},
     },
     8: {
         harvester: {work: 6, carry: 1, move: 3}, 
@@ -84,10 +84,8 @@ export const roomSpawn = {
         test: {attack: 1, heal: 1, move: 2},
         creepTransfer: {carry: 4, move: 4},
         creepPS: {carry: 6, move: 6},
-        // test
-        // harvesterRoom: {work: 1, carry: 1, move: 1},
         harvesterRoom: {work: 6, carry: 4, move: 6},
-        reserver: {claim: 2, move: 10},
+        reserver: {claim: 2, move: 2},
     }
 }
 
@@ -242,3 +240,5 @@ export const reactionResource = {
     [RESOURCE_UTRIUM_LEMERGITE]: [RESOURCE_UTRIUM, RESOURCE_LEMERGIUM],
     [RESOURCE_GHODIUM]: [RESOURCE_ZYNTHIUM_KEANITE, RESOURCE_UTRIUM_LEMERGITE],
 }
+
+// export co
