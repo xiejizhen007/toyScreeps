@@ -22,7 +22,7 @@ export const newCreep = function() {
                     break;
                 }
                 else if (tmp == ERR_NOT_ENOUGH_ENERGY && iter.role == 'queen') {
-                    let en = room.energyAvailable / 100;
+                    let en = (room.energyAvailable / 100) ^ 0;
                     if (spawn[i].spawnCreep(getCreepBodys({carry: en, move: en}), roleName,
                         { memory: {role: iter.role, room: iter.room, isNeeded: iter.isNeeded, task: iter.task}}) == OK) {
                         room.memory.spawnTasks.shift();

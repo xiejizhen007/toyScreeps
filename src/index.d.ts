@@ -33,6 +33,11 @@ interface RoomMemory {
 interface Room {
     addHarvestRoom(roomName: string): boolean,
     removeHarvestRoom(roomName: string): boolean,
+    addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean,
+
+    // creepController
+    addRoomCreepGroup(roomName: string): boolean,
+    addRoomReserver(roomName: string): boolean,
 }
 
 interface CreepMemory {

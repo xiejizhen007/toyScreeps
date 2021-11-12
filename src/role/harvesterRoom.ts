@@ -1,80 +1,98 @@
 import { addRoleSpawnTask, addSpawnTask, callReserver, removeReserverRoom } from "utils";
+import { CREEP_STATE } from "setting";
 
-export function harvesterRoom(creep: Creep) {
-    // 没能力干活
-    if (!creep || creep.spawning) { return; }
-
-    // prepare 
-    let flag = Game.flags[creep.memory.task.flagName];
-    if (!flag) {
-        console.log('插旗给：' + creep.id);
-        return;
+export class harvesterRoom {
+    constructor(creep: Creep) {
+        this.creep_ = creep;
     }
 
-    // 前往指定位置
-    if (!creep.pos.isEqualTo(flag.pos)) {
-        creep.farGoTo(flag.pos);
-        return;
-    }
-
-    // 重生任务
-    if (creep.ticksToLive <= 50 && creep.memory.isNeeded) {
-        addSpawnTask(creep);
-    }
-
-    // const reservation = creep.room.controller.reservation;
-
-    // 预定点数掉到 0 了，派一个预定者
-    // 是不是已经有预定者了，没有再添加添加
-    if (creep.room.controller && !creep.room.controller.reservation) {
-        // if (callReserver(creep)) { console.log('call reserver'); }
-        // addRoleSpawnTask('reserver', creep.memory.room, creep.room.name);
-    }
-    else if (creep.room.controller && creep.room.controller.reservation) {
-        removeReserverRoom(creep.room.name);
-    }
-    // 刷 npc 了，等 1500 tick 后重生，继续干活，（把 npc 耗死掉）
-
-    // 有 npc 核心，记录消失时间，等到 npc core 消失才叫人去挖外矿
-    // 或者是派遣一个攻击的，把 core 给打了
-    // 暂定离家近的话，给他打了，远的话就先停下
-    if (creep.room.controller && creep.room.controller.reservation && creep.room.controller.reservation.username == 'Invader') {
-        let core = creep.room.find(FIND_STRUCTURES).find(s => s.structureType == STRUCTURE_INVADER_CORE);
-        if (core) {
-            // console.log(core.effects[0].ticksRemaining);
+    public work() {
+        switch(this.creep_.memory.state) {
+            case CREEP_STATE.PREPARE:
+                this.prepare();
+                break;
+            case CREEP_STATE.TARGET:
+                this.target();
+                break;
+            case CREEP_STATE.BACK:
+                this.back();
+                break;
+            default:
+                this.creep_.memory.state = CREEP_STATE.PREPARE;
+                break;
         }
     }
 
-    // 到达指定位置之后就开始挖能量
-    // 检查脚下的箱子，没事就修一下
-    let target = Game.getObjectById<Source>(creep.memory.task.sourceID);
-    let container = Game.getObjectById<StructureContainer>(creep.memory.task.containerID);
-    let newContainer = Game.getObjectById<ConstructionSite>(creep.memory.task.constructionSiteID);
+    private prepare() {
+        if (!this.creep_ && this.creep_.spawning) { return; }
+    
+        let sourceFlag = Game.flags[this.creep_.memory.task.flagName];
+        if (!sourceFlag) {
+            console.log('create flag for ' + this.creep_.id);
+            return;
+        }
 
-    if (!target) {
-        target = flag.pos.findClosestByRange(FIND_SOURCES);
-        if (target) { creep.memory.task.sourceID = target.id; }
+        // 前往工作地点
+        if (!sourceFlag.pos.isEqualTo(this.creep_.pos)) { 
+            this.creep_.farGoTo(sourceFlag.pos); 
+            return;
+        }
+
+        this.creep_.memory.state = CREEP_STATE.TARGET;
     }
 
-    if (!container) {
-        container = flag.pos.lookFor(LOOK_STRUCTURES).find(s => s.structureType == STRUCTURE_CONTAINER) as StructureContainer;
-        if (container) { creep.memory.task.containerID = container.id; }
-        else { creep.room.createConstructionSite(flag.pos, STRUCTURE_CONTAINER); }
+    private target() {
+        let source = Game.getObjectById<Source>(this.creep_.memory.task.sourceID);
+        if (!source) {
+            source = this.creep_.pos.findClosestByRange(FIND_SOURCES);
+            this.creep_.memory.task.sourceID = source.id;
+        }
+
+        if (!source) {
+            console.log('there is not source around ' + this.creep_.pos);
+            // this.creep_.suicide();
+            return;
+        }
+
+        // 派活
+        if (this.creep_.room.controller && !this.creep_.room.controller.reservation) {
+
+        }
+
+        this.creep_.getEnergyFrom(source);
+        if (this.creep_.store.getFreeCapacity() == 0) {
+            this.creep_.memory.state = CREEP_STATE.BACK;
+        }
     }
 
-    if (!newContainer && !container) {
-        newContainer = flag.pos.lookFor(LOOK_CONSTRUCTION_SITES).find(s => s.structureType == STRUCTURE_CONTAINER);
-        if (newContainer) { creep.memory.task.constructionSiteID = newContainer.id; }
+    private back() {
+        let room = Game.rooms[this.creep_.memory.room];
+        if (!room) {
+            console.log('spawnRoom does not exist!!!');
+            this.creep_.say('myRoom!!!');
+            return;
+        }
+
+        let storage = room.storage;
+        let terminal = room.terminal;
+        
+        if (!storage && !terminal) {
+            console.log('spawnRoom\'s storage and terminal do not exist!!!');
+            this.creep_.say('noTarget');
+            return;
+        }
+
+        if (this.creep_.room.name != room.name) {
+            this.creep_.farGoTo(new RoomPosition(room.controller.pos.x, room.controller.pos.y, room.name));
+            return;   
+        }
+
+        let tmp: number;
+        if (terminal) { tmp = this.creep_.transferTo(terminal, RESOURCE_ENERGY); }
+        else if (storage) { tmp = this.creep_.transferTo(storage, RESOURCE_ENERGY); }
+
+        if (tmp == OK) { this.creep_.memory.state = CREEP_STATE.PREPARE; }
     }
 
-    // 开始挖能量
-    creep.getEnergyFrom(target);
-
-    // 快死了，把身上的能量放到 container 里
-    if (creep.ticksToLive <= 5) { creep.drop(RESOURCE_ENERGY); }
-
-    if (newContainer) { creep.build(newContainer); }
-    else if (container && container.hits < container.hitsMax) { creep.repair(container); }
-
-    return;
+    private creep_: Creep;
 }

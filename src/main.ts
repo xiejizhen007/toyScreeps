@@ -76,7 +76,9 @@ export const loop = errorMapper(() => {
             transferRoom(creep);
         }
         else if (creep.memory.role && creep.memory.role == 'harvesterRoom') {
-            harvesterRoom(creep);
+            // harvesterRoom(creep);
+            let creep_ = new harvesterRoom(creep);
+            creep_.work();
         }
         else if (creep.memory.role == 'reserver') {
             reserverRoom(creep);

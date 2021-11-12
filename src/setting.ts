@@ -38,7 +38,7 @@ export const roomSpawn = {
         builder: {work: 4, carry: 6, move: 6},
         outputer: {carry: 6, move: 6},
         harvester: {work: 6, carry: 1, move: 3},
-        harvesterRoom: {work: 6, carry: 4, move: 6},
+        harvesterRoom: {work: 6, carry: 10, move: 8},
         harvesterMineral: {work: 5, carry: 6, move: 6},
         repairer: {work: 4, carry: 4, move: 4},
         transfer: {carry: 8, move: 8},
@@ -87,6 +87,12 @@ export const roomSpawn = {
         harvesterRoom: {work: 6, carry: 4, move: 6},
         reserver: {claim: 2, move: 2},
     }
+}
+
+export const CREEP_STATE = {
+    PREPARE: 'creepPrepare',
+    TARGET: 'creepTarget',
+    BACK: 'creepBack',
 }
 
 export const LAB_STATE = {
