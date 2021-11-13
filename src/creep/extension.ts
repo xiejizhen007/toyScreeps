@@ -108,7 +108,6 @@ export default class creepExtension extends Creep {
                             (struct.structureType !== STRUCTURE_RAMPART || 
                             !struct.my))
                             costs.set(struct.pos.x, struct.pos.y, 0xff);
-
                     });
 
                     // 避开房间内不是自己的 creep

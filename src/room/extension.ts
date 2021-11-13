@@ -7,7 +7,7 @@ export default class roomExtension extends Room {
             room: this.name,
             isNeeded: isNeeded ? true : false,
             task: {
-                workRoomName: workRoomName ? this.name : workRoomName,
+                workRoomName: workRoomName ? workRoomName : this.name,
                 flagName: flagName,
             }
         });
@@ -16,6 +16,24 @@ export default class roomExtension extends Room {
         return true;
     }
     
+    /**
+     * 孵化 creep
+     * @param creep 需要孵化的 creep
+     */
+    public addSpawnTask(creep: Creep): boolean {
+        if (!this.memory.spawnTasks) { this.memory.spawnTasks = []; }
+
+        this.memory.spawnTasks.push({
+            role: creep.memory.role,
+            room: creep.memory.room,
+            isNeeded: creep.memory.isNeeded,
+            task: creep.memory.task
+        });
+
+        creep.memory.isNeeded = false;
+        return true;
+    }
+
     /**
      * 添加外矿房间
      * @param roomName 外矿房间名

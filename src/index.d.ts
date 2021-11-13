@@ -25,6 +25,7 @@ interface RoomMemory {
     exeTransferTasks?: any[],
     war?: boolean,
     powerSpawnID?: string,
+    mineralID?: string,
     reserverRoom?: string[],
 
     harvestRoom?: iHarvestRoom[],
@@ -34,6 +35,7 @@ interface Room {
     addHarvestRoom(roomName: string): boolean,
     removeHarvestRoom(roomName: string): boolean,
     addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean,
+    addSpawnTask(creep: Creep): boolean,
 
     // creepController
     addRoomCreepGroup(roomName: string): boolean,
