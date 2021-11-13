@@ -183,6 +183,10 @@ export const addTransferTask = function (room: Room, task: any) {
     room.memory.transferTasks.push(task);
 }
 
+export function testTask(task: roomTransferTask) {
+    // console.log(task.nukeID);
+}
+
 // export function addRoom(roomName: string, addRoomName: string): boolean {
 //     let room = Game.rooms[roomName];
 //     if (!room) { return false; }

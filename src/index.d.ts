@@ -1,3 +1,4 @@
+// memory 对象的信息
 interface Memory {
     enemyRoom?: string[],
     reserverRoom?: string[],
@@ -21,25 +22,14 @@ interface RoomMemory {
         labsID?: any,
     },
 
-    transferTasks?: any[],
-    exeTransferTasks?: any[],
+    transferTasks?: roomTransferTask[],
+    exeTransferTasks?: roomTransferTask[],
     war?: boolean,
     powerSpawnID?: string,
     mineralID?: string,
     reserverRoom?: string[],
 
     harvestRoom?: iHarvestRoom[],
-}
-
-interface Room {
-    addHarvestRoom(roomName: string): boolean,
-    removeHarvestRoom(roomName: string): boolean,
-    addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean,
-    addSpawnTask(creep: Creep): boolean,
-
-    // creepController
-    addRoomCreepGroup(roomName: string): boolean,
-    addRoomReserver(roomName: string): boolean,
 }
 
 interface CreepMemory {
@@ -67,13 +57,34 @@ interface CreepMemory {
     boost?: boolean,
     boostType?: string,
     labsID?: any,
-    exeTask?: any,
+    exeTask?: roomTransferTask,
     powerSpawnID?: string,
     farMove?: {
         index?: number,
         paths?: RoomPosition[],
         targetPos?: RoomPosition,
     }
+}
+
+interface PowerCreepMemory {
+    powerSpawnID?: string,
+}
+
+// 原型拓展的信息
+interface Room {
+    addHarvestRoom(roomName: string): boolean,
+    removeHarvestRoom(roomName: string): boolean,
+    addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean,
+    addSpawnTask(creep: Creep): boolean,
+
+    addTransferTask(task: roomTransferTask, priority?: number): number,
+    removeTransferTask(taskType: string): boolean,
+    taskToExe(): void,
+    hasTransferTask(taskType: string): boolean,
+
+    // creepController
+    addRoomCreepGroup(roomName: string): boolean,
+    addRoomReserver(roomName: string): boolean,
 }
 
 interface Creep {
@@ -87,25 +98,16 @@ interface Creep {
     getEnergyFrom(target: Structure | Source): ScreepsReturnCode,
 }
 
-interface PowerCreepMemory {
-    powerSpawnID?: string,
-}
-
 interface PowerCreep {
     work() : void,
 }
 
-type roomTransferTask = iLabIn | iLabOut;
+type roomTransferTask = iLabIn | iLabOut | iTower | iNuke | iPowerSpawn;
 
-interface Room {
-    // 传输任务
-    addTransferTask(task: roomTransferTask) : number
-    hasTransferTask(taskType: string) : boolean
-}
-
+// 任务类型
 interface iLabIn {
     type: string,
-    resource?: {
+    resource: {
         id: string,
         type: ResourceConstant,
         amount: number,
@@ -114,7 +116,22 @@ interface iLabIn {
 
 interface iLabOut {
     type: string,
-    labsID?: string[],
+    labsID: string[],
+}
+
+interface iTower {
+    type: string,
+    id: string,
+}
+
+interface iNuke {
+    type: string,
+    id: string,
+}
+
+interface iPowerSpawn {
+    type: string,
+    id: string,
 }
 
 type reserverRoomType = iReserverRoom;

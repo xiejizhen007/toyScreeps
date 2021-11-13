@@ -9,6 +9,7 @@ dist/
 // 游戏代码
 main.js
 main.js.map.js
+main.js.map
 
 // 运行脚本
 run

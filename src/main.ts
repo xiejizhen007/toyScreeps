@@ -24,6 +24,7 @@ import { roleHarvesterMineral } from 'role/role.harvesterMineral';
 import { addRoleSpawnTask } from './utils';
 import { transferRoom } from 'role/transferRoom';
 import { reserverRoom } from 'role/reserver';
+import { Manager } from 'role/creepLocal';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -82,6 +83,10 @@ export const loop = errorMapper(() => {
         }
         else if (creep.memory.role == 'reserver') {
             reserverRoom(creep);
+        }
+        else if (creep.memory.role == 'manager') {
+            let creep_ = new Manager(creep);
+            creep_.work();
         }
     }
 

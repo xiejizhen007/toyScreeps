@@ -77,4 +77,57 @@ export default class roomExtension extends Room {
 
         return false;
     }
+
+    /**
+     * 
+     * @param task 任务对象
+     * @param priority 任务优先级，默认添加任务到队尾
+     * @returns 
+     */
+    public addTransferTask(task: roomTransferTask, priority?: number): number {
+        if (!this.memory.transferTasks) { this.memory.transferTasks = []; }
+        if (this.hasTransferTask(task.type)) { return -1; }
+        
+        if (priority != undefined) {
+            // 防止过长
+            this.memory.transferTasks.splice(priority, 0, task);
+            return priority < this.memory.transferTasks.length ? priority : this.memory.transferTasks.length - 1;
+        }
+        else {
+            // 插入队尾
+            this.memory.transferTasks.push(task);
+            return this.memory.transferTasks.length - 1;
+        }
+    }
+
+    public removeTransferTask(taskType: string): boolean {
+        const task = this.memory.exeTransferTasks.find(f => f.type == taskType);
+        const index = this.memory.exeTransferTasks.indexOf(task);
+        console.log('remove index: ' + index);
+        // this.memory.exeTransferTasks.splice(index, 0);
+        console.log(this.memory.exeTransferTasks.splice(index, 1));
+        return true;
+    }
+
+    public taskToExe(): void {
+        const task = this.memory.transferTasks.shift();
+        if (task) {
+            this.memory.exeTransferTasks.push(task);
+        }
+    }
+
+    /**
+     * 查看当前是否存在当前任务
+     * @param taskType 任务类型
+     * @returns 
+     */
+    public hasTransferTask(taskType: string): boolean {
+        if (!this.memory.transferTasks) { return false; }
+        if (!this.memory.exeTransferTasks) { this.memory.exeTransferTasks = []; }
+
+        const task = this.memory.transferTasks.find(f => f.type == taskType);
+        const taskExe = this.memory.exeTransferTasks.find(f => f.type == taskType);
+
+        return task || taskExe ? true : false;
+    }
 }

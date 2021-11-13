@@ -86,6 +86,7 @@ export const roomSpawn = {
         creepPS: {carry: 6, move: 6},
         harvesterRoom: {work: 6, carry: 4, move: 6},
         reserver: {claim: 2, move: 2},
+        manager: {carry: 1, move: 1},
     }
 }
 
@@ -110,6 +111,10 @@ export const ROOM_TRANSFER_TASK = {
     BOOST_GET_RESOURCE: 'boostGetResource',
     BOOST_GET_ENERGY: 'boostGetEnergy',
     BOOST_CLEAR: 'boostClear',
+    
+    // 填充塔
+    FILL_TOWER: 'fillTower',
+    FILL_NUKE: 'fillNuke',
 };
 
 export const LAB_TRANSFER_TASK = {
