@@ -105,7 +105,7 @@ interface Room {
 
 interface iLabIn {
     type: string,
-    resource: {
+    resource?: {
         id: string,
         type: ResourceConstant,
         amount: number,
@@ -114,7 +114,7 @@ interface iLabIn {
 
 interface iLabOut {
     type: string,
-    labsID: string[],
+    labsID?: string[],
 }
 
 type reserverRoomType = iReserverRoom;

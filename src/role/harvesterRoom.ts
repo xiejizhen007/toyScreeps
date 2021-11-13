@@ -37,13 +37,13 @@ export class harvesterRoom {
         // 前往工作地点
         if (!sourceFlag.pos.isEqualTo(this.creep_.pos)) { 
             this.creep_.farGoTo(sourceFlag.pos); 
-            let road = this.creep_.pos.lookFor(LOOK_STRUCTURES).find(f => f.structureType == STRUCTURE_ROAD);
-            let buildRoad = this.creep_.pos.lookFor(LOOK_CONSTRUCTION_SITES).find(f => f.structureType == STRUCTURE_ROAD);
+            // let road = this.creep_.pos.lookFor(LOOK_STRUCTURES).find(f => f.structureType == STRUCTURE_ROAD);
+            // let buildRoad = this.creep_.pos.lookFor(LOOK_CONSTRUCTION_SITES).find(f => f.structureType == STRUCTURE_ROAD);
 
-            // 没有路也没有工地，就新建一个工地
-            if (!road && !buildRoad) {
-                this.creep_.room.createConstructionSite(this.creep_.pos, STRUCTURE_ROAD);
-            }
+            // // 没有路也没有工地，就新建一个工地
+            // if (!road && !buildRoad) {
+            //     this.creep_.room.createConstructionSite(this.creep_.pos, STRUCTURE_ROAD);
+            // }
             return;
         }
 
@@ -94,13 +94,13 @@ export class harvesterRoom {
         // 可能全拿来修路了
         if (this.creep_.store.getUsedCapacity() == 0) { this.creep_.memory.state = CREEP_STATE.PREPARE; }
 
-        let road = this.creep_.pos.lookFor(LOOK_STRUCTURES).find(f => f.structureType == STRUCTURE_ROAD);
-        let buildRoad = this.creep_.pos.lookFor(LOOK_CONSTRUCTION_SITES).find(f => f.structureType == STRUCTURE_ROAD);
+        // let road = this.creep_.pos.lookFor(LOOK_STRUCTURES).find(f => f.structureType == STRUCTURE_ROAD);
+        // let buildRoad = this.creep_.pos.lookFor(LOOK_CONSTRUCTION_SITES).find(f => f.structureType == STRUCTURE_ROAD);
 
         if (this.creep_.room.name != room.name) {
-            if (buildRoad) { this.creep_.build(buildRoad); } 
-            else if (road && road.hits != road.hitsMax) { this.creep_.repair(road); }
-            else { this.creep_.farGoTo(new RoomPosition(room.controller.pos.x, room.controller.pos.y, room.name)); }
+            // if (buildRoad) { this.creep_.build(buildRoad); } 
+            // else if (road && road.hits != road.hitsMax) { this.creep_.repair(road); }
+            this.creep_.farGoTo(new RoomPosition(room.controller.pos.x, room.controller.pos.y, room.name));
 
             return;   
         }
