@@ -1,6 +1,6 @@
-import roomExtension from "./extension";
+import RoomExtension from "./extension";
 
-export default class creepController extends roomExtension {
+export default class creepController extends RoomExtension {
     /**
      * 添加外矿采集组
      * @param roomName 外矿的房间
