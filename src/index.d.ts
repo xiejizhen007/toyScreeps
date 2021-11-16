@@ -78,8 +78,9 @@ interface Room {
     addSpawnTask(creep: Creep): boolean,
 
     addTransferTask(task: roomTransferTask, priority?: number): number,
-    removeTransferTask(taskType: string): boolean,
-    taskToExe(): void,
+    // removeTransferTask(taskType: string): boolean,
+    removeTransferTask(): boolean,
+    // taskToExe(): void,
     hasTransferTask(taskType: string): boolean,
 
     // creepController

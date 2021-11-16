@@ -115,6 +115,7 @@ export const ROOM_TRANSFER_TASK = {
     // 填充塔
     FILL_TOWER: 'fillTower',
     FILL_NUKE: 'fillNuke',
+    FILL_EXTENSION: 'fillExtension',
 };
 
 export const LAB_TRANSFER_TASK = {
@@ -251,5 +252,3 @@ export const reactionResource = {
     [RESOURCE_UTRIUM_LEMERGITE]: [RESOURCE_UTRIUM, RESOURCE_LEMERGIUM],
     [RESOURCE_GHODIUM]: [RESOURCE_ZYNTHIUM_KEANITE, RESOURCE_UTRIUM_LEMERGITE],
 }
-
-// export co

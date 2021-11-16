@@ -1,8 +1,8 @@
 import { assignPrototype } from "utils";
 import creepController from "./creepController";
-import roomExtension from "./extension";
+import RoomExtension from "./extension";
 
 export default function () {
-    assignPrototype(roomExtension, creepController);
-    assignPrototype(Room, roomExtension);
+    assignPrototype(RoomExtension, creepController);
+    assignPrototype(Room, RoomExtension);
 }

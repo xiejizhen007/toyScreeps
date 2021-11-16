@@ -1,4 +1,4 @@
-export default class roomExtension extends Room {
+export default class RoomExtension extends Room {
     public addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean {
         if (!this.memory.spawnTasks) { this.memory.spawnTasks = []; }
 
@@ -100,21 +100,21 @@ export default class roomExtension extends Room {
         }
     }
 
-    public removeTransferTask(taskType: string): boolean {
-        const task = this.memory.exeTransferTasks.find(f => f.type == taskType);
-        const index = this.memory.exeTransferTasks.indexOf(task);
-        console.log('remove index: ' + index);
-        // this.memory.exeTransferTasks.splice(index, 0);
-        console.log(this.memory.exeTransferTasks.splice(index, 1));
+    public removeTransferTask(): boolean {
+        // const task = this.memory.transferTasks.find(f => f.type == taskType);
+        // const index = this.memory.transferTasks.indexOf(task);
+        // console.log('remove index: ' + index);
+        // console.log(this.memory.transferTasks.splice(index, 1));
+        this.memory.transferTasks.shift();
         return true;
     }
 
-    public taskToExe(): void {
-        const task = this.memory.transferTasks.shift();
-        if (task) {
-            this.memory.exeTransferTasks.push(task);
-        }
-    }
+    // public taskToExe(): void {
+    //     const task = this.memory.transferTasks.shift();
+    //     if (task) {
+    //         this.memory.exeTransferTasks.push(task);
+    //     }
+    // }
 
     /**
      * 查看当前是否存在当前任务
@@ -123,11 +123,11 @@ export default class roomExtension extends Room {
      */
     public hasTransferTask(taskType: string): boolean {
         if (!this.memory.transferTasks) { return false; }
-        if (!this.memory.exeTransferTasks) { this.memory.exeTransferTasks = []; }
+        // if (!this.memory.exeTransferTasks) { this.memory.exeTransferTasks = []; }
 
         const task = this.memory.transferTasks.find(f => f.type == taskType);
-        const taskExe = this.memory.exeTransferTasks.find(f => f.type == taskType);
+        // const taskExe = this.memory.exeTransferTasks.find(f => f.type == taskType);
 
-        return task || taskExe ? true : false;
+        return task ? true : false;
     }
 }
