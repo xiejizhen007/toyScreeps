@@ -83,7 +83,7 @@ export const roomSpawn = {
         creepLab: {carry: 10, move: 10},
         test: {attack: 1, heal: 1, move: 2},
         creepTransfer: {carry: 4, move: 4},
-        creepPS: {carry: 6, move: 6},
+        creepPS: {carry: 10, move: 10},
         harvesterRoom: {work: 6, carry: 4, move: 6},
         reserver: {claim: 2, move: 2},
         manager: {carry: 1, move: 1},
