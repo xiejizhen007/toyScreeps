@@ -22,6 +22,9 @@ interface RoomMemory {
         labsID?: any,
     },
 
+    sources?: string[],
+    powerTask?: pcTaskType[],
+
     transferTasks?: roomTransferTask[],
     exeTransferTasks?: roomTransferTask[],
     war?: boolean,
@@ -86,6 +89,14 @@ interface Room {
     // creepController
     addRoomCreepGroup(roomName: string): boolean,
     addRoomReserver(roomName: string): boolean,
+
+    // powerCreepController
+    powerWork(): boolean,
+    usePower(): boolean,
+    regenSource(): void,
+    hasPowerTask(task: pcTaskType): boolean,
+    addPowerTask(task: pcTaskType): boolean,
+    removePowerTask(): boolean,
 }
 
 interface Creep {
@@ -152,4 +163,11 @@ interface iHarvestRoom {
     roomName: string,
     cooldown?: number,
     hasReserver?: boolean,
+}
+
+type pcTaskType = iRegenSource;
+
+interface iRegenSource {
+    type: string,
+    id: string,
 }

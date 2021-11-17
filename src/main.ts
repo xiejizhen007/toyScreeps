@@ -26,6 +26,8 @@ import { transferRoom } from 'role/transferRoom';
 import { reserverRoom } from 'role/reserver';
 import { Manager } from 'role/creepLocal';
 
+import { RoleHarvester } from 'role/base';
+
 export const loop = errorMapper(() => {
     mountWork();
 
@@ -41,7 +43,9 @@ export const loop = errorMapper(() => {
         let creep = Game.creeps[name];
 
         if (creep.memory.role == 'harvester') {
-            roleHarvester.run(creep);
+            // roleHarvester.run(creep);
+            let creep_ = new RoleHarvester(creep);
+            creep_.work();
         }
         else if (creep.memory.role == 'queen') {
             roleQueen.run(creep);
@@ -103,6 +107,7 @@ export const loop = errorMapper(() => {
         let room = Game.rooms[name];
         Lab.run(room);
         powerSpawnRun(room);
+        room.powerWork();
     }
 
     if (Game.cpu.bucket >= 10000) {

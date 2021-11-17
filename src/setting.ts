@@ -67,8 +67,8 @@ export const roomSpawn = {
         reserver: {claim: 2, move: 2},
     },
     8: {
-        harvester: {work: 6, carry: 1, move: 3}, 
-        transfer: {carry: 10, move: 10},
+        harvester: {work: 10, carry: 1, move: 5}, 
+        transfer: {carry: 12, move: 12},
         transferRoom: {carry: 20, move: 20},
         repairer: {work: 6, carry: 6, move: 6},
         repairerWall: {work: 5, carry: 10, move: 10},
@@ -87,6 +87,8 @@ export const roomSpawn = {
         harvesterRoom: {work: 6, carry: 4, move: 6},
         reserver: {claim: 2, move: 2},
         manager: {carry: 1, move: 1},
+
+        powerHarvester: {work: 10, carry: 1, move: 1},
     }
 }
 
@@ -150,6 +152,10 @@ export const BOOST_RESOURCE = {
         // 三级化合物
         RESOURCE_CATALYZED_GHODIUM_ACID,
     ],
+}
+
+export const PC_TASK = {
+    REGEN_SOURCE : 'regenSource',
 }
 
 export const labTarget = [

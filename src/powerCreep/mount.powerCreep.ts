@@ -1,3 +1,5 @@
+import { PC_TASK } from "setting";
+
 export default class powerCreepExtension extends PowerCreep {
     public work(): void {
         if (this.enablePower()) { return; }
@@ -5,6 +7,7 @@ export default class powerCreepExtension extends PowerCreep {
 
         this.say('work');
         this.generateOps();
+        this.regenSource();
     }
 
     private keepAlive(): boolean {
@@ -46,7 +49,7 @@ export default class powerCreepExtension extends PowerCreep {
         return false;
     }
 
-    private generateOps(): void{
+    private generateOps(): void {
         this.usePower(PWR_GENERATE_OPS);
         let terminal = this.room.terminal;
         let storage = this.room.storage;
@@ -57,8 +60,25 @@ export default class powerCreepExtension extends PowerCreep {
             if (this.pos.inRangeTo(storage, 1)) { this.transfer(storage, RESOURCE_OPS); }
             else { this.moveTo(storage); }
         }
-        else {
-            this.moveTo(this.room.controller);
-        }
+        // else {
+        //     this.moveTo(this.room.controller);
+        // }
+    }
+
+    private regenSource():void {
+        if (!this.room.memory.powerTask) { return; }
+        let task = this.room.memory.powerTask[0];
+        if (!task || task.type != PC_TASK.REGEN_SOURCE) { return; }
+
+        const source = Game.getObjectById<Source>(task.id);
+        if (!source) { return; }
+
+        if (this.pos.inRangeTo(source, 3)) {
+            const tmp = this.usePower(PWR_REGEN_SOURCE, source);
+            if (tmp == OK) {
+                this.room.removePowerTask();
+            }
+        }   
+        else { this.moveTo(source); }
     }
 }
