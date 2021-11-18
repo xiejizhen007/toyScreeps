@@ -68,6 +68,11 @@ export class Manager {
         }
     }
 
+    private fillTower() {
+        let task = this.creep_.memory.exeTask as iTower;
+        
+    }
+
     private labIn() {
         let task = this.creep_.memory.exeTask as iLabIn;
         const lab1 = Game.getObjectById<StructureLab>(task.resource[0].id);

@@ -19,6 +19,30 @@ export default class creepExtension extends Creep {
         return ERR_NOT_IN_RANGE;
     }
 
+    public withdrawFrom(target: Structure, resourceType: ResourceConstant): ScreepsReturnCode {
+        if (!target) { return ERR_INVALID_TARGET; }
+
+        if (this.pos.inRangeTo(target, 1)) { return this.withdraw(target, resourceType); }
+
+        this.goTo(target.pos);
+        return ERR_NOT_IN_RANGE;
+    }
+
+    public clearBody(target: Structure): ScreepsReturnCode {
+        if (!target) { return ERR_INVALID_TARGET; }
+        if (!this.pos.inRangeTo(target, 1)) { 
+            this.goTo(target.pos);
+            return ERR_NOT_IN_RANGE;
+        }
+
+        for (const type in this.store) {
+            const resourceType = type as ResourceConstant;
+            this.transferTo(target, resourceType);
+        }
+
+        return OK;
+    }
+
     public goTo(target: RoomPosition): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND {
         const ret = this.moveTo(target);
         return ret;
