@@ -168,3 +168,7 @@ export class Manager {
 
     private creep_: Creep;
 }
+
+export class King {
+    
+}
