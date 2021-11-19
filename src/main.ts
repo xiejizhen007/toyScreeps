@@ -5,7 +5,7 @@ import { roleKing } from 'role/role.king';
 import { roleRepairer } from 'role/role.repairer';
 import { roleUpgrader } from 'role/role.upgrader';
 import { boostClear, Lab } from 'structure/labs';
-import { Tower } from 'structure/tower';
+// import { Tower } from 'structure/tower';
 import { errorMapper } from './modules/errorMapper'
 import { roleHarvester } from './role/role.harvester';
 import { roleOutputer } from './role/role.outputer';
@@ -112,7 +112,14 @@ export const loop = errorMapper(() => {
         let room = Game.rooms[name];
         Lab.run(room);
         powerSpawnRun(room);
+        
         room.powerWork();
+
+        room.buyPower();
+        const towers = room.find(FIND_STRUCTURES, {
+            filter: s => s.structureType == STRUCTURE_TOWER
+        }) as StructureTower[];
+        towers.forEach(s => s.work());
     }
 
     if (Game.cpu.bucket >= 10000) {
@@ -120,7 +127,7 @@ export const loop = errorMapper(() => {
         Game.cpu.generatePixel();
     }
 
-    Tower.run();
+    // Tower.run();
 });
 
 

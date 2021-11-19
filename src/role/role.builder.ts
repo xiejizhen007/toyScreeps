@@ -53,6 +53,17 @@ export const roleBuilder = {
 
                 return;
             }
+
+            let wall = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: s => s.structureType == STRUCTURE_WALL
+            });
+
+            if (wall) {
+                if (creep.repair(wall) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(wall);
+                }
+                return;
+            }
         }
         // 取能量
         else {

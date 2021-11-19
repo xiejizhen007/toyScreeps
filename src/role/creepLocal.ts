@@ -25,6 +25,9 @@ export class Manager {
             case ROOM_TRANSFER_TASK.FILL_TOWER:
                 this.fillTower();
                 break;
+            case ROOM_TRANSFER_TASK.FILL_POWER_SPAWN:
+                this.fillPowerSpawn();
+                break;
             default:
                 break;
         }
@@ -82,24 +85,6 @@ export class Manager {
         let tower = Game.getObjectById<StructureTower>(task.id);
         console.log('tower: ' + tower);
         if (!tower || tower.store.getUsedCapacity(RESOURCE_ENERGY) >= 900) {
-            // tower = this.creep_.pos.findClosestByRange(FIND_STRUCTURES, {
-            //     filter: (s) => {
-            //         if (s.structureType == STRUCTURE_TOWER) {
-            //             console.log('tower: ' + s.pos + ' energy:' + s.store.getUsedCapacity(RESOURCE_ENERGY));
-            //         }
-            //         s.structureType == STRUCTURE_TOWER && 
-            //             s.store.getUsedCapacity(RESOURCE_ENERGY) <= 900;
-            //     }
-            // }) as StructureTower;
-
-            // 说明所有的塔的能量都在 900 以上了
-            // if (!tower) {
-            //     console.log('tower fill ok');
-            //     this.creep_.room.removeTransferTask();
-            //     delete this.creep_.memory.exeTask;
-            //     return;
-            // }
-
             const towers = this.creep_.room.find(FIND_STRUCTURES, {
                 filter: s=> s.structureType == STRUCTURE_TOWER && 
                     s.store[RESOURCE_ENERGY] <= 900
@@ -136,6 +121,15 @@ export class Manager {
             if (tmp == OK) {
                 this.creep_.memory.work = true;
             }            
+        }
+    }
+
+    private fillPowerSpawn() {
+        const task = this.creep_.memory.exeTask as iPowerSpawn;
+        let powerSpawn = Game.getObjectById<StructurePowerSpawn>(task.id);
+        if (!powerSpawn) {
+            this.creep_.room.removeTransferTask();
+            return;
         }
     }
 

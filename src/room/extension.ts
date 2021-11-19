@@ -101,20 +101,9 @@ export default class RoomExtension extends Room {
     }
 
     public removeTransferTask(): boolean {
-        // const task = this.memory.transferTasks.find(f => f.type == taskType);
-        // const index = this.memory.transferTasks.indexOf(task);
-        // console.log('remove index: ' + index);
-        // console.log(this.memory.transferTasks.splice(index, 1));
         this.memory.transferTasks.shift();
         return true;
     }
-
-    // public taskToExe(): void {
-    //     const task = this.memory.transferTasks.shift();
-    //     if (task) {
-    //         this.memory.exeTransferTasks.push(task);
-    //     }
-    // }
 
     /**
      * 查看当前是否存在当前任务
@@ -123,11 +112,34 @@ export default class RoomExtension extends Room {
      */
     public hasTransferTask(taskType: string): boolean {
         if (!this.memory.transferTasks) { return false; }
-        // if (!this.memory.exeTransferTasks) { this.memory.exeTransferTasks = []; }
 
         const task = this.memory.transferTasks.find(f => f.type == taskType);
-        // const taskExe = this.memory.exeTransferTasks.find(f => f.type == taskType);
-
         return task ? true : false;
+    }
+
+    /**
+     * 只有八级房才能烧 power
+     */
+    public buyPower(): void {
+        const storage = this.storage;
+        const terminal = this.terminal;
+        const controller = this.controller;
+
+        if (storage && terminal && controller && controller.my && controller.level == 8) {
+            const powerAmount = storage.store[RESOURCE_POWER] + terminal.store[RESOURCE_POWER];
+            const energyAmount = storage.store[RESOURCE_ENERGY] + terminal.store[RESOURCE_ENERGY];
+            // 一般都是 3000 一单，所以把能力限制在 150000 以上
+            if (powerAmount <= 100 && energyAmount >= 150000) {
+                let orders = Game.market.getAllOrders({type: ORDER_SELL, resourceType: RESOURCE_POWER});
+                orders.sort((a, b) => a.price - b.price);
+                for (const i in orders) {
+                    // console.log(orders[i].price + ' ' + orders[i].amount);
+                    if (Game.market.deal(orders[i].id, orders[i].amount, this.name) == OK) {
+                        console.log(this.name + ' buyPower: ' + orders[i].amount);
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

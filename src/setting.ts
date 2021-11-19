@@ -121,6 +121,7 @@ export const ROOM_TRANSFER_TASK = {
     FILL_TOWER: 'fillTower',
     FILL_NUKE: 'fillNuke',
     FILL_EXTENSION: 'fillExtension',
+    FILL_POWER_SPAWN: 'fillPowerSpawn',
 };
 
 export const LAB_TRANSFER_TASK = {
@@ -134,6 +135,17 @@ export const BOOST_STATE = {
     BOOST_GET_ENERGY: 'boostGetEnergy',             // 填充 lab 的能量
     BOOST_WAIT: 'boostWait',                        // 等待
     BOOST_CLEAR: 'boostClear',                      // boost 结束，把用到的资源放回 terminal
+}
+
+export const towerCheckStructure = 5;
+export const towerCheckEnergy = 10;
+export const towerEnergyLimit = 600;
+export const TOWER_STATE = {
+    REPAIR_STRUCTURE: 'repairStructure',
+    HEAL_CREEP: 'healCreep',
+    // ATTACK_CREEP: 'attackCreep',
+    DEFENSE_NPC: 'defenseNpc',
+    DEFENSE_PLAYER: 'defensePlayer',
 }
 
 export const BOOST_RESOURCE = {

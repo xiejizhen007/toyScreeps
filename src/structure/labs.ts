@@ -120,7 +120,8 @@ export const Lab = {
             let lab = Game.getObjectById(labsID[i]) as StructureLab;
             if (!lab) {
                 console.log(labsID[i] + ' is undefined');
-                continue;
+                delete room.memory.lab.labsID;
+                return;
             }
 
             const labResult = lab.runReaction(lab1, lab2);

@@ -33,6 +33,11 @@ interface RoomMemory {
     reserverRoom?: string[],
 
     harvestRoom?: iHarvestRoom[],
+
+    // tower
+    towerState?: string,
+    damagedStructure?: string,
+    attackTarget?: string,
 }
 
 interface CreepMemory {
@@ -97,6 +102,9 @@ interface Room {
     hasPowerTask(task: pcTaskType): boolean,
     addPowerTask(task: pcTaskType): boolean,
     removePowerTask(): boolean,
+
+    // market
+    buyPower(): void,
 }
 
 interface Creep {
@@ -114,6 +122,16 @@ interface Creep {
 interface PowerCreep {
     work() : void,
 }
+
+interface StructureTower {
+    work(): void,
+}
+
+interface StructurePowerSpawn {
+    generatePower(): void,
+}
+
+
 
 type roomTransferTask = iLabIn | iLabOut | iTower | iNuke | iPowerSpawn;
 

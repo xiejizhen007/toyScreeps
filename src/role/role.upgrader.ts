@@ -43,7 +43,7 @@ export const roleUpgrader = {
             let controller = creep.room.controller;
             let container = Game.getObjectById(creep.memory.task.containerID) as StructureContainer;
 
-            if (container && container.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
+            if (container && container.store.getUsedCapacity(RESOURCE_ENERGY) > 0 && container.pos.inRangeTo(controller, 4)) {
                 if (creep.withdraw(container, RESOURCE_ENERGY, creep.store.getFreeCapacity(RESOURCE_ENERGY)) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(container);
                 }
