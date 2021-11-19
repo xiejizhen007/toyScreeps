@@ -97,3 +97,7 @@ export class RoleHarvester {
 export class RoleBuilder {
 
 }
+
+export class RoleUpgrader {
+    
+}

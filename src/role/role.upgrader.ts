@@ -82,8 +82,9 @@ export const roleUpgrader = {
             if (!container || !container.pos.inRangeTo(controller.pos, 4)) {
                 container = controller.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
-                        return structure.structureType == STRUCTURE_CONTAINER &&
-                            structure.store[RESOURCE_ENERGY] > 0;
+                        return structure.structureType == STRUCTURE_CONTAINER 
+                            && structure.store[RESOURCE_ENERGY] > 0
+                            && controller.pos.inRangeTo(structure, 4);
                     }
                 });
                 

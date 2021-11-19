@@ -10,19 +10,19 @@ export default class creepExtension extends Creep {
      * @param resourceType 资源类型
      * @returns 
      */
-    public transferTo(target: Structure, resourceType: ResourceConstant): ScreepsReturnCode {
+    public transferTo(target: Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode {
         if (!target) { return ERR_INVALID_TARGET; }
 
-        if (this.pos.inRangeTo(target, 1)) { return this.transfer(target, resourceType); }
+        if (this.pos.inRangeTo(target, 1)) { return this.transfer(target, resourceType, amount); }
 
         this.goTo(target.pos);
         return ERR_NOT_IN_RANGE;
     }
 
-    public withdrawFrom(target: Structure, resourceType: ResourceConstant): ScreepsReturnCode {
+    public withdrawFrom(target: Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode {
         if (!target) { return ERR_INVALID_TARGET; }
 
-        if (this.pos.inRangeTo(target, 1)) { return this.withdraw(target, resourceType); }
+        if (this.pos.inRangeTo(target, 1)) { return this.withdraw(target, resourceType, amount); }
 
         this.goTo(target.pos);
         return ERR_NOT_IN_RANGE;

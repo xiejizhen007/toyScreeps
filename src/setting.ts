@@ -45,6 +45,7 @@ export const roomSpawn = {
         transferRoom: {carry: 15, move: 15}, 
         claimer: {claim: 1, move: 4},
         reserver: {claim: 2, move: 2},
+        manager: {carry: 1, move: 1},
     },
     7: {
         harvester: {work: 6, carry: 1, move: 3}, 
@@ -65,6 +66,7 @@ export const roomSpawn = {
         test: {attack: 1, heal: 1, move: 2},
         creepTransfer: {carry: 4, move: 4},
         reserver: {claim: 2, move: 2},
+        manager: {carry: 1, move: 1},
     },
     8: {
         harvester: {work: 10, carry: 1, move: 5}, 
@@ -88,6 +90,7 @@ export const roomSpawn = {
         reserver: {claim: 2, move: 2},
         manager: {carry: 1, move: 1},
 
+        tmp: {carry: 10, move: 10},
         powerHarvester: {work: 10, carry: 1, move: 1},
     }
 }

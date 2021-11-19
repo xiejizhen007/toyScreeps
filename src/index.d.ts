@@ -104,7 +104,8 @@ interface Creep {
     work(): void,
 
     goTo(target: RoomPosition): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND,
-    transferTo(target: Structure, resourceType: ResourceConstant): ScreepsReturnCode,
+    transferTo(target: Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode,
+    withdrawFrom(target: Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode,
     farGoTo(target: RoomPosition): CreepMoveReturnCode,
     findPath(target: RoomPosition): void,
     getEnergyFrom(target: Structure | Source): ScreepsReturnCode,

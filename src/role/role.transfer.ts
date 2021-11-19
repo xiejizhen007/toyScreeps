@@ -37,9 +37,9 @@ export const roleTransfer = {
                 if (tmp == ERR_NOT_IN_RANGE) {
                     creep.moveTo(storage);
                 }
-                else if (tmp == ERR_NOT_ENOUGH_RESOURCES) {
-                    creep.transfer(storage, RESOURCE_LEMERGIUM);
-                }
+                // else if (tmp == ERR_NOT_ENOUGH_RESOURCES) {
+                //     creep.transfer(storage, RESOURCE_LEMERGIUM);
+                // }
 
                 return;
             }

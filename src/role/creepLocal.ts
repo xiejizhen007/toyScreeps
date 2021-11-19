@@ -7,6 +7,8 @@ import { ROOM_TRANSFER_TASK } from "setting";
 export class Manager {
     constructor(creep: Creep) {
         this.creep_ = creep;
+        this.storage_ = creep.room.storage;
+        this.terminal_ = creep.room.terminal;
     }
 
     public work() {
@@ -20,6 +22,9 @@ export class Manager {
             case ROOM_TRANSFER_TASK.LAB_IN:
                 this.labIn();
                 break;
+            case ROOM_TRANSFER_TASK.FILL_TOWER:
+                this.fillTower();
+                break;
             default:
                 break;
         }
@@ -31,6 +36,7 @@ export class Manager {
             // task = this.creep_.room.memory.transferTasks.pop();
             // this.creep_.room.memory.exeTransferTasks.push(task);
             task = this.creep_.room.memory.transferTasks[0];
+            // console.log(task);
             // this.creep_.room.taskToExe();
             this.creep_.memory.exeTask = task;
             if (!task) { return false; }
@@ -68,9 +74,69 @@ export class Manager {
         }
     }
 
+    /**
+     * 把 tower 填到 900 以上
+     */
     private fillTower() {
         let task = this.creep_.memory.exeTask as iTower;
+        let tower = Game.getObjectById<StructureTower>(task.id);
+        console.log('tower: ' + tower);
+        if (!tower || tower.store.getUsedCapacity(RESOURCE_ENERGY) >= 900) {
+            // tower = this.creep_.pos.findClosestByRange(FIND_STRUCTURES, {
+            //     filter: (s) => {
+            //         if (s.structureType == STRUCTURE_TOWER) {
+            //             console.log('tower: ' + s.pos + ' energy:' + s.store.getUsedCapacity(RESOURCE_ENERGY));
+            //         }
+            //         s.structureType == STRUCTURE_TOWER && 
+            //             s.store.getUsedCapacity(RESOURCE_ENERGY) <= 900;
+            //     }
+            // }) as StructureTower;
+
+            // 说明所有的塔的能量都在 900 以上了
+            // if (!tower) {
+            //     console.log('tower fill ok');
+            //     this.creep_.room.removeTransferTask();
+            //     delete this.creep_.memory.exeTask;
+            //     return;
+            // }
+
+            const towers = this.creep_.room.find(FIND_STRUCTURES, {
+                filter: s=> s.structureType == STRUCTURE_TOWER && 
+                    s.store[RESOURCE_ENERGY] <= 900
+            });
+
+            if (towers.length <= 0) {
+                console.log('tower 填充完毕');
+                this.creep_.room.removeTransferTask();
+                delete this.creep_.memory.exeTask;
+                return;
+            }
+
+            tower = this.creep_.pos.findClosestByRange(towers) as StructureTower;
+            // this.creep_.memory.exeTask.
+            task.id = tower.id;
+            this.creep_.memory.exeTask = task;
+        }
+
+        const amount = Math.min(this.creep_.store.getFreeCapacity(RESOURCE_ENERGY),
+            tower.store.getFreeCapacity(RESOURCE_ENERGY));
         
+        if (this.creep_.store.getUsedCapacity() == 0) 
+            this.creep_.memory.work = false;
+
+        // 默认是 false
+        if (this.creep_.memory.work) {
+            this.creep_.transferTo(tower, RESOURCE_ENERGY, amount);            
+        }
+        else {
+            let tmp = -1;
+            if (this.storage_) { tmp = this.creep_.withdrawFrom(this.storage_, RESOURCE_ENERGY, amount); }
+            else if (this.terminal_) { tmp = this.creep_.withdrawFrom(this.terminal_, RESOURCE_ENERGY, amount); }
+
+            if (tmp == OK) {
+                this.creep_.memory.work = true;
+            }            
+        }
     }
 
     private labIn() {
@@ -172,4 +238,6 @@ export class Manager {
     }
 
     private creep_: Creep;
+    private storage_: StructureStorage;
+    private terminal_: StructureTerminal;
 }

@@ -75,10 +75,10 @@ export const roleKing = {
             }
         }
 
-        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+        if (creep.store.getFreeCapacity() == 0) {
             creep.memory.work = true;
         }
-        else if (creep.store[RESOURCE_ENERGY] == 0) {
+        else if (creep.store.getUsedCapacity() == 0) {
             creep.memory.work = false;
         }
 
@@ -113,6 +113,38 @@ export const roleKing = {
             //         creep.withdraw(storage, "H")
             //     }
             // }
+
+            // tmp
+            if (creep.room.name == 'W15N58') {
+                for (let type in storage.store) {
+                    const resourcetype = type as ResourceConstant;
+
+                    if (creep.store.getUsedCapacity(resourcetype) + creep.store.getFreeCapacity()
+                        != creep.store.getCapacity()) {
+                        for (let creepType in creep.store) {
+                            let creepResourceType = creepType as ResourceConstant;
+                            creep.transfer(terminal, creepResourceType);
+                        }
+                    }
+
+                    // console.log(resourcetype);
+
+                    if (creep.memory.work) {
+                        // console.log('terminal ' + creep.transfer(terminal, resourcetype));
+                        if (creep.transferTo(terminal, resourcetype) == OK) {
+                            creep.memory.work = false;
+                        }
+                    }
+                    else {
+                        const amount = Math.min(creep.store.getFreeCapacity(),
+                            storage.store.getUsedCapacity(resourcetype));
+                        // console.log(amount);
+                        if (creep.withdraw(storage, resourcetype, amount) == OK) {
+                            creep.memory.work = true;
+                        }
+                    }
+                }
+            }
 
             return;
         }

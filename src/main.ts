@@ -27,6 +27,7 @@ import { reserverRoom } from 'role/reserver';
 import { Manager } from 'role/creepLocal';
 
 import { RoleHarvester } from 'role/base';
+import { RoleTmp } from 'role/tmp';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -92,6 +93,10 @@ export const loop = errorMapper(() => {
             let creep_ = new Manager(creep);
             creep_.work();
         }
+        else if (creep.memory.role == 'tmp') {
+            let creep_ = new RoleTmp(creep);
+            creep_.work();
+        }
     }
 
     newCreep();
@@ -110,10 +115,10 @@ export const loop = errorMapper(() => {
         room.powerWork();
     }
 
-    // if (Game.cpu.bucket >= 10000) {
-    //     console.log('generating pixel');
-    //     Game.cpu.generatePixel();
-    // }
+    if (Game.cpu.bucket >= 10000) {
+        console.log('generating pixel');
+        Game.cpu.generatePixel();
+    }
 
     Tower.run();
 });
@@ -121,4 +126,3 @@ export const loop = errorMapper(() => {
 
 // addRoleSpawnTask(role: string, roomName: string, isNeeded?: boolean, workRoomName?: string, flagName?: string)
 global._spawn = addRoleSpawnTask;
-// global._addRoom = 
