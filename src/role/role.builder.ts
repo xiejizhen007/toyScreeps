@@ -55,7 +55,8 @@ export const roleBuilder = {
             }
 
             let wall = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: s => s.structureType == STRUCTURE_WALL
+                filter: s => s.structureType == STRUCTURE_WALL && 
+                    s.hits <= 100000
             });
 
             if (wall) {

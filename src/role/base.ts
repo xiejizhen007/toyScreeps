@@ -99,5 +99,25 @@ export class RoleBuilder {
 }
 
 export class RoleUpgrader {
-    
+    constructor(creep: Creep) {
+        this.creep_ = creep;
+    }
+
+    public work() {
+
+    }
+
+    private prepare() {
+
+    }
+
+    private target() {
+
+    }
+
+    private check() {
+        
+    }
+
+    private creep_: Creep;    
 }

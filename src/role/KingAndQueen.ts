@@ -25,7 +25,7 @@ export class Manager {
             case ROOM_TRANSFER_TASK.FILL_TOWER:
                 this.fillTower();
                 break;
-            case ROOM_TRANSFER_TASK.FILL_POWER_SPAWN:
+            case ROOM_TRANSFER_TASK.FILL_POWERSPAWN:
                 this.fillPowerSpawn();
                 break;
             default:
@@ -129,8 +129,26 @@ export class Manager {
         let powerSpawn = Game.getObjectById<StructurePowerSpawn>(task.id);
         if (!powerSpawn) {
             this.creep_.room.removeTransferTask();
+            console.log('queen: can not find powerSpawn!');
             return;
         }
+
+        const amount = Math.min(this.creep_.store.getFreeCapacity(), powerSpawn.store.getFreeCapacity(task.resourceType));
+
+        if (this.creep_.memory.work) {
+            if (this.creep_.transferTo(powerSpawn, task.resourceType, amount) == OK) {
+                this.creep_.memory.work = false;
+            }
+        }   
+        else {
+            let tmp = -1;
+            if (this.terminal_) { tmp = this.creep_.withdrawFrom(this.terminal_, task.resourceType, amount); }
+            else if (this.storage_) { tmp = this.creep_.withdrawFrom(this.storage_, task.resourceType, amount); }
+
+            if (tmp == OK) {
+                this.creep_.memory.work = true;
+            }
+        }     
     }
 
     private labIn() {

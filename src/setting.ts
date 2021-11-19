@@ -121,7 +121,7 @@ export const ROOM_TRANSFER_TASK = {
     FILL_TOWER: 'fillTower',
     FILL_NUKE: 'fillNuke',
     FILL_EXTENSION: 'fillExtension',
-    FILL_POWER_SPAWN: 'fillPowerSpawn',
+    FILL_POWERSPAWN: 'fillPowerSpawn',
 };
 
 export const LAB_TRANSFER_TASK = {

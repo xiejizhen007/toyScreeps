@@ -24,7 +24,7 @@ import { roleHarvesterMineral } from 'role/role.harvesterMineral';
 import { addRoleSpawnTask } from './utils';
 import { transferRoom } from 'role/transferRoom';
 import { reserverRoom } from 'role/reserver';
-import { Manager } from 'role/creepLocal';
+import { Manager } from 'role/KingAndQueen';
 
 import { RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';

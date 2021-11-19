@@ -114,39 +114,39 @@ export const roleKing = {
             //     }
             // }
 
-            // tmp
-            if (creep.room.name == 'W15N58') {
-                for (let type in storage.store) {
-                    const resourcetype = type as ResourceConstant;
+            // // tmp
+            // if (creep.room.name == 'W15N58') {
+            //     for (let type in storage.store) {
+            //         const resourcetype = type as ResourceConstant;
 
-                    if (creep.store.getUsedCapacity(resourcetype) + creep.store.getFreeCapacity()
-                        != creep.store.getCapacity()) {
-                        for (let creepType in creep.store) {
-                            let creepResourceType = creepType as ResourceConstant;
-                            creep.transfer(terminal, creepResourceType);
-                        }
-                    }
+            //         if (creep.store.getUsedCapacity(resourcetype) + creep.store.getFreeCapacity()
+            //             != creep.store.getCapacity()) {
+            //             for (let creepType in creep.store) {
+            //                 let creepResourceType = creepType as ResourceConstant;
+            //                 creep.transfer(terminal, creepResourceType);
+            //             }
+            //         }
 
-                    // console.log(resourcetype);
+            //         // console.log(resourcetype);
 
-                    if (creep.memory.work) {
-                        // console.log('terminal ' + creep.transfer(terminal, resourcetype));
-                        if (creep.transferTo(terminal, resourcetype) == OK) {
-                            creep.memory.work = false;
-                        }
-                    }
-                    else {
-                        const amount = Math.min(creep.store.getFreeCapacity(),
-                            storage.store.getUsedCapacity(resourcetype));
-                        // console.log(amount);
-                        if (creep.withdraw(storage, resourcetype, amount) == OK) {
-                            creep.memory.work = true;
-                        }
-                    }
-                }
-            }
+            //         if (creep.memory.work) {
+            //             // console.log('terminal ' + creep.transfer(terminal, resourcetype));
+            //             if (creep.transferTo(terminal, resourcetype) == OK) {
+            //                 creep.memory.work = false;
+            //             }
+            //         }
+            //         else {
+            //             const amount = Math.min(creep.store.getFreeCapacity(),
+            //                 storage.store.getUsedCapacity(resourcetype));
+            //             // console.log(amount);
+            //             if (creep.withdraw(storage, resourcetype, amount) == OK) {
+            //                 creep.memory.work = true;
+            //             }
+            //         }
+            //     }
+            // }
 
-            return;
+            // return;
         }
 
         if (containerController && linkCenter && linkController) {

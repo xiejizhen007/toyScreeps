@@ -158,11 +158,13 @@ interface iTower {
 interface iNuke {
     type: string,
     id: string,
+    resourceType: ResourceConstant,     // 当前需要运输的资源类型
 }
 
 interface iPowerSpawn {
     type: string,
     id: string,
+    resourceType: ResourceConstant,     // 当前需要运输的资源类型
 }
 
 type reserverRoomType = iReserverRoom;
