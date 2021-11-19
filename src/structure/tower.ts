@@ -18,3 +18,33 @@ export const Tower = {
         }
     }
 };
+
+const checkTime = 10;
+
+export default class TowerExtension extends StructureTower {
+    public work(): void {
+        
+    }
+
+    /**
+     * 日常任务
+     */
+    private normalTask(): boolean {
+        return false;
+    }
+
+    /**
+     * 修路
+     * @returns 
+     */
+    private repairRoad(): boolean {
+         
+        return false;
+    }
+
+    private checkStructure(): boolean {
+        if (Game.time % checkTime != 0) { return false; }
+
+        
+    }
+}

@@ -281,73 +281,13 @@ export const boostControlleer = function (room: Room) {
 }
 
 export const boostGetResource = function (room: Room) {
-    const boostTask = room.memory.boost;
-
-    let resourceReady = true;
-    for (const i in BOOST_RESOURCE[boostTask.type]) {
-        const lab = Game.getObjectById<StructureLab>(boostTask.labsID[i]);
-        if (!lab) continue;
-
-        if (lab.store[BOOST_RESOURCE[boostTask.type][i]] <= 0) resourceReady = false;
-    }
-
-    if (resourceReady) {
-        console.log('boost resource is ok, ready to boost');
-        room.memory.boost.state = BOOST_STATE.BOOST_GET_ENERGY;
-    }
-    else if (!hasTransferTask(room, ROOM_TRANSFER_TASK.BOOST_GET_RESOURCE)) {
-        addTransferTask(room, {
-            type: ROOM_TRANSFER_TASK.BOOST_GET_RESOURCE,
-
-        });
-    }
+    
 }
 
 export const boostGetEnergy = function (room: Room) {
-    const boostTask = room.memory.boost;
-    // lab 中有底物
-    for (const i in boostTask.labsID) {
-        const lab = Game.getObjectById<StructureLab>(boostTask.labsID[i]);
 
-        if (!lab || !lab.mineralType) { return; }
-
-        if (lab.store[RESOURCE_ENERGY] <= 1000) {
-            if (!hasTransferTask(room, ROOM_TRANSFER_TASK.BOOST_GET_ENERGY)) {
-                addTransferTask(room, {
-                    type: ROOM_TRANSFER_TASK.BOOST_GET_ENERGY,
-                });
-            }
-            return;
-        }
-    }
-
-    // 能量都够了
-    room.memory.boost.state = BOOST_STATE.BOOST_WAIT;
-    console.log('boost energy is ok');
 }
 
 export const boostClear = function (room: Room) {
-    const boostTask = room.memory.boost;
-    for (const i in boostTask.labsID) {
-        const lab = Game.getObjectById<StructureLab>(boostTask.labsID[i]);
-
-        if (lab && lab.mineralType) {
-            if (!hasTransferTask(room, ROOM_TRANSFER_TASK.BOOST_CLEAR)) {
-                addTransferTask(room, {
-                    type: ROOM_TRANSFER_TASK.BOOST_CLEAR
-                });
-            }
-            return;
-        }
-    }
-
-    // 继续 boost
-    if (hasTransferTask(room, ROOM_TRANSFER_TASK.BOOST_GET_RESOURCE)) return;
-    // 清理完毕，没有任务了
-    else if (!hasTransferTask(room, ROOM_TRANSFER_TASK.BOOST_CLEAR)) {
-        console.log('boost clear is ok');
-
-        if (room.memory.lab) { room.memory.lab.state = LAB_STATE.GET_TARGET; }
-        return;
-    }
+    
 }
