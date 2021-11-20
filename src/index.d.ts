@@ -11,7 +11,7 @@ interface RoomMemory {
         state?: string,
         lab1ID?: string,
         lab2ID?: string,
-        labsID?: any,
+        labsID?: string[],
         cooldown?: number,
         transferTasks?: any,
         targetIndex?: number,

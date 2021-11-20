@@ -15,7 +15,7 @@ import { newCreep } from './utils';
 
 import { BOOST_RESOURCE, LAB_TRANSFER_TASK } from './setting';
 // import { transfer } from 'creep/transfer';
-import { powerSpawnRun } from 'structure/powerSpawn';
+// import { powerSpawnRun } from 'structure/powerSpawn';
 import { creepPS } from 'role/role.creepPS';
 import mountWork from './mount'
 import { harvesterRoom } from 'role/harvesterRoom';
@@ -110,8 +110,27 @@ export const loop = errorMapper(() => {
 
     for (let name in Game.rooms) {
         let room = Game.rooms[name];
+        
+        // powerSpawn 
+        let powerSpawn = Game.getObjectById<StructurePowerSpawn>(room.memory.powerSpawnID);
+        if (powerSpawn) {
+            powerSpawn.generatePower();
+        }
+        else if (room.controller && room.controller.my && room.controller.level == 8) {
+            let powerSpawns = room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return structure.structureType == STRUCTURE_POWER_SPAWN;
+                }
+            });
+
+            if (powerSpawns.length > 0) {
+                powerSpawn = powerSpawns[0] as StructurePowerSpawn;
+                room.memory.powerSpawnID = powerSpawn.id;
+            }
+        }
+
         Lab.run(room);
-        powerSpawnRun(room);
+        // powerSpawnRun(room);
         
         room.powerWork();
 
