@@ -95,7 +95,132 @@ export class RoleHarvester {
 }
 
 export class RoleBuilder {
+    constructor(creep: Creep) {
+        this.creep_ = creep;
+    }
 
+    public work() {
+        this.check();
+
+        switch (this.creep_.memory.state) {
+            case CREEP_STATE.PREPARE:
+                this.prepare();
+                break;
+            case CREEP_STATE.TARGET:
+                this.target();
+                break;
+            case CREEP_STATE.BACK:
+                this.getResource();
+                break;
+            default:
+                this.creep_.memory.state = CREEP_STATE.PREPARE;
+                break;
+        }   
+    }
+
+    private prepare() {
+        if (this.creep_.spawning) { return; }
+
+        if (this.creep_.room.name != this.creep_.memory.task.workRoomName) {
+            this.creep_.farGoTo(new RoomPosition(25, 25, this.creep_.memory.task.workRoomName));
+            return;
+        }
+
+        this.creep_.memory.state = CREEP_STATE.TARGET;
+    }
+
+    private target() {
+        if (this.creep_.store[RESOURCE_ENERGY] == 0) {
+            this.creep_.memory.state = CREEP_STATE.BACK;
+            return;
+        }
+        
+        let constructionSite = Game.getObjectById<ConstructionSite>(this.creep_.memory.task.constructionSiteID);
+        if (!constructionSite) {
+            const constructionSites = this.creep_.room.find(FIND_CONSTRUCTION_SITES);
+            constructionSite = this.creep_.pos.findClosestByRange(constructionSites);
+            if (!constructionSite) { 
+                this.creep_.suicide();
+                return;
+            }
+            else 
+                this.creep_.memory.task.constructionSiteID = constructionSite.id;
+        }
+
+        if (this.creep_.pos.inRangeTo(constructionSite, 3)) {
+            this.creep_.build(constructionSite);    
+        } else {
+            this.creep_.goTo(constructionSite.pos);
+        }
+
+    }
+
+    private getResource() {
+        if (this.creep_.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+            this.creep_.memory.state = CREEP_STATE.TARGET;
+            return;
+        }
+
+        const storage = this.creep_.room.storage;
+        const terminal = this.creep_.room.terminal;
+
+        if (storage) { this.creep_.getEnergyFrom(storage); return; }
+        else if (terminal) { this.creep_.getEnergyFrom(terminal); return; }
+
+        let resource = Game.getObjectById<Resource>(this.creep_.memory.resourceID);
+        if (!resource) {
+            const resources = this.creep_.room.find(FIND_DROPPED_RESOURCES, {
+                filter: r => r.resourceType == RESOURCE_ENERGY
+            });
+            resource = this.creep_.pos.findClosestByRange(resources);
+            if (resource) { this.creep_.memory.resourceID = resource.id; }
+        }
+
+        if (resource) { 
+            this.creep_.pickupFrom(resource); 
+            return;
+        }
+
+        let tombstone = Game.getObjectById<Tombstone>(this.creep_.memory.tombstoneID);
+        if (!tombstone) {
+            const tombstones = this.creep_.room.find(FIND_TOMBSTONES, {
+                filter: t => t.store[RESOURCE_ENERGY] > 0
+            });
+            tombstone = this.creep_.pos.findClosestByRange(tombstones);
+            if (tombstone) { this.creep_.memory.tombstoneID = tombstone.id; }
+        }
+
+        if (tombstone) { 
+            const amount = Math.min(this.creep_.store.getFreeCapacity(), tombstone.store[RESOURCE_ENERGY]);
+            this.creep_.withdrawFrom(tombstone, RESOURCE_ENERGY, amount); 
+            return;
+        }
+
+        // let source = Game.getObjectById<Source>(this.creep_.memory.sourceID);
+        // if (!source) {
+        //     const sources = this.creep_.room.find(FIND_SOURCES_ACTIVE);
+        //     source = this.creep_.pos.findClosestByRange(sources);
+        //     this.creep_.memory.sourceID = source.id;
+        // }
+
+        // if (source) { 
+        //     this.creep_.getEnergyFrom(source); 
+        //     return; 
+        // }
+    }
+
+    private check() {
+        const target = Game.getObjectById<ConstructionSite>(this.creep_.memory.task.constructionSiteID);
+        if (this.creep_.ticksToLive <= 10 && this.creep_.memory.isNeeded && target) {
+            let spawnRoom = Game.rooms[this.creep_.memory.room];
+            if (!spawnRoom) { return; }
+
+            spawnRoom.addSpawnTask(this.creep_);
+            console.log('add spawn task: ' + this.creep_.name);
+        }
+    }
+
+    private creep_: Creep
 }
 
 export class RoleUpgrader {

@@ -19,7 +19,7 @@ export default class creepExtension extends Creep {
         return ERR_NOT_IN_RANGE;
     }
 
-    public withdrawFrom(target: Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode {
+    public withdrawFrom(target: Structure | Tombstone, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode {
         if (!target) { return ERR_INVALID_TARGET; }
 
         if (this.pos.inRangeTo(target, 1)) { return this.withdraw(target, resourceType, amount); }
@@ -62,6 +62,18 @@ export default class creepExtension extends Creep {
         let ret: ScreepsReturnCode;
         if (target instanceof Structure) { ret = this.withdraw(target, RESOURCE_ENERGY); }
         else { ret = this.harvest(target); }
+
+        return ret;
+    }
+
+    public pickupFrom(target: Resource): ScreepsReturnCode {
+        if (!this.pos.inRangeTo(target, 1)) {
+            this.goTo(target.pos);
+            return ERR_NOT_IN_RANGE;
+        }
+
+        let ret: ScreepsReturnCode;
+        if (target) { ret = this.pickup(target); }
 
         return ret;
     }

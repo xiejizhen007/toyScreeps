@@ -71,7 +71,11 @@ interface CreepMemory {
         index?: number,
         paths?: RoomPosition[],
         targetPos?: RoomPosition,
-    }
+    },
+
+    resourceID?: string,    // 掉在地上资源的 id
+    tombstoneID?: string,   // 墓碑 id
+    sourceID?: string,      // 能量矿 id
 }
 
 interface PowerCreepMemory {
@@ -113,10 +117,11 @@ interface Creep {
 
     goTo(target: RoomPosition): CreepMoveReturnCode | ERR_NO_PATH | ERR_INVALID_TARGET | ERR_NOT_FOUND,
     transferTo(target: Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode,
-    withdrawFrom(target: Structure, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode,
+    withdrawFrom(target: Structure | Tombstone, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode,
     farGoTo(target: RoomPosition): CreepMoveReturnCode,
     findPath(target: RoomPosition): void,
     getEnergyFrom(target: Structure | Source): ScreepsReturnCode,
+    pickupFrom(target: Resource): ScreepsReturnCode,
 }
 
 interface PowerCreep {
