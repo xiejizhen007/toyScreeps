@@ -236,6 +236,7 @@ export class Manager {
         let lab2 = Game.getObjectById(task.resource[1].id) as StructureLab;
         if (!lab1 || !lab2) {
             console.log('manager: lab 不存在');
+            this.creep_.room.removeTransferTask();
             return;
         }
 
@@ -245,7 +246,7 @@ export class Manager {
                 return;
         }
 
-
+        
     }
 
     private labOut() {

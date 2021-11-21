@@ -27,4 +27,13 @@ export default class creepController extends RoomExtension {
         this.addRoleSpawnTask('reserver', false, roomName);
         return true;
     }
+    
+    /**
+     * 检查房间矿产还有没有，矿产存在派一个去挖
+     * 注意避免重复派遣
+     */
+    public addMineral(): boolean {
+        
+        return false;
+    }
 }

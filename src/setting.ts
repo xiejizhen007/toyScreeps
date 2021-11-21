@@ -99,6 +99,7 @@ export const CREEP_STATE = {
     PREPARE: 'creepPrepare',
     TARGET: 'creepTarget',
     BACK: 'creepBack',
+    SOURCE: 'creepSource',
 }
 
 export const LAB_STATE = {

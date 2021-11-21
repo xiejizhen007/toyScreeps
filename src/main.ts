@@ -28,6 +28,7 @@ import { Manager } from 'role/KingAndQueen';
 
 import { RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
+import { RemoteHarvester } from 'role/remote';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -94,7 +95,7 @@ export const loop = errorMapper(() => {
             creep_.work();
         }
         else if (creep.memory.role == 'tmp') {
-            let creep_ = new RoleTmp(creep);
+            let creep_ = new RemoteHarvester(creep);
             creep_.work();
         }
     }
