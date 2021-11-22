@@ -1,7 +1,8 @@
 // 只会在本房间中工作的角色
 
 import { findLastKey, result } from "lodash";
-import { ROOM_TRANSFER_TASK } from "setting";
+import { CREEP_STATE, ROOM_TRANSFER_TASK } from "setting";
+import { Role } from "./role";
 
 // 任务队列测试
 
@@ -223,8 +224,6 @@ export class Manager {
             if (tmp == OK) {
                 this.creep_.memory.work = true;
             }
-
-            // console.log('manager: ' + task.resourceType + ' amount: ' + amount + ' return ' + tmp);
         }     
     }
 
@@ -311,4 +310,155 @@ export class Manager {
     private creep_: Creep;
     private storage_: StructureStorage;
     private terminal_: StructureTerminal;
+}
+
+export class Queen extends Role {
+    /**
+     * 检查任务
+     */
+    protected override prepare() {
+
+    }
+    
+    protected override source() {
+        const task = this.creep_.memory.exeTask;
+        let resourceType: ResourceConstant;
+        
+        switch (task.type) {
+            case ROOM_TRANSFER_TASK.FILL_EXTENSION:
+            case ROOM_TRANSFER_TASK.FILL_TOWER:
+                resourceType = RESOURCE_ENERGY;
+                break;
+            case ROOM_TRANSFER_TASK.FILL_NUKE:
+            case ROOM_TRANSFER_TASK.FILL_POWERSPAWN:
+                const taskType = task as iNuke | iPowerSpawn;
+                resourceType = taskType.resourceType;
+                break;
+            case ROOM_TRANSFER_TASK.LAB_IN:
+                break;
+            default:
+                resourceType = RESOURCE_ENERGY;
+                break;
+        }
+
+        const storage = this.creep_.room.storage;
+        const terminal = this.creep_.room.terminal;
+
+        let amount = 0;
+        // 先在 terminal 取，不够再去 storage 取
+    }
+
+    protected override target() {
+        const task = this.creep_.memory.exeTask;
+        switch (task.type) {
+            case ROOM_TRANSFER_TASK.FILL_EXTENSION:
+                this.fillExtension();
+                break;
+            case ROOM_TRANSFER_TASK.FILL_TOWER:
+                this.fillTower();
+                break;
+            case ROOM_TRANSFER_TASK.FILL_POWERSPAWN:
+                break;
+            case ROOM_TRANSFER_TASK.FILL_NUKE:
+                break;
+            case ROOM_TRANSFER_TASK.LAB_IN:
+                break;
+            case ROOM_TRANSFER_TASK.LAB_OUT:
+                break;
+            default:
+                // 没找到的任务类型，重新找任务
+                this.creep_.memory.state = CREEP_STATE.PREPARE;
+                break;
+        }
+    }
+
+    /**
+     * 填充 spawn 和 extension
+     */
+    private fillExtension(): void {
+        if (this.creep_.store[RESOURCE_ENERGY] == 0) {
+            this.creep_.memory.state = CREEP_STATE.SOURCE;
+            return;
+        }
+
+        let target = Game.getObjectById(this.creep_.memory.target) as StructureExtension | StructureSpawn;
+        // 目标不存在、或者是已经装满了，就重新找
+        // 可能需要判断 target 是不是 spawn 或者 extension
+        if (!target || target.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+            target = this.creep_.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: s => (s.structureType == STRUCTURE_EXTENSION || 
+                    s.structureType == STRUCTURE_SPAWN) && 
+                    s.store.getFreeCapacity(RESOURCE_ENERGY) != 0
+            });
+
+            if (target) {
+                this.creep_.memory.target = target.id;
+            } else {
+                this.creep_.room.removeTransferTask();
+                delete this.creep_.memory.exeTask;
+                return;
+            }
+        }
+
+        if (target) {
+            const amount = Math.min(this.creep_.store[RESOURCE_ENERGY], target.store.getFreeCapacity(RESOURCE_ENERGY));
+            this.creep_.transferTo(target, RESOURCE_ENERGY, amount);
+        }
+    }
+
+    /**
+     * 填充 tower 
+     */
+    private fillTower(): void {
+        if (this.creep_.store[RESOURCE_ENERGY] == 0) {
+            this.creep_.memory.state = CREEP_STATE.SOURCE;
+            return;
+        }
+
+        let target = Game.getObjectById(this.creep_.memory.target) as StructureTower;
+        if (!target || target.store[RESOURCE_ENERGY] > 900) {
+            target = this.creep_.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: s => s.structureType == STRUCTURE_TOWER && 
+                    s.store[RESOURCE_ENERGY] <= 900
+            });
+
+            if (target) {
+                this.creep_.memory.target = target.id;
+            } else {
+                console.log('tower 填充完毕');
+                this.creep_.room.removeTransferTask();
+                delete this.creep_.memory.exeTask;
+                return;
+            }
+        }
+
+        const amount = Math.min(this.creep_.store[RESOURCE_ENERGY], target.store.getFreeCapacity(RESOURCE_ENERGY));
+        this.creep_.transferTo(target, RESOURCE_ENERGY, amount);
+    }
+
+    // 工具类方法
+
+    /**
+     * 清理不是 resourceType 的资源
+     * @param resourceType 保留的资源类型
+     */
+    private clearCarry(resourceType: ResourceConstant): boolean {
+        // 身上只剩下 resourceType 了
+        if (this.creep_.store[resourceType] == this.creep_.store.getUsedCapacity()) {
+            return false;
+        }
+
+        const storage = this.creep_.room.storage;
+
+        for (let type in this.creep_.store) {
+            if (type != resourceType) {
+                let ret = this.creep_.transferTo(storage, type as ResourceConstant);
+                if (ret == ERR_FULL) {
+                    this.creep_.drop(type as ResourceConstant);
+                }
+            }
+        }
+
+        return true;
+    }
 }

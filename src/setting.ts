@@ -90,7 +90,7 @@ export const roomSpawn = {
         reserver: {claim: 2, move: 2},
         manager: {carry: 5, move: 5},
 
-        tmp: {carry: 10, move: 10},
+        tmp: {carry: 1, move: 1},
         powerHarvester: {work: 10, carry: 1, move: 1},
     }
 }

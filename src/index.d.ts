@@ -76,6 +76,7 @@ interface CreepMemory {
     resourceID?: string,    // 掉在地上资源的 id
     tombstoneID?: string,   // 墓碑 id
     sourceID?: string,      // 能量矿 id
+    target?: string,      // 目标 id
 }
 
 interface PowerCreepMemory {

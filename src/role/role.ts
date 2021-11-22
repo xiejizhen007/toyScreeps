@@ -6,7 +6,7 @@ export class Role {
     }
 
     /**
-     * 
+     * 干活接口
      */
     public work(): void {
         if (this.creep_.spawning) { return; }
@@ -27,15 +27,25 @@ export class Role {
         }
     }
 
-    public prepare() {
+    /**
+     * 准备阶段
+     * 比如说前往工作地点
+     */
+    protected prepare() {
         this.creep_.say("prepare");
     }
 
-    public source() {
+    /**
+     * 获取资源阶段
+     */
+    protected source() {
         this.creep_.say("source");
     }
 
-    public target() {
+    /**
+     * 获得资源之后的逻辑
+     */
+    protected target() {
         this.creep_.say("target");
     }
 
