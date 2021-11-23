@@ -11,9 +11,9 @@ import { roleHarvester } from './role/role.harvester';
 import { roleOutputer } from './role/role.outputer';
 import { roleQueen } from './role/role.queen';
 import { roleTransfer } from './role/role.transfer';
-import { newCreep } from './utils';
+import { getBodyArray, getCreepBodys, newCreep } from './utils';
 
-import { BOOST_RESOURCE, LAB_TRANSFER_TASK } from './setting';
+import { bodyArray, BOOST_RESOURCE, LAB_TRANSFER_TASK, roomSpawn } from './setting';
 // import { transfer } from 'creep/transfer';
 // import { powerSpawnRun } from 'structure/powerSpawn';
 import { creepPS } from 'role/role.creepPS';
@@ -24,7 +24,7 @@ import { roleHarvesterMineral } from 'role/role.harvesterMineral';
 import { addRoleSpawnTask } from './utils';
 import { transferRoom } from 'role/transferRoom';
 import { reserverRoom } from 'role/reserver';
-import { Manager } from 'role/KingAndQueen';
+import { Manager, Queen } from 'role/KingAndQueen';
 
 import { RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
@@ -45,7 +45,6 @@ export const loop = errorMapper(() => {
         let creep = Game.creeps[name];
 
         if (creep.memory.role == 'harvester') {
-            // roleHarvester.run(creep);
             let creep_ = new RoleHarvester(creep);
             creep_.work();
         }
@@ -95,7 +94,7 @@ export const loop = errorMapper(() => {
             creep_.work();
         }
         else if (creep.memory.role == 'tmp') {
-            let creep_ = new Signer(creep);
+            let creep_ = new Queen(creep);
             creep_.work();
         }
     }
@@ -130,7 +129,7 @@ export const loop = errorMapper(() => {
             }
         }
 
-        Lab.run(room);
+        // Lab.run(room);
         // powerSpawnRun(room);
         
         room.powerWork();
@@ -147,7 +146,12 @@ export const loop = errorMapper(() => {
         Game.cpu.generatePixel();
     }
 
+    // console.log(roomSpawn[6].tmp);
+    // console.log(getCreepBodys(roomSpawn[6].tmp));
     // Tower.run();
+    // console.log(bodyArray['harvester'][0][MOVE]);
+    // console.log(bodyArray['queen'][6][CARRY]);
+    // getBodyArray(bodyArray['queen'][6]);
 });
 
 

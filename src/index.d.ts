@@ -38,6 +38,10 @@ interface RoomMemory {
     towerState?: string,
     damagedStructure?: string,
     attackTarget?: string,
+
+    // id
+    nuker?: string,
+    labs?: string[],        // 所有的 lab id
 }
 
 interface CreepMemory {
@@ -77,6 +81,7 @@ interface CreepMemory {
     tombstoneID?: string,   // 墓碑 id
     sourceID?: string,      // 能量矿 id
     target?: string,      // 目标 id
+    resourceType?: ResourceConstant,
 }
 
 interface PowerCreepMemory {
@@ -95,6 +100,7 @@ interface Room {
     removeTransferTask(): boolean,
     // taskToExe(): void,
     hasTransferTask(taskType: string): boolean,
+    getTransferTask(): roomTransferTask,
 
     // creepController
     addRoomCreepGroup(roomName: string): boolean,
@@ -110,6 +116,7 @@ interface Room {
 
     // market
     buyPower(): void,
+
 }
 
 interface Creep {
@@ -123,6 +130,9 @@ interface Creep {
     findPath(target: RoomPosition): void,
     getEnergyFrom(target: Structure | Source): ScreepsReturnCode,
     pickupFrom(target: Resource): ScreepsReturnCode,
+    
+    // tool
+    clearBody(target: Structure): ScreepsReturnCode,
 }
 
 interface PowerCreep {

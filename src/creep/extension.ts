@@ -37,7 +37,7 @@ export default class creepExtension extends Creep {
 
         for (const type in this.store) {
             const resourceType = type as ResourceConstant;
-            this.transferTo(target, resourceType);
+            return this.transferTo(target, resourceType);
         }
 
         return OK;

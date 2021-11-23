@@ -46,6 +46,7 @@ export const roomSpawn = {
         claimer: {claim: 1, move: 4},
         reserver: {claim: 2, move: 2},
         manager: {carry: 1, move: 1},
+        tmp: {carry: 5, move: 5},
     },
     7: {
         harvester: {work: 6, carry: 1, move: 3}, 
@@ -67,6 +68,7 @@ export const roomSpawn = {
         creepTransfer: {carry: 4, move: 4},
         reserver: {claim: 2, move: 2},
         manager: {carry: 1, move: 1},
+        tmp: {carry: 5, move: 5},
     },
     8: {
         harvester: {work: 10, carry: 1, move: 5}, 
@@ -89,10 +91,29 @@ export const roomSpawn = {
         harvesterRoom: {work: 6, carry: 4, move: 6},
         reserver: {claim: 2, move: 2},
         manager: {carry: 5, move: 5},
-
-        tmp: {carry: 1, move: 1},
+        tmp: {carry: 5, move: 5},
         powerHarvester: {work: 10, carry: 1, move: 1},
     }
+}
+
+// 后期再改
+export const bodyArray = {
+    harvester: [
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+    ],
+
+    queen: [
+        { [MOVE]: 2, [CARRY]: 2 },
+        { [MOVE]: 2, [CARRY]: 2 },
+        { [MOVE]: 2, [CARRY]: 2 },
+        { [MOVE]: 2, [CARRY]: 2 },
+        { [MOVE]: 2, [CARRY]: 2 },
+        { [MOVE]: 2, [CARRY]: 2 },
+        { [MOVE]: 2, [CARRY]: 2 },
+        { [MOVE]: 2, [CARRY]: 2 },
+    ],
+
+
 }
 
 export const CREEP_STATE = {
@@ -120,7 +141,7 @@ export const ROOM_TRANSFER_TASK = {
     
     // 填充塔
     FILL_TOWER: 'fillTower',
-    FILL_NUKE: 'fillNuke',
+    FILL_NUKER: 'fillNuker',
     FILL_EXTENSION: 'fillExtension',
     FILL_POWERSPAWN: 'fillPowerSpawn',
 };

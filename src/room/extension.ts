@@ -113,8 +113,12 @@ export default class RoomExtension extends Room {
     public hasTransferTask(taskType: string): boolean {
         if (!this.memory.transferTasks) { return false; }
 
-        const task = this.memory.transferTasks.find(f => f.type == taskType);
+        const task = this.memory.transferTasks.find(f => f && f.type == taskType);
         return task ? true : false;
+    }
+
+    public getTransferTask(): roomTransferTask {
+        return this.memory.transferTasks[0];
     }
 
     /**

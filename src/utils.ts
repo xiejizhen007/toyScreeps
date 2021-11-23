@@ -1,4 +1,4 @@
-import { roomSpawn } from "setting";
+import { roomSpawn, bodyArray } from "setting";
 
 export const newCreep = function() {
     for (let roomName in Game.rooms) {
@@ -152,6 +152,19 @@ export const getCreepBodys = function(bodySet) {
     return ret;
 }
 
+export function getBodyArray(bodyset): BodyPartConstant[] {
+    let ret = new Array();
+    for (let name in bodyset) {
+        // console.log(name);
+        for (let i = 0; i < bodyset[name]; i++) {
+            ret.push(name);
+            // console.log(name);
+        }
+    }
+    console.log(ret);
+    return ret;
+}
+
 
 export const hasTransferTask = function (room: Room, taskType: string) : boolean {
     if (!room.memory.transferTasks) { room.memory.transferTasks = []; }
@@ -193,3 +206,7 @@ export function testTask(task: roomTransferTask) {
 
 //     // return room.addRo
 // }
+
+export function getObject(id: string): RoomObject {
+    return Game.getObjectById(id);
+}

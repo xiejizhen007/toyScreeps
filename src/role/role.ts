@@ -9,8 +9,6 @@ export class Role {
      * 干活接口
      */
     public work(): void {
-        if (this.creep_.spawning) { return; }
-
         switch (this.creep_.memory.state) {
             case CREEP_STATE.PREPARE:
                 this.prepare();
