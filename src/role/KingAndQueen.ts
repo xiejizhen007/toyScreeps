@@ -340,30 +340,34 @@ export class Queen extends Role {
         let resourceType: ResourceConstant;
         let resourceAmount = 1e10;
         
-        switch (task.type) {
-            case ROOM_TRANSFER_TASK.FILL_EXTENSION:
-            case ROOM_TRANSFER_TASK.FILL_TOWER:
-                resourceType = RESOURCE_ENERGY;
-                break;
-            case ROOM_TRANSFER_TASK.FILL_NUKER:
-            case ROOM_TRANSFER_TASK.FILL_POWERSPAWN:
-                const taskType = task as iNuke | iPowerSpawn;
-                let target = getObject(taskType.id) as StructureNuker | StructurePowerSpawn;
-                resourceType = taskType.resourceType;
-                resourceAmount = target.store.getFreeCapacity(resourceType);
-                break;
-            case ROOM_TRANSFER_TASK.LAB_IN:
-                const labTask = task as iLabIn;
-                resourceType = labTask.resource[0].amount < labTask.resource[1].amount ?
-                    labTask.resource[1].type : labTask.resource[0].type;
-                break;
-            case ROOM_TRANSFER_TASK.LAB_OUT:
-                // 需要到 lab 去取资源，跟其他的不太一样
-                this.creep_.memory.state = CREEP_STATE.TARGET;
-                return;
-            default:
-                this.creep_.memory.state = CREEP_STATE.PREPARE;
-                break;
+        if (!task) {
+            this.creep_.memory.state = CREEP_STATE.PREPARE;
+            this.creep_.room.removeTransferTask();
+            delete this.creep_.memory.exeTask;
+            return;
+        }
+
+        // 根据任务类型取 resourceType
+        if (task.type == ROOM_TRANSFER_TASK.FILL_EXTENSION
+        || task.type == ROOM_TRANSFER_TASK.FILL_TOWER) {    
+            resourceType = RESOURCE_ENERGY;
+        } else if (task.type == ROOM_TRANSFER_TASK.FILL_NUKER
+        || task.type == ROOM_TRANSFER_TASK.FILL_POWERSPAWN) {
+            const taskType = task as iNuke | iPowerSpawn;
+            let target = getObject(taskType.id) as StructureNuker | StructurePowerSpawn;
+            resourceType = taskType.resourceType;
+            resourceAmount = target.store.getFreeCapacity(resourceType);
+        } else if (task.type == ROOM_TRANSFER_TASK.LAB_IN) {
+            const labTask = task as iLabIn;
+            resourceType = labTask.resource[0].amount < labTask.resource[1].amount ?
+                labTask.resource[1].type : labTask.resource[0].type;
+        } else if (task.type == ROOM_TRANSFER_TASK.LAB_OUT) {
+            // 需要到 lab 去取资源，跟其他的不太一样
+            this.creep_.memory.state = CREEP_STATE.TARGET;
+            return;
+        } else {
+            this.creep_.memory.state = CREEP_STATE.PREPARE;
+            return;
         }
 
         const storage = this.creep_.room.storage;
@@ -390,7 +394,7 @@ export class Queen extends Role {
             this.creep_.memory.state = CREEP_STATE.PREPARE;
             this.creep_.room.removeTransferTask();
             delete this.creep_.memory.exeTask;
-            console.log('没资源了，清理任务');
+            // console.log('没资源了，清理任务');
         }
     }
 
@@ -524,7 +528,8 @@ export class Queen extends Role {
         // target 一定存在
         const amount = Math.min(target.store.getFreeCapacity(task.resourceType), this.creep_.store[task.resourceType]);
         // 完成任务了
-        if (this.creep_.transferTo(target, task.resourceType, amount) == OK) {
+        let tmp = this.creep_.transferTo(target, task.resourceType, amount);
+        if (tmp == OK || tmp == ERR_FULL) {
             this.creep_.room.removeTransferTask();
             delete this.creep_.memory.exeTask;
             // console.log("powerSpawn 填充完毕");
@@ -694,7 +699,9 @@ export class Queen extends Role {
      */
     private checkLife(): boolean {
         if (this.creep_.ticksToLive <= 3 * this.creep_.body.length) {
-            this.creep_.room.memory.transferTasks[0] = this.creep_.memory.exeTask;
+            if (this.creep_.memory.exeTask) {
+                this.creep_.room.memory.transferTasks[0] = this.creep_.memory.exeTask;
+            }
             if (this.creep_.memory.isNeeded) {
                 this.creep_.room.addSpawnTask(this.creep_);
                 this.creep_.memory.isNeeded = false;

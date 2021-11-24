@@ -1,4 +1,4 @@
-import { roomSpawn, bodyArray } from "setting";
+import { roomSpawn, bodyArray, ROOM_TRANSFER_TASK } from "setting";
 
 export const newCreep = function() {
     for (let roomName in Game.rooms) {
@@ -19,6 +19,11 @@ export const newCreep = function() {
                 if (tmp == OK) {
                     console.log('new creep: ' + roleName);
                     room.memory.spawnTasks.shift();
+                    const task = {
+                        type: ROOM_TRANSFER_TASK.FILL_EXTENSION
+                    } as roomTransferTask;
+                    room.addTransferTask(task);
+                    console.log('add transfer task');
                     break;
                 }
                 else if (tmp == ERR_NOT_ENOUGH_ENERGY && iter.role == 'queen') {
@@ -26,9 +31,19 @@ export const newCreep = function() {
                     if (spawn[i].spawnCreep(getCreepBodys({carry: en, move: en}), roleName,
                         { memory: {role: iter.role, room: iter.room, isNeeded: iter.isNeeded, task: iter.task}}) == OK) {
                         room.memory.spawnTasks.shift();
-                        break;
                     }
+                    break;
                 }
+
+                // 填充 extension
+                // room.addTransferTask({
+                //     type: ROOM_TRANSFER_TASK.FILL_EXTENSION
+                // });
+                const task = {
+                    type: ROOM_TRANSFER_TASK.FILL_EXTENSION
+                } as roomTransferTask;
+                room.addTransferTask(task);
+                console.log('add transfer task');
             }
         }
     }

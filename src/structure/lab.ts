@@ -1,17 +1,46 @@
 import { labTarget, LAB_STATE, reactionResource, ROOM_TRANSFER_TASK } from "setting";
+import { getBodyArray, getObject } from "utils";
 
 export default class LabExtension extends StructureLab {
     public work(): void {
         if (!this.room.memory.lab) { this.room.memory.lab = {}; }
+        
+        this.runLab();
     }
 
     private runLab(): void {
         switch (this.room.memory.lab.state) {
+            case LAB_STATE.INIT:
+                break;
+            case LAB_STATE.WORKING:
+                this.labWorking();
+                break;
             case LAB_STATE.GET_TARGET:
+                this.labGetTarget();
+                break;
+            case LAB_STATE.IN_RESOURCE:
+                this.labInResource();
+                break;
+            case LAB_STATE.OUT_RESOURCE:
+                this.labOutResource();
+                break;
+            default:
+                this.room.memory.lab.state = LAB_STATE.INIT;
                 break;
         } 
     }
 
+    // private labInit(): void {
+        // let flag1 = Game.flags[this.room.name + 'Lab1'];
+        // let flag2 = Game.flags[this.room.name + 'Lab2'];
+        
+        // if (!flag1 || !flag2) {
+        //     console.log('lab: no flag');
+        //     return;
+        // }
+
+        // let lab1 = getObject(this.room)
+    // }
 
     private labGetTarget(): void {
         if (!this.room.memory.lab.targetIndex) {
@@ -20,7 +49,7 @@ export default class LabExtension extends StructureLab {
 
         const terminal = this.room.terminal;
         if (!terminal) {
-            // console.log('terminal 不存在');
+            console.log('terminal 不存在');
             return;
         }
 
@@ -32,10 +61,10 @@ export default class LabExtension extends StructureLab {
 
         const enResource = reactionResource[resource.target];
         if (terminal.store[enResource[0]] <= 100 
-            || terminal.store[enResource[1]] <= 100
-            || terminal.store[resource.target] >= resource.number) {
-                this.setNextInedx();
-                return;
+        || terminal.store[enResource[1]] <= 100
+        || terminal.store[resource.target] >= resource.number) {
+            this.setNextInedx();
+            return;
         }
 
         this.room.memory.lab.state = LAB_STATE.IN_RESOURCE;
@@ -109,7 +138,47 @@ export default class LabExtension extends StructureLab {
     }
 
     private labWorking(): void {
+        let lab1 = Game.getObjectById(this.room.memory.lab.lab1ID) as StructureLab;
+        let lab2 = Game.getObjectById(this.room.memory.lab.lab2ID) as StructureLab;
+        let labsID = this.room.memory.lab.labsID;
+
+        if (!lab1 || !lab2 || !labsID || !labsID.length) {
+            this.room.memory.lab.state = LAB_STATE.INIT;
+            console.log('error: not inLab!!!');
+            return;
+        }
         
+        // 冷却中，直接退出
+        if (this.room.memory.lab.cooldown != undefined && !this.room.memory.lab.cooldown) {
+            this.room.memory.lab.cooldown--;
+            return;
+        }
+
+        for (let i = 0; i < labsID.length; i++) {
+            let lab = Game.getObjectById(labsID[i]) as StructureLab;
+            if (!lab) {
+                console.log(labsID[i] + ' is undefined');
+                delete this.room.memory.lab.labsID;
+                return;
+            }
+
+            const labResult = lab.runReaction(lab1, lab2);
+            // 没冷却完全
+            if (labResult == ERR_TIRED) {
+                this.room.memory.lab.cooldown = lab.cooldown;
+                return;
+            }
+            // 没底物了
+            else if (labResult == ERR_NOT_ENOUGH_RESOURCES || labResult == ERR_INVALID_ARGS) {
+                this.room.memory.lab.state = LAB_STATE.OUT_RESOURCE;
+                return;
+            }
+            else if (labResult != OK) {
+                console.log('lab return: ' + labResult);
+                return;
+            }
+        }
+
     }
 
     private setNextInedx(): number {

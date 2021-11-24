@@ -149,7 +149,7 @@ interface StructurePowerSpawn {
 
 
 
-type roomTransferTask = iLabIn | iLabOut | iTower | iNuke | iPowerSpawn;
+type roomTransferTask = iLabIn | iLabOut | iTower | iNuke | iPowerSpawn | iExtension;
 
 // 任务类型
 interface iLabIn {
@@ -181,6 +181,10 @@ interface iPowerSpawn {
     type: string,
     id: string,
     resourceType: ResourceConstant,     // 当前需要运输的资源类型
+}
+
+interface iExtension {
+    type: string
 }
 
 type reserverRoomType = iReserverRoom;
