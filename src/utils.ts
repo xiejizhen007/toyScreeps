@@ -233,6 +233,9 @@ export function roomWork(): void {
             continue;
         }
 
+        room.powerWork();
+        room.buyPower();
+
         let structureTargets = room.find(FIND_STRUCTURES);
         for (let i = 0; i < structureTargets.length; i++) {
             let targte = structureTargets[i];
