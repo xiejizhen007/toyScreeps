@@ -1,3 +1,4 @@
+import { LAB_STATE } from "setting";
 import { getObject } from "utils";
 
 export default class RoomController extends Room {
@@ -32,5 +33,21 @@ export default class RoomController extends Room {
             }
         }
 
+        let labs = this.find(FIND_STRUCTURES, {
+            filter: (s) => {
+                s.structureType == STRUCTURE_LAB
+                && !s.pos.isEqualTo(flag1)
+                && !s.pos.isEqualTo(flag2)
+            }
+        });
+
+        if (labs.length > 0) {
+            this.memory.lab.labsID = [];
+            labs.forEach(l => {
+                this.memory.lab.labsID.push(l.id);
+            });
+
+            this.memory.lab.state = LAB_STATE.WORKING;
+        }
     }
 }

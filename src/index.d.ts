@@ -114,9 +114,11 @@ interface Room {
     addPowerTask(task: pcTaskType): boolean,
     removePowerTask(): boolean,
 
+    // roomController
+    labCheck(): void,
+
     // market
     buyPower(): void,
-
 }
 
 interface Creep {
@@ -144,10 +146,21 @@ interface StructureTower {
 }
 
 interface StructurePowerSpawn {
+    work(): void,
     generatePower(): void,
 }
 
+interface StructureSpawn {
+    work(): void,
+}
 
+interface StructureTerminal {
+    work(): void,
+}
+
+interface StructureLab {
+    work(): void,
+}
 
 type roomTransferTask = iLabIn | iLabOut | iTower | iNuke | iPowerSpawn | iExtension;
 
@@ -211,4 +224,32 @@ type pcTaskType = iRegenSource;
 interface iRegenSource {
     type: string,
     id: string,
+}
+
+type spawnTaskType = iSpawnTask;
+
+interface iSpawnTask {
+    role: string,
+    room: string,
+    isNeeded: boolean,
+    task: iCreepTask,
+}
+
+interface iCreepTask {
+    // 
+    target?: string,
+
+    // 资源 id
+    resource?: string,
+    source?: string,
+    mineral?: string,
+    // 建筑 id
+    container?: string,
+    newContainerID?: string,
+    constructionSite?: string,
+    link?: string,
+
+    workRoomName?: string,
+    flagName?: string,
+    transferTask?: any,
 }

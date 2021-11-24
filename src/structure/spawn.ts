@@ -11,7 +11,8 @@ export default class SpawnExtension extends StructureSpawn {
 
     public spawn(): void {
         if (this.room.memory.spawnTasks.length > 0) {
-
+            const spawnTask = this.room.memory.spawnTasks[0];
+            
         }
     }
 

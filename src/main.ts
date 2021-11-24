@@ -11,7 +11,7 @@ import { roleHarvester } from './role/role.harvester';
 import { roleOutputer } from './role/role.outputer';
 import { roleQueen } from './role/role.queen';
 import { roleTransfer } from './role/role.transfer';
-import { getBodyArray, getCreepBodys, newCreep } from './utils';
+import { getBodyArray, getCreepBodys, newCreep, roomWork } from './utils';
 
 import { bodyArray, BOOST_RESOURCE, LAB_TRANSFER_TASK, roomSpawn } from './setting';
 // import { transfer } from 'creep/transfer';
@@ -24,7 +24,7 @@ import { roleHarvesterMineral } from 'role/role.harvesterMineral';
 import { addRoleSpawnTask } from './utils';
 import { transferRoom } from 'role/transferRoom';
 import { reserverRoom } from 'role/reserver';
-import { Manager, Queen } from 'role/KingAndQueen';
+import { Queen } from 'role/KingAndQueen';
 
 import { RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
@@ -89,10 +89,10 @@ export const loop = errorMapper(() => {
         else if (creep.memory.role == 'reserver') {
             reserverRoom(creep);
         }
-        else if (creep.memory.role == 'manager') {
-            let creep_ = new Manager(creep);
-            creep_.work();
-        }
+        // else if (creep.memory.role == 'manager') {
+        //     let creep_ = new Manager(creep);
+        //     creep_.work();
+        // }
         else if (creep.memory.role == 'tmp') {
             let creep_ = new Queen(creep);
             creep_.work();
@@ -108,38 +108,40 @@ export const loop = errorMapper(() => {
         }
     }
 
-    for (let name in Game.rooms) {
-        let room = Game.rooms[name];
+    // for (let name in Game.rooms) {
+    //     let room = Game.rooms[name];
         
-        // powerSpawn 
-        let powerSpawn = Game.getObjectById<StructurePowerSpawn>(room.memory.powerSpawnID);
-        if (powerSpawn) {
-            powerSpawn.generatePower();
-        }
-        else if (room.controller && room.controller.my && room.controller.level == 8) {
-            let powerSpawns = room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return structure.structureType == STRUCTURE_POWER_SPAWN;
-                }
-            });
+    //     // powerSpawn 
+    //     let powerSpawn = Game.getObjectById<StructurePowerSpawn>(room.memory.powerSpawnID);
+    //     if (powerSpawn) {
+    //         powerSpawn.generatePower();
+    //     }
+    //     else if (room.controller && room.controller.my && room.controller.level == 8) {
+    //         let powerSpawns = room.find(FIND_STRUCTURES, {
+    //             filter: (structure) => {
+    //                 return structure.structureType == STRUCTURE_POWER_SPAWN;
+    //             }
+    //         });
 
-            if (powerSpawns.length > 0) {
-                powerSpawn = powerSpawns[0] as StructurePowerSpawn;
-                room.memory.powerSpawnID = powerSpawn.id;
-            }
-        }
+    //         if (powerSpawns.length > 0) {
+    //             powerSpawn = powerSpawns[0] as StructurePowerSpawn;
+    //             room.memory.powerSpawnID = powerSpawn.id;
+    //         }
+    //     }
 
-        // Lab.run(room);
-        // powerSpawnRun(room);
+    //     // Lab.run(room);
+    //     // powerSpawnRun(room);
         
-        room.powerWork();
+    //     room.powerWork();
 
-        room.buyPower();
-        const towers = room.find(FIND_STRUCTURES, {
-            filter: s => s.structureType == STRUCTURE_TOWER
-        }) as StructureTower[];
-        towers.forEach(s => s.work());
-    }
+    //     room.buyPower();
+    //     const towers = room.find(FIND_STRUCTURES, {
+    //         filter: s => s.structureType == STRUCTURE_TOWER
+    //     }) as StructureTower[];
+    //     towers.forEach(s => s.work());
+    // }
+
+    roomWork();
 
     if (Game.cpu.bucket >= 10000) {
         console.log('generating pixel');

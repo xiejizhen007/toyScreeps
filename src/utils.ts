@@ -23,7 +23,7 @@ export const newCreep = function() {
                         type: ROOM_TRANSFER_TASK.FILL_EXTENSION
                     } as roomTransferTask;
                     room.addTransferTask(task);
-                    console.log('add transfer task');
+                    // console.log('add transfer task');
                     break;
                 }
                 else if (tmp == ERR_NOT_ENOUGH_ENERGY && iter.role == 'queen') {
@@ -43,7 +43,7 @@ export const newCreep = function() {
                     type: ROOM_TRANSFER_TASK.FILL_EXTENSION
                 } as roomTransferTask;
                 room.addTransferTask(task);
-                console.log('add transfer task');
+                // console.log('add transfer task');
             }
         }
     }
@@ -224,4 +224,29 @@ export function testTask(task: roomTransferTask) {
 
 export function getObject(id: string): RoomObject {
     return Game.getObjectById(id);
+}
+
+export function roomWork(): void {
+    for (let roomName in Game.rooms) {
+        let room = Game.rooms[roomName];
+        if (!room.controller || !room.controller.my) {
+            continue;
+        }
+
+        let structureTargets = room.find(FIND_STRUCTURES);
+        for (let i = 0; i < structureTargets.length; i++) {
+            let targte = structureTargets[i];
+            if (targte instanceof StructureLab) {
+                targte.work();
+            } else if (targte instanceof StructureTower) {
+                targte.work();
+            } else if (targte instanceof StructurePowerSpawn) {
+                targte.work();
+            } else if (targte instanceof StructureSpawn) {
+                targte.work();
+            } else if (targte instanceof StructureTerminal) {
+                targte.work();
+            }
+        }
+    }
 }

@@ -11,6 +11,7 @@ export default class LabExtension extends StructureLab {
     private runLab(): void {
         switch (this.room.memory.lab.state) {
             case LAB_STATE.INIT:
+                this.room.labCheck();
                 break;
             case LAB_STATE.WORKING:
                 this.labWorking();
@@ -29,18 +30,6 @@ export default class LabExtension extends StructureLab {
                 break;
         } 
     }
-
-    // private labInit(): void {
-        // let flag1 = Game.flags[this.room.name + 'Lab1'];
-        // let flag2 = Game.flags[this.room.name + 'Lab2'];
-        
-        // if (!flag1 || !flag2) {
-        //     console.log('lab: no flag');
-        //     return;
-        // }
-
-        // let lab1 = getObject(this.room)
-    // }
 
     private labGetTarget(): void {
         if (!this.room.memory.lab.targetIndex) {

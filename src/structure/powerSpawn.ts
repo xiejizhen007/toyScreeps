@@ -1,6 +1,10 @@
 import { ROOM_TRANSFER_TASK } from "setting";
 
 export default class PowerSpawnExtension extends StructurePowerSpawn {
+    public work(): void {
+        this.generatePower();
+    }
+
     public generatePower(): void {
         if (this.store[RESOURCE_POWER] >= 1 && this.store[RESOURCE_ENERGY] >= 50) {
             this.processPower();
