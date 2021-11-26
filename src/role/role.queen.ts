@@ -48,22 +48,22 @@ export const roleQueen = {
                 return;
             }
 
-            let controller = creep.room.controller;
-            let container = controller.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return structure.structureType == STRUCTURE_CONTAINER;
-                }
-            }) as StructureContainer;
+            // let controller = creep.room.controller;
+            // let container = controller.pos.findClosestByRange(FIND_STRUCTURES, {
+            //     filter: (structure) => {
+            //         return structure.structureType == STRUCTURE_CONTAINER;
+            //     }
+            // }) as StructureContainer;
 
-            if (container) {
-                if (creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(container);
-                }
-                else if (creep.transfer(container, RESOURCE_ENERGY) == ERR_FULL) {
-                    creep.transfer(container, RESOURCE_ENERGY, container.store.getFreeCapacity(RESOURCE_ENERGY));
-                }
-                return;
-            }
+            // if (container) {
+            //     if (creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            //         creep.moveTo(container);
+            //     }
+            //     else if (creep.transfer(container, RESOURCE_ENERGY) == ERR_FULL) {
+            //         creep.transfer(container, RESOURCE_ENERGY, container.store.getFreeCapacity(RESOURCE_ENERGY));
+            //     }
+            //     return;
+            // }
         }
         // 取能量
         else {
