@@ -55,7 +55,7 @@ export const roomSpawn = {
         harvesterRoom: {work: 6, carry: 4, move: 6},
         repairer: {work: 6, carry: 6, move: 6},
         repairerWall: {work: 5, carry: 10, move: 10},
-        upgrader: {work: 30, carry: 6, move: 8},
+        upgrader: {work: 12, carry: 6, move: 6},
         builder: {work: 8, carry: 8, move: 8},
         outputer: {carry: 15, move: 15},
         king: {carry: 10, move: 10},
