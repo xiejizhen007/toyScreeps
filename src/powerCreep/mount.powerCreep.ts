@@ -2,6 +2,8 @@ import { PC_TASK } from "setting";
 
 export default class powerCreepExtension extends PowerCreep {
     public work(): void {
+        if (!this || !this.hits) { return; }
+
         if (this.enablePower()) { return; }
         if (this.keepAlive()) { return; }
 

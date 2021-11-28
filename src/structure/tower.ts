@@ -82,8 +82,8 @@ export default class TowerExtension extends StructureTower {
             });
 
             if (damagedStructures.length > 0) {
-                this.room.memory.damagedStructure = damagedStructures[0].id;
-                damagedStructure = damagedStructures[0];
+                damagedStructure = this.pos.findClosestByRange(damagedStructures);
+                this.room.memory.damagedStructure = damagedStructure.id;
             }
             else {
                 delete this.room.memory.damagedStructure;
