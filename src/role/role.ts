@@ -41,7 +41,7 @@ export class Role {
     }
 
     /**
-     * 获得资源之后的逻辑
+     * 主要目标
      */
     protected target() {
         this.creep_.say("target");
