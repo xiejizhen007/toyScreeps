@@ -69,6 +69,7 @@ export const roomSpawn = {
         reserver: {claim: 2, move: 2},
         manager: {carry: 1, move: 1},
         tmp: {carry: 5, move: 5},
+        farmove: {work: 2, carry: 1, move: 2},
     },
     8: {
         harvester: {work: 10, carry: 1, move: 5}, 
@@ -113,7 +114,15 @@ export const bodyArray = {
         { [MOVE]: 2, [CARRY]: 2 },
     ],
 
+    king: [
+        { },
+        { },
+        { },
+        { },
+        { },
+        { },        // terminal
 
+    ],
 }
 
 export const CREEP_STATE = {

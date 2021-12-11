@@ -49,6 +49,7 @@ interface CreepMemory {
     room: string,
     isNeeded: boolean,
     work?: boolean,
+    ready?: boolean,       
     linkControllerID?: string,
     containerControllerID?: string,
     linkCenterID?: string,

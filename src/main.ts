@@ -28,7 +28,7 @@ import { Queen } from 'role/queen';
 
 import { RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
-import { RemoteHarvester, Signer } from 'role/remote';
+import { Farmove, RemoteHarvester, Signer } from 'role/remote';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -95,6 +95,10 @@ export const loop = errorMapper(() => {
         // }
         else if (creep.memory.role == 'tmp') {
             let creep_ = new Queen(creep);
+            creep_.work();
+        }
+        else if (creep.memory.role == 'farmove') {
+            let creep_ = new Farmove(creep);
             creep_.work();
         }
     }
