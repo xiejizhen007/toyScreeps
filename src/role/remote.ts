@@ -94,7 +94,7 @@ export class Signer extends Role {
         }
 
         if (this.creep_.pos.inRangeTo(controller, 1)) {
-            this.creep_.signController(controller, "hello");
+            this.creep_.signController(controller, "i will uncliam this room when novice area end. don't hurt me, please!!!");
         } 
         else {
             this.creep_.goTo(controller.pos);

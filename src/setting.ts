@@ -4,12 +4,14 @@ export const roomSpawn = {
         upgrader: {work: 1, carry: 1, move: 2},
         builder: {work: 1, carry: 1, move: 1},
         queen: {carry: 1, move: 1},
+        signer: {move: 1},
     },
     2: {
         harvester: { work: 2, carry: 1, move: 1},
         upgrader: {work: 1, carry: 1, move: 2},
         builder: {work: 1, carry: 1, move: 1},
         queen: {carry: 1, move: 1},
+        signer: {move: 1},
     },
     3: {
         builder: {work: 1, carry: 2, move: 2},
@@ -18,6 +20,7 @@ export const roomSpawn = {
         upgrader: {work: 3, carry: 3, move: 3},
         repairer: {work: 2, carry: 3, move: 3},
         outputer: {carry: 4, move: 4},
+        signer: {move: 1},
     },
     4: {
         builder: {work: 5, carry: 5, move: 2},

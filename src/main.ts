@@ -104,6 +104,10 @@ export const loop = errorMapper(() => {
             let creep_ = new RemoteSoldier(creep);
             creep_.work();
         }
+        else if (creep.memory.role == 'signer') {
+            let creep_ = new Signer(creep);
+            creep_.work();
+        }
     }
 
     newCreep();
