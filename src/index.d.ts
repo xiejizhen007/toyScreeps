@@ -66,6 +66,7 @@ interface CreepMemory {
         transferTask?: any,
         targetID?: string,
         mineralID?: string,
+        portalFlag?: string,
     },
     boost?: boolean,
     boostType?: string,

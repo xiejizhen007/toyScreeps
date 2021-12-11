@@ -9,6 +9,8 @@ export class Role {
      * 干活接口
      */
     public work(): void {
+        this.check();
+        
         switch (this.creep_.memory.state) {
             case CREEP_STATE.PREPARE:
                 this.prepare();
@@ -45,6 +47,10 @@ export class Role {
      */
     protected target() {
         this.creep_.say("target");
+    }
+
+    protected check() {
+        
     }
 
     protected creep_: Creep;

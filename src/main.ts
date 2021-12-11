@@ -28,7 +28,7 @@ import { Queen } from 'role/queen';
 
 import { RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
-import { Farmove, RemoteHarvester, Signer } from 'role/remote';
+import { Claimer, Pioneer, RemoteHarvester, RemoteSoldier, Signer } from 'role/remote';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -82,23 +82,26 @@ export const loop = errorMapper(() => {
             transferRoom(creep);
         }
         else if (creep.memory.role && creep.memory.role == 'harvesterRoom') {
-            // harvesterRoom(creep);
             let creep_ = new harvesterRoom(creep);
             creep_.work();
         }
         else if (creep.memory.role == 'reserver') {
             reserverRoom(creep);
         }
-        // else if (creep.memory.role == 'manager') {
-        //     let creep_ = new Manager(creep);
-        //     creep_.work();
-        // }
         else if (creep.memory.role == 'tmp') {
             let creep_ = new Queen(creep);
             creep_.work();
         }
-        else if (creep.memory.role == 'farmove') {
-            let creep_ = new Farmove(creep);
+        else if (creep.memory.role == 'farmove' || creep.memory.role == 'pioneer') {
+            let creep_ = new Pioneer(creep);
+            creep_.work();
+        }
+        else if (creep.memory.role == 'claimer') {
+            let creep_ = new Claimer(creep);
+            creep_.work();
+        }
+        else if (creep.memory.role == 'remoteSoldier') {
+            let creep_ = new RemoteSoldier(creep);
             creep_.work();
         }
     }

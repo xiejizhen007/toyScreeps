@@ -1,9 +1,15 @@
 export const roomSpawn = {
     1: {
         harvester: { work: 1, carry: 1, move: 1},
+        upgrader: {work: 1, carry: 1, move: 2},
+        builder: {work: 1, carry: 1, move: 1},
+        queen: {carry: 1, move: 1},
     },
     2: {
         harvester: { work: 2, carry: 1, move: 1},
+        upgrader: {work: 1, carry: 1, move: 2},
+        builder: {work: 1, carry: 1, move: 1},
+        queen: {carry: 1, move: 1},
     },
     3: {
         builder: {work: 1, carry: 2, move: 2},
@@ -70,6 +76,9 @@ export const roomSpawn = {
         manager: {carry: 1, move: 1},
         tmp: {carry: 5, move: 5},
         farmove: {work: 2, carry: 1, move: 2},
+        claimer: {move: 5, claim: 1},
+        remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
+        pioneer: {work: 20, carry: 10, move: 20},
     },
     8: {
         harvester: {work: 10, carry: 1, move: 5}, 
@@ -94,6 +103,9 @@ export const roomSpawn = {
         manager: {carry: 5, move: 5},
         tmp: {carry: 5, move: 5},
         powerHarvester: {work: 10, carry: 1, move: 1},
+        claimer: {move: 5, claim: 1},
+        remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
+        pioneer: {work: 20, carry: 10, move: 20},
     }
 }
 
