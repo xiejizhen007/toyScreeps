@@ -32,23 +32,27 @@ export class Role {
      * 比如说前往工作地点
      */
     protected prepare() {
-        this.creep_.say("prepare");
+
     }
 
     /**
      * 获取资源阶段
      */
     protected source() {
-        this.creep_.say("source");
+
     }
 
     /**
      * 主要目标
      */
     protected target() {
-        this.creep_.say("target");
+
     }
 
+    /**
+     * 每时每刻都运行
+     * 
+     */
     protected check() {
         
     }

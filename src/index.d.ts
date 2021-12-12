@@ -42,6 +42,8 @@ interface RoomMemory {
     // id
     nuker?: string,
     labs?: string[],        // 所有的 lab id
+
+    wallHit?: number,       
 }
 
 interface CreepMemory {
@@ -82,8 +84,9 @@ interface CreepMemory {
     resourceID?: string,    // 掉在地上资源的 id
     tombstoneID?: string,   // 墓碑 id
     sourceID?: string,      // 能量矿 id
-    target?: string,      // 目标 id
+    target?: string,        // 目标 id
     resourceType?: ResourceConstant,
+    countTime?: number,     // 到岗时间
 }
 
 interface PowerCreepMemory {

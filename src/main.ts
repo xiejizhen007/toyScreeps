@@ -26,9 +26,9 @@ import { transferRoom } from 'role/transferRoom';
 import { reserverRoom } from 'role/reserver';
 import { Queen } from 'role/queen';
 
-import { RoleHarvester } from 'role/base';
+import { BaseUpgrader, RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
-import { Claimer, Pioneer, RemoteHarvester, RemoteSoldier, Signer } from 'role/remote';
+import { Claimer, Pioneer, RemoteDeposit, RemoteHarvester, RemoteSoldier, Signer } from 'role/remote';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -37,6 +37,13 @@ export const loop = errorMapper(() => {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
+        }
+    }
+
+    for (let name in Memory.rooms) {
+        if (!Game.rooms[name]) {
+            delete Memory.rooms[name];
+            console.log('clear room memory: ', name);
         }
     }
 
@@ -64,7 +71,9 @@ export const loop = errorMapper(() => {
             roleKing.run(creep);
         }
         else if (creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
+            // roleUpgrader.run(creep);
+            let creep_ = new BaseUpgrader(creep);
+            creep_.work();
         }
         else if (creep.memory.role == 'repairer') {
             roleRepairer.run(creep);
@@ -106,6 +115,10 @@ export const loop = errorMapper(() => {
         }
         else if (creep.memory.role == 'signer') {
             let creep_ = new Signer(creep);
+            creep_.work();
+        }
+        else if (creep.memory.role == 'deposit') {
+            let creep_ = new RemoteDeposit(creep);
             creep_.work();
         }
     }

@@ -1,3 +1,4 @@
+import { Role } from './role'
 import { CREEP_STATE } from 'setting'
 
 export class RoleHarvester {
@@ -223,26 +224,141 @@ export class RoleBuilder {
     private creep_: Creep
 }
 
-export class RoleUpgrader {
-    constructor(creep: Creep) {
-        this.creep_ = creep;
+export class BaseUpgrader extends Role {
+    protected override check() {
+        // 处理后事
+        if (this.creep_.ticksToLive < this.creep_.body.length * 3 && this.creep_.memory.isNeeded) {
+            this.creep_.room.addSpawnTask(this.creep_);
+            this.creep_.memory.isNeeded = false;
+        }
     }
 
-    public work() {
+    protected override prepare() {
+        if (this.creep_.spawning) { return; }
+
+        this.creep_.memory.state = CREEP_STATE.SOURCE;
+        this.source();
+    }
+
+    // 先拿身边的 link、container
+    // 再拿 storage、terminal
+    protected override source() {
+        // 能拿的能量最小值
+        let amount = 0;
+        let link = Game.getObjectById(this.creep_.memory.linkControllerID as Id<StructureLink>);
+        if (link) {
+            amount = Math.min(this.creep_.store.getFreeCapacity(), link.store[RESOURCE_ENERGY]);
+            if (amount > 0) {
+                if (this.creep_.withdrawFrom(link, RESOURCE_ENERGY, amount) == OK) {
+                    this.creep_.memory.state = CREEP_STATE.TARGET;
+                }
+                return;
+            }
+        }
+
+        let container = Game.getObjectById(this.creep_.memory.containerControllerID as Id<StructureContainer>);
+        if (container) {
+            amount = Math.min(this.creep_.store.getFreeCapacity(), container.store[RESOURCE_ENERGY]);
+            if (amount > 0) {
+                if (this.creep_.withdrawFrom(container, RESOURCE_ENERGY, amount) == OK) {
+                    this.creep_.memory.state = CREEP_STATE.TARGET;
+                }
+                return;
+            }
+        }
+
+        const controller = this.creep_.room.controller;
+
+        // 5 级之后，才有 link
+        if (!link && controller.level >= 5) {
+            link = controller.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: s => s.structureType == STRUCTURE_LINK 
+                    && s.pos.inRangeTo(controller, 4)
+            });
+
+            this.creep_.memory.linkControllerID = link ? link.id : undefined;
+        }
+
+        const storage = this.creep_.room.storage;
+        if (storage) {
+            amount = Math.min(this.creep_.store.getFreeCapacity(), storage.store[RESOURCE_ENERGY]);
+            if (amount > 0) {
+                if (this.creep_.withdrawFrom(storage, RESOURCE_ENERGY, amount) == OK) {
+                    this.creep_.memory.state = CREEP_STATE.TARGET;
+                }
+                return;
+            }
+        }
+
+        const terminal = this.creep_.room.terminal;
+        if (terminal) {
+            amount = Math.min(this.creep_.store.getFreeCapacity(), terminal.store[RESOURCE_ENERGY]);
+            if (amount > 0) {
+                if (this.creep_.withdrawFrom(terminal, RESOURCE_ENERGY, amount) == OK) {
+                    this.creep_.memory.state = CREEP_STATE.TARGET;
+                }
+                return;
+            }
+        }
+
+        // 优先级最低
+        if (!container) {
+            container = controller.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: s => s.structureType == STRUCTURE_CONTAINER
+            });
+
+            this.creep_.memory.containerControllerID = container ? container.id : undefined;
+        }
+
+        let source = Game.getObjectById(this.creep_.memory.sourceID as Id<Source>);
+        if (source) {
+            this.creep_.getEnergyFrom(source);
+        } else {
+            source = this.creep_.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+            this.creep_.memory.sourceID = source.id;
+        }
+
+        if (this.creep_.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+            this.creep_.memory.state = CREEP_STATE.TARGET;
+            return;
+        }
+    }
+
+    protected override target() {
+        const controller = this.creep_.room.controller;
+        if (!controller) { return; }
+
+        if (this.creep_.pos.inRangeTo(controller, 3)) {
+            this.creep_.upgradeController(controller);
+        } else {
+            this.creep_.goTo(controller.pos);
+        }
+
+        if (this.creep_.store[RESOURCE_ENERGY] == 0) {
+            this.creep_.memory.state = CREEP_STATE.SOURCE;
+            this.source();
+        }
+    }
+}
+
+/**
+ * 修建筑
+ * 刷墙
+ */
+export class BaseWorker extends Role {
+    protected override check() {
 
     }
 
-    private prepare() {
+    protected override prepare() {
 
     }
 
-    private target() {
+    protected override source() {
 
     }
 
-    private check() {
-        
-    }
+    protected override target() {
 
-    private creep_: Creep;    
+    }
 }

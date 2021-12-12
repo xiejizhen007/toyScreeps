@@ -62,6 +62,7 @@ export class RemoteSoldier extends Role {
     }
 
     protected override check() {
+        // 注意 attack 和 heal 不能在同一 tick 进行
         if (this.creep_.getActiveBodyparts(HEAL) > 0 && this.creep_.hits != this.creep_.hitsMax) {
             this.creep_.heal(this.creep_);
         }
@@ -103,7 +104,8 @@ export class Signer extends Role {
 }
 
 /**
- * 跨传送门，目前为测试代码，未确定任务
+ * 新房的开拓者，可跨传送门
+ * 需要在传送门上插旗，并且指定目标房间
  */
 export class Pioneer extends Role {
     protected override prepare() {
@@ -130,10 +132,12 @@ export class Pioneer extends Role {
     }
 
     protected override source() {
-        let source = this.creep_.pos.findClosestByRange(FIND_SOURCES) as Source;
+        let source = this.creep_.pos.findClosestByRange(FIND_SOURCES_ACTIVE) as Source;
+        if (!source) { return; }
+        
         this.creep_.getEnergyFrom(source);
 
-        if (this.creep_.store.getFreeCapacity() == 0) {
+        if (this.creep_.store.getFreeCapacity() == 0 || source.energy == 0) {
             this.creep_.memory.state = CREEP_STATE.TARGET;
             this.target();
         }
@@ -174,6 +178,11 @@ export class Pioneer extends Role {
         }
     }
 
+    protected override check() {
+        if (this.creep_.getActiveBodyparts(HEAL) > 0 && this.creep_.hits != this.creep_.hitsMax) {
+            this.creep_.heal(this.creep_);
+        }
+    }
 }
 
 /**
@@ -229,5 +238,101 @@ export class Claimer extends Role {
         if (this.creep_.getActiveBodyparts(HEAL) > 0 && this.creep_.hits != this.creep_.hitsMax) {
             this.creep_.heal(this.creep_);
         }
+    }
+}
+
+/**
+ * 挖沉积物
+ * TODO: 记录前往目标的时间
+ */
+export class RemoteDeposit extends Role {
+    protected override check() {
+
+    }
+
+    // 去到沉积物所在地
+    protected override prepare() {
+        if (this.creep_.spawning) {
+            this.creep_.memory.countTime = Game.time;
+            return;
+        }
+
+        // 去到指定房间
+        if (this.creep_.room.name != this.creep_.memory.task.workRoomName) {
+            this.creep_.farGoTo(new RoomPosition(25, 25, this.creep_.memory.task.workRoomName));
+        } else {
+            // 去到沉积物附近
+            let target = Game.getObjectById(this.creep_.memory.target as Id<Deposit>);
+            if (!target) {
+                target = this.creep_.pos.findClosestByRange(FIND_DEPOSITS);
+                this.creep_.memory.target = target ? target.id : undefined;
+            }
+
+            if (this.creep_.pos.inRangeTo(target.pos, 1)) {
+                this.creep_.memory.countTime = Game.time - this.creep_.memory.countTime;
+                this.creep_.memory.state = CREEP_STATE.SOURCE;
+                this.source();
+            } else {
+                this.creep_.goTo(target.pos);
+            }
+        }
+    }
+
+    protected override source() {
+        let target = Game.getObjectById(this.creep_.memory.target as Id<Deposit>);
+        if (!target) { 
+            this.creep_.memory.state = CREEP_STATE.PREPARE;
+            this.prepare();
+            return;
+        }
+
+        if (target.cooldown == 0) {
+            this.creep_.harvest(target);
+        } else if (this.creep_.store.getFreeCapacity() == 0
+            || this.creep_.ticksToLive < this.creep_.memory.countTime + 50) {
+
+            this.creep_.memory.state = CREEP_STATE.TARGET;
+            this.target();
+        }
+    }
+
+    // 往回送
+    protected override target() {
+        const room = Game.rooms[this.creep_.memory.room];
+        const storage = room.storage;
+        const terminal = room.terminal;
+
+        if (this.creep_.room.name != room.name || !this.creep_.pos.inRangeTo(terminal, 1)) {
+            this.creep_.farGoTo(terminal.pos);
+        } else {
+            this.creep_.clearBody(terminal);
+
+            if (this.creep_.store.getUsedCapacity() == 0) {
+                this.creep_.memory.countTime = Game.time;
+                this.creep_.memory.state = CREEP_STATE.PREPARE;
+                this.prepare();
+            }
+        }
+    }
+}
+
+/**
+ * 角色模板
+ */
+export class template extends Role {
+    protected override check() {
+
+    }
+
+    protected override prepare() {
+
+    }
+
+    protected override source() {
+
+    }
+
+    protected override target() {
+        
     }
 }

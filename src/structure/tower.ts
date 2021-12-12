@@ -71,30 +71,58 @@ export default class TowerExtension extends StructureTower {
     private repairStructure(): boolean {
         if (Game.time % towerCheckStructure != 0) { return false; }
 
-        let damagedStructure = Game.getObjectById<AnyStructure>(this.room.memory.damagedStructure);
-        // 这个建筑彻底坏了，或者是建筑满血了，重新找到目标
-        if (!damagedStructure || damagedStructure.hits == damagedStructure.hitsMax) {
-            const damagedStructures = this.room.find(FIND_STRUCTURES, {
-                filter: s => s.hits < s.hitsMax && 
-                    s.structureType != STRUCTURE_RAMPART && 
-                    s.structureType != STRUCTURE_WALL && 
-                    s.structureType != STRUCTURE_CONTAINER
-            });
+        // let damagedStructure = Game.getObjectById<AnyStructure>(this.room.memory.damagedStructure);
+        // // 这个建筑彻底坏了，或者是建筑满血了，重新找到目标
+        // if (!damagedStructure || damagedStructure.hits == damagedStructure.hitsMax) {
+        //     const damagedStructures = this.room.find(FIND_STRUCTURES, {
+        //         filter: s => s.hits < s.hitsMax && 
+        //             s.structureType != STRUCTURE_RAMPART && 
+        //             s.structureType != STRUCTURE_WALL && 
+        //             s.structureType != STRUCTURE_CONTAINER
+        //     });
 
-            if (damagedStructures.length > 0) {
-                damagedStructure = this.pos.findClosestByRange(damagedStructures);
-                this.room.memory.damagedStructure = damagedStructure.id;
-            }
-            else {
-                delete this.room.memory.damagedStructure;
-                return false;
-            }
+        //     if (damagedStructures.length > 0) {
+        //         damagedStructure = this.pos.findClosestByRange(damagedStructures);
+        //         this.room.memory.damagedStructure = damagedStructure.id;
+        //     }
+        //     else {
+        //         delete this.room.memory.damagedStructure;
+        //         return false;
+        //     }
+        // }
+
+        // if (damagedStructure.hits + 400 < damagedStructure.hitsMax) {
+        //     this.repair(damagedStructure);
+        //     this.room.memory.damagedStructure = damagedStructure.id;
+        //     return true;
+        // }
+
+        // return false;
+
+        if (!this.room.memory.wallHit) {
+            this.room.memory.wallHit = 10000;
         }
 
-        if (damagedStructure.hits + 400 < damagedStructure.hitsMax) {
-            this.repair(damagedStructure);
-            this.room.memory.damagedStructure = damagedStructure.id;
+        let structures = this.room.find(FIND_STRUCTURES, {
+            filter: s => s.hits != s.hitsMax && s.structureType != STRUCTURE_WALL 
+                && s.structureType != STRUCTURE_RAMPART
+        });
+
+        if (structures.length > 0) {
+            this.repair(structures[0]);
             return true;
+        } else {
+            structures = this.room.find(FIND_STRUCTURES, {
+                filter: s => (s.structureType == STRUCTURE_RAMPART || s.structureType == STRUCTURE_WALL)
+                    && s.hits < this.room.memory.wallHit
+            });
+
+            if (structures.length > 0) {
+                this.repair(structures[0]);
+                return true;
+            } else {
+                this.room.memory.wallHit += 10000;
+            }
         }
 
         return false;

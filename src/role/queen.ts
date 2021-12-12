@@ -5,6 +5,10 @@ import { CREEP_STATE, ROOM_TRANSFER_TASK } from "setting";
 import { getObject } from "utils";
 import { Role } from "./role";
 
+/**
+ * queen
+ * 房间物流管理者
+ */
 export class Queen extends Role {
     /**
      * queen 干活入口

@@ -3,14 +3,14 @@ export const roomSpawn = {
         harvester: { work: 1, carry: 1, move: 1},
         upgrader: {work: 1, carry: 1, move: 2},
         builder: {work: 1, carry: 1, move: 1},
-        queen: {carry: 1, move: 1},
+        queen: {carry: 2, move: 2},
         signer: {move: 1},
     },
     2: {
         harvester: { work: 2, carry: 1, move: 1},
-        upgrader: {work: 1, carry: 1, move: 2},
+        upgrader: {work: 2, carry: 1, move: 2},
         builder: {work: 1, carry: 1, move: 1},
-        queen: {carry: 1, move: 1},
+        queen: {carry: 3, move: 3},
         signer: {move: 1},
     },
     3: {
@@ -106,9 +106,10 @@ export const roomSpawn = {
         manager: {carry: 5, move: 5},
         tmp: {carry: 5, move: 5},
         powerHarvester: {work: 10, carry: 1, move: 1},
-        claimer: {move: 5, claim: 1},
+        claimer: {tough: 15, move: 21, claim: 1, heal: 5},
         remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
-        pioneer: {work: 20, carry: 10, move: 20},
+        pioneer: {work: 15, carry: 10, move: 20, heal: 5},
+        deposit: {work: 20, carry: 5, move: 25},       // 挖沉积物
     }
 }
 
