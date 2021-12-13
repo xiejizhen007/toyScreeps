@@ -17,9 +17,11 @@ interface RoomMemory {
         targetIndex?: number,
     },
     boost?: {
-        state?: string,
+        state?: string,                     // boost 状态
         type?: string,
-        labsID?: any,
+        resourceType?: ResourceConstant[],  // 所用化合物
+        labsID?: Id<StructureLab>[],        // 用于 boost 的 lab
+        count?: number,                     // 记录当前需要 boost 的数量
     },
 
     sources?: string[],
@@ -70,8 +72,8 @@ interface CreepMemory {
         mineralID?: string,
         portalFlag?: string,
     },
-    boost?: boolean,
-    boostType?: string,
+    // boost?: boolean,
+    // boostType?: string,
     labsID?: any,
     exeTask?: roomTransferTask,
     powerSpawnID?: string,
@@ -87,6 +89,11 @@ interface CreepMemory {
     target?: string,        // 目标 id
     resourceType?: ResourceConstant,
     countTime?: number,     // 到岗时间
+
+    // boost
+    boost?: boolean,        // 是否需要 boost
+    boostType?: string[],   // 需要 boost 的动作，如 "attack"，具体看 ./setting/BOOST_RESOURCE_TYPE
+    boostLevel?: number,    // boost 等级，默认 boost 二级
 }
 
 interface PowerCreepMemory {
@@ -99,6 +106,7 @@ interface Room {
     removeHarvestRoom(roomName: string): boolean,
     addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean,
     addSpawnTask(creep: Creep): boolean,
+    addBoostRole(role: string, isNeeded: boolean, boostType: string[], level: number, workRoomName?: string, flagName?: string),
 
     addTransferTask(task: roomTransferTask, priority?: number): number,
     // removeTransferTask(taskType: string): boolean,
@@ -137,6 +145,9 @@ interface Creep {
     findPath(target: RoomPosition): void,
     getEnergyFrom(target: Structure | Source): ScreepsReturnCode,
     pickupFrom(target: Resource): ScreepsReturnCode,
+
+    // boost
+    boost(): void,
     
     // tool
     clearBody(target: Structure): ScreepsReturnCode,
@@ -167,7 +178,7 @@ interface StructureLab {
     work(): void,
 }
 
-type roomTransferTask = iLabIn | iLabOut | iTower | iNuke | iPowerSpawn | iExtension;
+type roomTransferTask = iLabIn | iLabOut | iTower | iNuke | iPowerSpawn | iExtension | iBoostLab;
 
 // 任务类型
 interface iLabIn {
@@ -182,6 +193,14 @@ interface iLabIn {
 interface iLabOut {
     type: string,
     labsID: string[],
+}
+
+interface iBoostLab {
+    type: string,
+    resource: {
+        id: string,
+        type: ResourceConstant,
+    }[],
 }
 
 interface iTower {

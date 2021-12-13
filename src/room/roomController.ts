@@ -16,6 +16,8 @@ export default class RoomController extends Room {
             return;
         }
 
+        console.log("lab check: " + this.name);
+
         let lab1 = getObject(this.memory.lab.lab1ID) as StructureLab;
         let lab2 = getObject(this.memory.lab.lab2ID) as StructureLab;
 
@@ -35,11 +37,13 @@ export default class RoomController extends Room {
 
         let labs = this.find(FIND_STRUCTURES, {
             filter: (s) => {
-                s.structureType == STRUCTURE_LAB
+                return s.structureType == STRUCTURE_LAB
                 && !s.pos.isEqualTo(flag1)
                 && !s.pos.isEqualTo(flag2)
             }
         });
+
+        console.log('lab length: ' + labs.length);
 
         if (labs.length > 0) {
             this.memory.lab.labsID = [];

@@ -247,7 +247,10 @@ export class Claimer extends Role {
  */
 export class RemoteDeposit extends Role {
     protected override check() {
-
+        if (this.creep_.ticksToLive < 10 &&  this.creep_.memory.isNeeded) {
+            this.creep_.room.addSpawnTask(this.creep_);
+            this.creep_.memory.isNeeded = false;
+        }
     }
 
     // 去到沉积物所在地
@@ -266,6 +269,9 @@ export class RemoteDeposit extends Role {
             if (!target) {
                 target = this.creep_.pos.findClosestByRange(FIND_DEPOSITS);
                 this.creep_.memory.target = target ? target.id : undefined;
+                if (!target) {
+                    this.creep_.memory.isNeeded = false;
+                }
             }
 
             if (this.creep_.pos.inRangeTo(target.pos, 1)) {
@@ -293,6 +299,10 @@ export class RemoteDeposit extends Role {
 
             this.creep_.memory.state = CREEP_STATE.TARGET;
             this.target();
+        }
+
+        if (target.lastCooldown > 300) {
+            this.creep_.memory.isNeeded = false;
         }
     }
 

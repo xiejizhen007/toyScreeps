@@ -11,9 +11,9 @@ import { roleHarvester } from './role/role.harvester';
 import { roleOutputer } from './role/role.outputer';
 import { roleQueen } from './role/role.queen';
 import { roleTransfer } from './role/role.transfer';
-import { getBodyArray, getCreepBodys, newCreep, roomWork } from './utils';
+import { addBoostRole, getBodyArray, getCreepBodys, newCreep, roomWork } from './utils';
 
-import { bodyArray, BOOST_RESOURCE, LAB_TRANSFER_TASK, roomSpawn } from './setting';
+import { bodyArray, BOOST_RESOURCE, BOOST_RESOURCE_TYPE, LAB_TRANSFER_TASK, roomSpawn } from './setting';
 // import { transfer } from 'creep/transfer';
 // import { powerSpawnRun } from 'structure/powerSpawn';
 import { creepPS } from 'role/role.creepPS';
@@ -121,6 +121,9 @@ export const loop = errorMapper(() => {
             let creep_ = new RemoteDeposit(creep);
             creep_.work();
         }
+        else if (creep.memory.role == 'test') {
+            creep.boost();
+        }
     }
 
     newCreep();
@@ -172,6 +175,8 @@ export const loop = errorMapper(() => {
         Game.cpu.generatePixel();
     }
 
+    // console.log("boostType: " + BOOST_RESOURCE_TYPE["attack"][0]);
+
     // console.log(roomSpawn[6].tmp);
     // console.log(getCreepBodys(roomSpawn[6].tmp));
     // Tower.run();
@@ -183,3 +188,4 @@ export const loop = errorMapper(() => {
 
 // addRoleSpawnTask(role: string, roomName: string, isNeeded?: boolean, workRoomName?: string, flagName?: string)
 global._spawn = addRoleSpawnTask;
+global._spawnBoost = addBoostRole;

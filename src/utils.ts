@@ -13,8 +13,16 @@ export const newCreep = function() {
             let spawn = room.find(FIND_MY_SPAWNS);
 
             for (let i = 0; i < spawn.length; i++) {
-                let tmp = spawn[i].spawnCreep(getCreepBodys(roomSpawn[room.controller.level][iter.role]), roleName,
-                    { memory: {role: iter.role, room: iter.room ? iter.room : roomName, isNeeded: iter.isNeeded ? true : false, task: iter.task}});
+                let tmp = spawn[i].spawnCreep(getCreepBodys(roomSpawn[room.controller.level][iter.role]), roleName, {
+                    memory: {
+                        role: iter.role, 
+                        room: iter.room ? iter.room : roomName, 
+                        isNeeded: iter.isNeeded ? true : false, 
+                        task: iter.task,
+                        boost: iter.boost,
+                        boostType: iter.boostType,
+                        boostLevel: iter.boostLevel,
+                }});
                 
                 if (tmp == OK) {
                     console.log('new creep: ' + roleName);
@@ -155,6 +163,13 @@ export function addRoleSpawnTask(role: string, roomName: string, isNeeded?: bool
     });
     console.log('add role spawn task');
     return true;
+}
+
+export function addBoostRole(role: string, roomName: string, isNeeded: boolean, boostType: string[], level: number, workRoomName?: string, flagName?: string): boolean {
+    let room = Game.rooms[roomName];
+    if (!room) { return false; }
+
+    return room.addBoostRole(role, isNeeded, boostType, level, workRoomName, flagName);
 }
 
 export const getCreepBodys = function(bodySet) {

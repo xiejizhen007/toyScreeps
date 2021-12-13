@@ -1,3 +1,5 @@
+import { BOOST_RESOURCE_TYPE } from "setting";
+
 export default class creepExtension extends Creep {
     public work(): void {
         console.log('sss');
@@ -178,5 +180,51 @@ export default class creepExtension extends Creep {
         // console.log(road.path);
         if (road.path.length <= 0) return null;
         this.memory.farMove.paths = road.path;
+    }
+
+    // boost
+    /**
+     * TODO: 只有 boost 完之后，才把 boost 设成 false
+     * @returns 
+     */
+    public boost(): void {
+        if (!this.memory.boost) { return; }
+        if (!this.room.memory.boost.resourceType) {
+            this.room.memory.boost.resourceType = new Array();
+        }
+
+        let task = this.room.memory.boost;
+        let resourceType = new Array();
+        this.memory.boostType.forEach(f => {
+            let resource = BOOST_RESOURCE_TYPE[f][this.memory.boostLevel];
+            if (!resourceType.includes(resource)) {
+                resourceType.push(resource);
+            }
+        });
+
+        resourceType.forEach(f => {
+            if (!this.room.memory.boost.resourceType.includes(f)) {
+                this.room.memory.boost.resourceType.push(f);
+            }
+        });
+
+        task.resourceType = resourceType;
+        this.room.memory.boost = task;
+
+        const flag = Game.flags[this.room.name + 'Boost'];
+        if (!flag) { return; }
+
+        if (this.pos.isEqualTo(flag)) {
+            task.labsID.forEach(f => {
+                let lab = Game.getObjectById(f as Id<StructureLab>);
+                if (lab.mineralType && resourceType.includes(lab.mineralType)) {
+                    lab.boostCreep(this);
+                }
+            });
+            this.memory.boost = false;
+            this.room.memory.boost.count--;
+        } else {
+            this.goTo(flag.pos);
+        }
     }
 }

@@ -1,3 +1,5 @@
+import { NumericDictionary } from "lodash";
+
 export default class RoomExtension extends Room {
     public addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean {
         if (!this.memory.spawnTasks) { this.memory.spawnTasks = []; }
@@ -31,6 +33,36 @@ export default class RoomExtension extends Room {
         });
 
         creep.memory.isNeeded = false;
+        return true;
+    }
+
+    /**
+     * 
+     * @param role 
+     * @param isNeeded 
+     * @param boostType 需要 boost 的操作
+     * @param level boost 等级，使用几级化合物，必须指定
+     * @param workRoomName 
+     * @param flagName 
+     */
+    public addBoostRole(role: string, isNeeded: boolean, boostType: string[], level: number, workRoomName?: string, flagName?: string) {
+        if (!this.memory.spawnTasks) { this.memory.spawnTasks = []; }
+
+        this.memory.spawnTasks.push({
+            role: role,
+            room: this.name,
+            isNeeded: isNeeded,
+            task: {
+                workRoomName: workRoomName,
+                flagName: flagName
+            },
+            boost: true,
+            boostType: boostType,
+            boostLevel: level
+        });
+
+        console.log('add boost role: ' + role);
+        this.memory.boost.count++;
         return true;
     }
 

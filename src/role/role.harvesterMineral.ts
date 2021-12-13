@@ -25,15 +25,15 @@ export const roleHarvesterMineral = {
         }
 
         if (creep.memory.back) {
-            let storage = creep.room.storage;
-            if (storage) {
-                if (!creep.pos.inRangeTo(storage.pos, 1)) {
-                    creep.moveTo(storage);
+            let terminal = creep.room.terminal;
+            if (terminal) {
+                if (!creep.pos.inRangeTo(terminal.pos, 1)) {
+                    creep.moveTo(terminal);
                     return;
                 }
 
                 for (let type in creep.store) {
-                    creep.transfer(storage, type);
+                    creep.transfer(terminal, type);
                 }
 
                 if (creep.store.getUsedCapacity() == 0) {

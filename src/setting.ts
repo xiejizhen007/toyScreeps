@@ -14,10 +14,10 @@ export const roomSpawn = {
         signer: {move: 1},
     },
     3: {
-        builder: {work: 1, carry: 2, move: 2},
+        builder: {work: 2, carry: 2, move: 2},
         harvester: { work: 3, carry: 1, move: 1},
         queen: {carry: 3, move: 3},
-        upgrader: {work: 3, carry: 3, move: 3},
+        upgrader: {work: 3, carry: 2, move: 3},
         repairer: {work: 2, carry: 3, move: 3},
         outputer: {carry: 4, move: 4},
         signer: {move: 1},
@@ -69,7 +69,7 @@ export const roomSpawn = {
         outputer: {carry: 15, move: 15},
         king: {carry: 10, move: 10},
         queen: {carry: 10, move: 10},
-        harvesterMineral: {work: 5, carry: 6, move: 6},
+        harvesterMineral: {work: 15, carry: 10, move: 25},
         soldier: {tough: 9, attack: 16, move: 25},
         docter: {tough: 9, heal: 16, move: 25},
         creepLab: {carry: 10, move: 10},
@@ -85,7 +85,7 @@ export const roomSpawn = {
     },
     8: {
         harvester: {work: 10, carry: 1, move: 5}, 
-        transfer: {carry: 12, move: 12},
+        transfer: {carry: 16, move: 16},
         transferRoom: {carry: 20, move: 20},
         repairer: {work: 6, carry: 6, move: 6},
         repairerWall: {work: 5, carry: 10, move: 10},
@@ -94,17 +94,17 @@ export const roomSpawn = {
         outputer: {carry: 10, move: 10},
         king: {carry: 10, move: 10},
         queen: {carry: 20, move: 20},
-        harvesterMineral: {work: 5, carry: 6, move: 6},
+        harvesterMineral: {work: 15, carry: 10, move: 25},
         soldier: {tough: 9, attack: 16, move: 25},
         docter: {tough: 9, heal: 16, move: 25},
         creepLab: {carry: 10, move: 10},
-        test: {attack: 1, heal: 1, move: 2},
+        test: {tough: 1, attack: 1, heal: 1, move: 2},
         creepTransfer: {carry: 4, move: 4},
         creepPS: {carry: 10, move: 10},
         harvesterRoom: {work: 6, carry: 4, move: 6},
         reserver: {claim: 2, move: 2},
         manager: {carry: 5, move: 5},
-        tmp: {carry: 5, move: 5},
+        tmp: {carry: 10, move: 10},
         powerHarvester: {work: 10, carry: 1, move: 1},
         claimer: {tough: 15, move: 21, claim: 1, heal: 5},
         remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
@@ -115,10 +115,12 @@ export const roomSpawn = {
 
 // 后期再改
 export const bodyArray = {
+    // 挖能量
     harvester: [
         { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
     ],
 
+    // 房间物流
     queen: [
         { [MOVE]: 2, [CARRY]: 2 },
         { [MOVE]: 2, [CARRY]: 2 },
@@ -130,6 +132,7 @@ export const bodyArray = {
         { [MOVE]: 2, [CARRY]: 2 },
     ],
 
+    // 中央物流
     king: [
         { },
         { },
@@ -137,6 +140,16 @@ export const bodyArray = {
         { },
         { },
         { },        // terminal
+    ],
+
+    // 升级
+    upgrader: [
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+        
+    ],
+
+    // 日常工作，修建筑，刷墙
+    worker: [
 
     ],
 }
@@ -182,6 +195,7 @@ export const BOOST_STATE = {
     BOOST_GET_ENERGY: 'boostGetEnergy',             // 填充 lab 的能量
     BOOST_WAIT: 'boostWait',                        // 等待
     BOOST_CLEAR: 'boostClear',                      // boost 结束，把用到的资源放回 terminal
+    BOOST_READY: 'boostReady',                      // 填充完毕
 }
 
 export const towerCheckStructure = 5;
@@ -216,6 +230,74 @@ export const BOOST_RESOURCE = {
     ],
 }
 
+/**
+ * 强化需要使用的资源类型
+ * 分为三个等级
+ */
+export const BOOST_RESOURCE_TYPE = {
+    attack: [
+        "UH",
+        "UH2O",
+        "XUH2O",
+    ],
+
+    harvest: [
+        "UO",
+        "UHO2",
+        "XUHO2",
+    ],
+
+    carry: [
+        "KH",
+        "KH2O",
+        "XKH2O",
+    ],
+
+    // rangedAttack
+    ranged: [
+        "KO",
+        "KHO2",
+        "XKHO2",
+    ],
+
+    // repair and build
+    repair: [
+        "LH",
+        "LH2O",
+        "XLH2O",
+    ],
+
+    heal: [
+        "LO",
+        "LHO2",
+        "XLHO2",
+    ],
+
+    dismantle: [
+        "ZH",
+        "ZH2O",
+        "XZH2O",
+    ],
+
+    move: [
+        "ZO",
+        "ZHO2",
+        "XZHO2",
+    ],
+
+    upgrade: [
+        "GH",
+        "GH2O",
+        "XGH2O",
+    ],
+
+    tough: [
+        "GO",
+        "GHO2",
+        "XGHO2",
+    ]
+}
+
 export const PC_TASK = {
     REGEN_SOURCE : 'regenSource',
 }
@@ -230,51 +312,49 @@ export const labTarget = [
     // attack
     { target: RESOURCE_CATALYZED_UTRIUM_ACID, number: 6000},  
     { target: RESOURCE_UTRIUM_ACID, number: 3000}, 
-    { target: RESOURCE_UTRIUM_HYDRIDE, number: 1000},
+    { target: RESOURCE_UTRIUM_HYDRIDE, number: 3000},
 
     // ranged attack
     { target: RESOURCE_CATALYZED_KEANIUM_ALKALIDE, number: 6000},
     { target: RESOURCE_KEANIUM_ALKALIDE, number: 3000}, 
-    { target: RESOURCE_KEANIUM_OXIDE, number: 1000},
+    { target: RESOURCE_KEANIUM_OXIDE, number: 3000},
 
     // move
     { target: RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE, number: 6000}, 
-    { target: RESOURCE_ZYNTHIUM_ALKALIDE, number: 1000}, 
-    { target: RESOURCE_ZYNTHIUM_OXIDE, number: 1000},
+    { target: RESOURCE_ZYNTHIUM_ALKALIDE, number: 3000}, 
+    { target: RESOURCE_ZYNTHIUM_OXIDE, number: 3000},
 
     // tough
     { target: RESOURCE_CATALYZED_GHODIUM_ALKALIDE, number: 6000}, 
     { target: RESOURCE_GHODIUM_ALKALIDE, number: 2000}, 
-    { target: RESOURCE_GHODIUM_OXIDE, number: 1000},
+    { target: RESOURCE_GHODIUM_OXIDE, number: 3000},
 
     // heal
     { target: RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE, number: 6000},
-    { target: RESOURCE_LEMERGIUM_ALKALIDE, number: 2000}, 
-    { target: RESOURCE_LEMERGIUM_OXIDE, number: 1000},
+    { target: RESOURCE_LEMERGIUM_ALKALIDE, number: 3000}, 
+    { target: RESOURCE_LEMERGIUM_OXIDE, number: 3000},
 
     // dismantle
     { target: RESOURCE_CATALYZED_ZYNTHIUM_ACID, number: 4000},
-    { target: RESOURCE_ZYNTHIUM_ACID, number: 1000}, 
-    { target: RESOURCE_ZYNTHIUM_HYDRIDE, number: 1000},
+    { target: RESOURCE_ZYNTHIUM_ACID, number: 3000}, 
+    { target: RESOURCE_ZYNTHIUM_HYDRIDE, number: 3000},
 
     // upgrader
     { target: RESOURCE_CATALYZED_GHODIUM_ACID, number: 4000},   
-    { target: RESOURCE_GHODIUM_ACID, number: 1000}, 
-    { target: RESOURCE_GHODIUM_HYDRIDE, number: 1000},
+    { target: RESOURCE_GHODIUM_ACID, number: 3000}, 
+    { target: RESOURCE_GHODIUM_HYDRIDE, number: 3000},
 
-    // { target: RESOURCE_CATALYZED_UTRIUM_ALKALIDE, number: 3000},    // harvester
-    // { target: RESOURCE_CATALYZED_KEANIUM_ACID, number: 3000},       // carry
-    // { target: RESOURCE_CATALYZED_LEMERGIUM_ACID, number: 3000},     // repairer
+    { target: RESOURCE_CATALYZED_UTRIUM_ALKALIDE, number: 3000},    // harvester
+    { target: RESOURCE_UTRIUM_ALKALIDE, number: 3000}, 
+    { target: RESOURCE_UTRIUM_OXIDE, number: 3000},
 
-    // // 二级化合物
-    // { target: RESOURCE_UTRIUM_ALKALIDE, number: 3000}, 
-    // { target: RESOURCE_KEANIUM_ACID, number: 3000}, 
-    // { target: RESOURCE_LEMERGIUM_ACID, number: 3000}, 
+    { target: RESOURCE_CATALYZED_KEANIUM_ACID, number: 3000},       // carry
+    { target: RESOURCE_KEANIUM_ACID, number: 3000}, 
+    { target: RESOURCE_KEANIUM_HYDRIDE, number: 3000},
 
-    // // 一级化合物
-    // { target: RESOURCE_UTRIUM_OXIDE, number: 3000},
-    // { target: RESOURCE_KEANIUM_HYDRIDE, number: 3000},
-    // { target: RESOURCE_LEMERGIUM_HYDRIDE, number: 3000},
+    { target: RESOURCE_CATALYZED_LEMERGIUM_ACID, number: 3000},     // repairer
+    { target: RESOURCE_LEMERGIUM_ACID, number: 3000}, 
+    { target: RESOURCE_LEMERGIUM_HYDRIDE, number: 3000},
 ];
 
 export const reactionResource = {

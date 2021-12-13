@@ -1,3 +1,5 @@
+// 基础角色组
+
 import { Role } from './role'
 import { CREEP_STATE } from 'setting'
 
@@ -360,5 +362,65 @@ export class BaseWorker extends Role {
 
     protected override target() {
 
+    }
+}
+
+export class BaseMineral extends Role {
+    protected override check() {
+
+    }
+
+    protected override prepare() {
+        if (this.creep_.spawning) {
+            this.creep_.memory.countTime = Game.time;
+            return;
+        }
+
+        if (this.creep_.room.name != this.creep_.memory.task.workRoomName) {
+            this.creep_.farGoTo(new RoomPosition(25, 25, this.creep_.memory.task.workRoomName));
+        } else {
+            // 计算到岗时间
+            this.creep_.memory.countTime = Game.time - this.creep_.memory.countTime;
+            this.creep_.memory.state = CREEP_STATE.SOURCE;
+            this.source();
+        }
+    }
+
+    protected override source() {
+        if (this.creep_.store.getFreeCapacity() == 0) {
+            this.creep_.memory.state = CREEP_STATE.TARGET;
+            this.target();
+            return;
+        }
+
+        let target = Game.getObjectById(this.creep_.memory.target as Id<Mineral>);
+        if (!target) {
+            target = this.creep_.pos.findClosestByRange(FIND_MINERALS);
+            this.creep_.memory.target = target ? target.id : undefined;
+        }
+
+        if (target) {
+            if (this.creep_.pos.inRangeTo(target, 1)) {
+                this.creep_.harvest(target);
+            } else {
+                this.creep_.goTo(target.pos);
+            }
+        }
+    }
+
+    protected override target() {
+        const room = Game.rooms[this.creep_.memory.room];
+        const terminal = room.terminal;
+        if (this.creep_.store.getUsedCapacity() == 0) {
+            this.creep_.memory.countTime = Game.time;
+            this.creep_.memory.state = CREEP_STATE.PREPARE;
+            this.prepare();
+        }
+
+        if (this.creep_.room.name != room.name) {
+            this.creep_.farGoTo(terminal.pos);
+        } else {
+            this.creep_.clearBody(terminal);
+        }
     }
 }
