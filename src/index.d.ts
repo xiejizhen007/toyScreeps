@@ -3,6 +3,11 @@ interface Memory {
     enemyRoom?: string[],
     reserverRoom?: string[],
     harvestRoom?: iHarvestRoom[],
+    pbTeam?: {
+        flagName?: string,
+        attacker?: string,          // 记录 attacker 的名字
+        docter?: string,            // docter 的名字
+    }[]
 }
 
 interface RoomMemory {
@@ -31,7 +36,7 @@ interface RoomMemory {
     exeTransferTasks?: roomTransferTask[],
     war?: boolean,
     powerSpawnID?: string,
-    mineralID?: string,
+    mineralID?: Id<Mineral>,
     reserverRoom?: string[],
 
     harvestRoom?: iHarvestRoom[],
@@ -119,6 +124,7 @@ interface Room {
     // creepController
     addRoomCreepGroup(roomName: string): boolean,
     addRoomReserver(roomName: string): boolean,
+    addMineral(): boolean,
 
     // powerCreepController
     powerWork(): boolean,
