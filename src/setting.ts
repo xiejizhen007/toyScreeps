@@ -15,18 +15,18 @@ export const roomSpawn = {
     },
     3: {
         builder: {work: 2, carry: 2, move: 2},
-        harvester: { work: 3, carry: 1, move: 1},
+        harvester: { work: 2, carry: 1, move: 1},
         queen: {carry: 3, move: 3},
         upgrader: {work: 3, carry: 2, move: 3},
         repairer: {work: 2, carry: 3, move: 3},
-        outputer: {carry: 4, move: 4},
+        outputer: {carry: 2, move: 2},
         signer: {move: 1},
     },
     4: {
         builder: {work: 5, carry: 5, move: 2},
         harvester: { work: 5, carry: 1, move: 1},
         queen: {carry: 5, move: 5},
-        upgrader: {work: 5, carry: 5, move: 3},
+        upgrader: {work: 5, carry: 3, move: 3},
         repairer: {work: 2, carry: 3, move: 3},
         outputer: {carry: 4, move: 4},
         transfer: {carry: 8, move: 8},
@@ -81,7 +81,9 @@ export const roomSpawn = {
         farmove: {work: 2, carry: 1, move: 2},
         claimer: {move: 5, claim: 1},
         remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
-        pioneer: {work: 20, carry: 10, move: 20},
+        // pioneer: {work: 20, carry: 10, move: 20},
+        // pioneer: {work: 13, carry: 10, move: 25, heal: 2},
+        pioneer: {work: 10, carry: 10, move: 25, heal: 5},
     },
     8: {
         harvester: {work: 10, carry: 1, move: 5}, 
@@ -108,8 +110,9 @@ export const roomSpawn = {
         powerHarvester: {work: 10, carry: 1, move: 1},
         claimer: {tough: 15, move: 21, claim: 1, heal: 5},
         remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
-        pioneer: {work: 15, carry: 10, move: 20, heal: 5},
-        deposit: {work: 20, carry: 5, move: 25},       // 挖沉积物
+        pioneer: {work: 10, carry: 10, move: 25, heal: 5},
+        // pioneer: {work: 15, carry: 10, move: 20, heal: 5},
+        deposit: {work: 15, carry: 10, move: 25},       // 挖沉积物
     }
 }
 

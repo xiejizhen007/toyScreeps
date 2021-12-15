@@ -107,6 +107,7 @@ interface Room {
     addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean,
     addSpawnTask(creep: Creep): boolean,
     addBoostRole(role: string, isNeeded: boolean, boostType: string[], level: number, workRoomName?: string, flagName?: string),
+    addBoostCreep(creep: Creep);
 
     addTransferTask(task: roomTransferTask, priority?: number): number,
     // removeTransferTask(taskType: string): boolean,
@@ -132,6 +133,7 @@ interface Room {
 
     // market
     buyPower(): void,
+    sell(resourceType: ResourceConstant): ScreepsReturnCode,
 }
 
 interface Creep {

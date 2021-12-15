@@ -215,14 +215,19 @@ export default class creepExtension extends Creep {
         if (!flag) { return; }
 
         if (this.pos.isEqualTo(flag)) {
+            let ret = false;
             task.labsID.forEach(f => {
                 let lab = Game.getObjectById(f as Id<StructureLab>);
                 if (lab.mineralType && resourceType.includes(lab.mineralType)) {
-                    lab.boostCreep(this);
+                    ret = lab.boostCreep(this) == OK || ret;
                 }
             });
-            this.memory.boost = false;
-            this.room.memory.boost.count--;
+            if (ret) {
+                this.memory.boost = false;
+                this.room.memory.boost.count--;
+            }
+            // TODO: 所有需要 boost 的身体都 boost 了，才能结束
+            
         } else {
             this.goTo(flag.pos);
         }

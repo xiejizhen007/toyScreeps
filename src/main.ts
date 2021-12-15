@@ -11,7 +11,7 @@ import { roleHarvester } from './role/role.harvester';
 import { roleOutputer } from './role/role.outputer';
 import { roleQueen } from './role/role.queen';
 import { roleTransfer } from './role/role.transfer';
-import { addBoostRole, getBodyArray, getCreepBodys, newCreep, roomWork } from './utils';
+import { addBoostRole, getBodyArray, getCreepBodys, newCreep, roomWork, sell } from './utils';
 
 import { bodyArray, BOOST_RESOURCE, BOOST_RESOURCE_TYPE, LAB_TRANSFER_TASK, roomSpawn } from './setting';
 // import { transfer } from 'creep/transfer';
@@ -52,8 +52,11 @@ export const loop = errorMapper(() => {
         let creep = Game.creeps[name];
 
         if (creep.memory.role == 'harvester') {
+            // let startCpu = Game.cpu.getUsed();
             let creep_ = new RoleHarvester(creep);
+            // console.log('cpu cost: ' + (Game.cpu.getUsed() - startCpu));
             creep_.work();
+            // console.log('cpu cost: ' + (Game.cpu.getUsed() - startCpu));
         }
         else if (creep.memory.role == 'queen') {
             roleQueen.run(creep);
@@ -189,3 +192,4 @@ export const loop = errorMapper(() => {
 // addRoleSpawnTask(role: string, roomName: string, isNeeded?: boolean, workRoomName?: string, flagName?: string)
 global._spawn = addRoleSpawnTask;
 global._spawnBoost = addBoostRole;
+global._sell = sell;

@@ -100,19 +100,19 @@ export const roleKing = {
                 }
             }
             // tmp
-            // if (terminal.store.getUsedCapacity("H") <= 25000) {
-            //     if (creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
-            //         creep.transfer(terminal, RESOURCE_ENERGY);
-            //         return;
-            //     }
+            if (terminal.store.getUsedCapacity("H") <= 20000) {
+                if (creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
+                    creep.transfer(terminal, RESOURCE_ENERGY);
+                    return;
+                }
 
-            //     if (creep.memory.work) {
-            //         creep.transfer(terminal, "H");
-            //     }
-            //     else {
-            //         creep.withdraw(storage, "H")
-            //     }
-            // }
+                if (creep.memory.work) {
+                    creep.transfer(terminal, "H");
+                }
+                else {
+                    creep.withdraw(storage, "H")
+                }
+            }
 
             // // tmp
             // if (creep.room.name == 'W15N58') {

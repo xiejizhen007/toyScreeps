@@ -66,6 +66,27 @@ export default class RoomExtension extends Room {
         return true;
     }
 
+    public addBoostCreep(creep: Creep) {
+        if (!this.memory.spawnTasks) { this.memory.spawnTasks = []; }
+
+        this.memory.spawnTasks.push({
+            role: creep.memory.role,
+            room: this.name,
+            isNeeded: creep.memory.isNeeded,
+            task: {
+                workRoomName: creep.memory.task.workRoomName,
+                flagName: creep.memory.task.flagName
+            },
+            boost: true,
+            boostType: creep.memory.boostType,
+            boostLevel: creep.memory.boostLevel
+        });
+
+        console.log('add boost role: ' + creep.memory.role);
+        this.memory.boost.count++;
+        return true;
+    }
+
     /**
      * 添加外矿房间
      * @param roomName 外矿房间名
@@ -177,5 +198,19 @@ export default class RoomExtension extends Room {
                 }
             }
         }
+    }
+
+    public sell(resourceType: ResourceConstant): ScreepsReturnCode {
+        let orders = Game.market.getAllOrders({
+            type: ORDER_BUY,
+            resourceType: resourceType
+        });
+
+        orders.sort((a, b) => b.price - a.price);
+        if (orders.length > 0) {
+            // console.log('orders price: ' + orders[0].price);
+            return Game.market.deal(orders[0].id, orders[0].amount, this.name);
+        }
+        return OK;
     }
 }

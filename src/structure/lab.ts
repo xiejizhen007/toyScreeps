@@ -227,6 +227,7 @@ export default class LabExtension extends StructureLab {
     }
 
     private boostGetEnergy() {
+        // console.log('boostGetEnergy: ' + this.room.name);
         if (this.room.hasTransferTask(ROOM_TRANSFER_TASK.BOOST_GET_ENERGY)) {
             return;
         }
@@ -237,12 +238,25 @@ export default class LabExtension extends StructureLab {
         let lab2 = Game.getObjectById(this.room.memory.lab.lab2ID as Id<StructureLab>);
 
         let labs = new Array();
-        this.room.memory.lab.labsID.forEach(s => {
-            let lab = Game.getObjectById(s as Id<StructureLab>);
-            if (lab.pos.inRangeTo(flag, 1) && !lab.pos.isEqualTo(lab1) && !lab.pos.isEqualTo(lab2)
-                && lab.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-                labs.push(lab.id);
+        // this.room.memory.lab.labsID.forEach(s => {
+        //     let lab = Game.getObjectById(s as Id<StructureLab>);
+        //     if (lab.pos.inRangeTo(flag, 1) && !lab.pos.isEqualTo(lab1) && !lab.pos.isEqualTo(lab2)
+        //         && lab.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+        //         labs.push(lab.id);
+        //     }
+        // });
+        let labObjs = this.room.find(FIND_STRUCTURES, {
+            filter: s => {
+                return s.structureType == STRUCTURE_LAB 
+                && !s.pos.isEqualTo(flag)
+                && !s.pos.isEqualTo(flag)
+                && s.pos.inRangeTo(flag, 1)
+                && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
+        });
+
+        labObjs.forEach(f => {
+            labs.push(f.id);
         });
 
         let resource = new Array();
@@ -276,6 +290,10 @@ export default class LabExtension extends StructureLab {
         tmps.forEach(f => {
             this.room.memory.lab.labsID.push(f.id)
         });
+
+        // labObjs.forEach(f => {
+        //     if ()
+        // })
 
         this.room.memory.boost.labsID = labs;
 
@@ -351,10 +369,14 @@ export default class LabExtension extends StructureLab {
     }
 
     private boostClear() {
-        if (this.room.hasTransferTask(ROOM_TRANSFER_TASK.BOOST_CLEAR) || this.room.memory.boost.count == 0) {
+        if (this.room.hasTransferTask(ROOM_TRANSFER_TASK.BOOST_CLEAR)) {
             return;
         } else if (this.room.memory.boost.count > 0) {
             this.room.memory.boost.state = BOOST_STATE.BOOST_GET_ENERGY;
+            return;
+        }
+
+        if (!this.room.memory.boost.labsID) {
             return;
         }
 

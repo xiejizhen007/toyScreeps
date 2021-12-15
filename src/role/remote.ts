@@ -182,6 +182,12 @@ export class Pioneer extends Role {
         if (this.creep_.getActiveBodyparts(HEAL) > 0 && this.creep_.hits != this.creep_.hitsMax) {
             this.creep_.heal(this.creep_);
         }
+
+        if (this.creep_.ticksToLive < this.creep_.body.length * 3 && this.creep_.memory.isNeeded) {
+            let room = Game.rooms[this.creep_.memory.room];
+            room.addSpawnTask(this.creep_);
+            this.creep_.memory.isNeeded = false;
+        }
     }
 }
 
@@ -248,7 +254,21 @@ export class Claimer extends Role {
 export class RemoteDeposit extends Role {
     protected override check() {
         if (this.creep_.ticksToLive < 10 &&  this.creep_.memory.isNeeded) {
-            this.creep_.room.addSpawnTask(this.creep_);
+            if (this.creep_.memory.boost != undefined) {
+                let room = Game.rooms[this.creep_.memory.room];
+                // room.addBoostRole(
+                //     this.creep_.memory.role,
+                //     true,
+                //     this.creep_.memory.boostType,
+                //     this.creep_.memory.boostLevel,
+                //     this.creep_.memory.task.workRoomName,
+                //     this.creep_.memory.task.flagName
+                // );
+                room.addBoostCreep(this.creep_);
+            } else {
+                this.creep_.room.addSpawnTask(this.creep_);
+            }
+
             this.creep_.memory.isNeeded = false;
         }
     }
@@ -260,13 +280,19 @@ export class RemoteDeposit extends Role {
             return;
         }
 
+        if (this.creep_.memory.boost) {
+            this.creep_.boost();
+            this.creep_.memory.countTime = Game.time;
+            return;
+        }
+
         // 去到指定房间
         if (this.creep_.room.name != this.creep_.memory.task.workRoomName) {
             this.creep_.farGoTo(new RoomPosition(25, 25, this.creep_.memory.task.workRoomName));
         } else {
             // 去到沉积物附近
             let target = Game.getObjectById(this.creep_.memory.target as Id<Deposit>);
-            if (!target) {
+            if (!target || target.lastCooldown >= 300) {
                 target = this.creep_.pos.findClosestByRange(FIND_DEPOSITS);
                 this.creep_.memory.target = target ? target.id : undefined;
                 if (!target) {

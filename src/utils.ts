@@ -268,3 +268,8 @@ export function roomWork(): void {
         }
     }
 }
+
+export function sell(roomName: string, resourceType: ResourceConstant): ScreepsReturnCode {
+    let room = Game.rooms[roomName];
+    return room.sell(resourceType);
+}
