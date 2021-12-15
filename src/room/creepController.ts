@@ -33,7 +33,20 @@ export default class creepController extends RoomExtension {
      * 注意避免重复派遣
      */
     public addMineral(): boolean {
-        
+        // let mineral = this.find(FIND_MINERALS)[0];
+        let mineral = Game.getObjectById(this.memory.mineralID);
+        if (!mineral) {
+            mineral = this.find(FIND_MINERALS)[0];
+            if (mineral) {
+                this.memory.mineralID = mineral.id;
+            }
+        }
+
+        if (mineral && mineral.ticksToRegeneration == 50) {
+            this.addRoleSpawnTask('harvesterMineral', true);
+            return true;
+        }
+
         return false;
     }
 }
