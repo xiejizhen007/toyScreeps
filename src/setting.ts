@@ -29,7 +29,7 @@ export const roomSpawn = {
         upgrader: {work: 5, carry: 3, move: 3},
         repairer: {work: 2, carry: 3, move: 3},
         outputer: {carry: 4, move: 4},
-        transfer: {carry: 8, move: 8},
+        transfer: {carry: 5, move: 5},
     },
     5: {
         builder: {work: 5, carry: 5, move: 2},
@@ -91,7 +91,7 @@ export const roomSpawn = {
         transferRoom: {carry: 20, move: 20},
         repairer: {work: 6, carry: 6, move: 6},
         repairerWall: {work: 5, carry: 10, move: 10},
-        upgrader: {work: 1, carry: 1, move: 1},
+        upgrader: {work: 10, carry: 10, move: 20},
         builder: {work: 15, carry: 20, move: 15},
         outputer: {carry: 10, move: 10},
         king: {carry: 10, move: 10},
@@ -403,3 +403,9 @@ export const reactionResource = {
     [RESOURCE_UTRIUM_LEMERGITE]: [RESOURCE_UTRIUM, RESOURCE_LEMERGIUM],
     [RESOURCE_GHODIUM]: [RESOURCE_ZYNTHIUM_KEANITE, RESOURCE_UTRIUM_LEMERGITE],
 }
+
+// 最大冷却时间
+export const DEPOSIT_MAX_COOLDOWN = 200;
+
+// target room
+// w11s22

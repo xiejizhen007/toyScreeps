@@ -250,6 +250,7 @@ export function roomWork(): void {
 
         room.powerWork();
         room.buyPower();
+        room.addMineral();
 
         let structureTargets = room.find(FIND_STRUCTURES);
         for (let i = 0; i < structureTargets.length; i++) {
