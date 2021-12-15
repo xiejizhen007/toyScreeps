@@ -112,17 +112,17 @@ export default class TowerExtension extends StructureTower {
             this.repair(structures[0]);
             return true;
         } else {
-            structures = this.room.find(FIND_STRUCTURES, {
-                filter: s => (s.structureType == STRUCTURE_RAMPART || s.structureType == STRUCTURE_WALL)
-                    && s.hits < this.room.memory.wallHit
-            });
+            // structures = this.room.find(FIND_STRUCTURES, {
+            //     filter: s => (s.structureType == STRUCTURE_RAMPART || s.structureType == STRUCTURE_WALL)
+            //         && s.hits < this.room.memory.wallHit
+            // });
 
-            if (structures.length > 0) {
-                this.repair(structures[0]);
-                return true;
-            } else {
-                this.room.memory.wallHit += 10000;
-            }
+            // if (structures.length > 0) {
+            //     this.repair(structures[0]);
+            //     return true;
+            // } else {
+            //     this.room.memory.wallHit += 10000;
+            // }
         }
 
         return false;
