@@ -58,6 +58,10 @@ export const roleHarvesterMineral = {
                 }
             }
 
+            if (mineral && mineral.mineralAmount == 0) {
+                creep.memory.isNeeded = false;
+            }
+
 
             if (creep.store.getFreeCapacity(RESOURCES_ALL) == 0) {
                 creep.memory.back = true;
