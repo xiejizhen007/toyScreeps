@@ -5,17 +5,14 @@ import { roleKing } from 'role/role.king';
 import { roleRepairer } from 'role/role.repairer';
 import { roleUpgrader } from 'role/role.upgrader';
 import { boostClear, Lab } from 'structure/labs';
-// import { Tower } from 'structure/tower';
 import { errorMapper } from './modules/errorMapper'
 import { roleHarvester } from './role/role.harvester';
 import { roleOutputer } from './role/role.outputer';
 import { roleQueen } from './role/role.queen';
 import { roleTransfer } from './role/role.transfer';
-import { addBoostRole, getBodyArray, getCreepBodys, newCreep, roomWork, sell } from './utils';
+import { addBoostRole, addPowerBank, buy, checkBuy, getBodyArray, getCreepBodys, newCreep, roomWork, sell } from './utils';
 
 import { bodyArray, BOOST_RESOURCE, BOOST_RESOURCE_TYPE, LAB_TRANSFER_TASK, roomSpawn } from './setting';
-// import { transfer } from 'creep/transfer';
-// import { powerSpawnRun } from 'structure/powerSpawn';
 import { creepPS } from 'role/role.creepPS';
 import mountWork from './mount'
 import { harvesterRoom } from 'role/harvesterRoom';
@@ -29,6 +26,7 @@ import { Queen } from 'role/queen';
 import { BaseUpgrader, RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
 import { Claimer, Pioneer, RemoteDeposit, RemoteHarvester, RemoteSoldier, Signer } from 'role/remote';
+import { PBAttacker, PBDocter } from 'role/team';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -126,6 +124,14 @@ export const loop = errorMapper(() => {
         }
         else if (creep.memory.role == 'test') {
             creep.boost();
+        } 
+        else if (creep.memory.role == 'pbAttacker') {
+            let creep_ = new PBAttacker(creep);
+            creep_.work();
+        }
+        else if (creep.memory.role == 'pbDocter') {
+            let creep_ = new PBDocter(creep);
+            creep_.work();
         }
     }
 
@@ -138,45 +144,12 @@ export const loop = errorMapper(() => {
         }
     }
 
-    // for (let name in Game.rooms) {
-    //     let room = Game.rooms[name];
-        
-    //     // powerSpawn 
-    //     let powerSpawn = Game.getObjectById<StructurePowerSpawn>(room.memory.powerSpawnID);
-    //     if (powerSpawn) {
-    //         powerSpawn.generatePower();
-    //     }
-    //     else if (room.controller && room.controller.my && room.controller.level == 8) {
-    //         let powerSpawns = room.find(FIND_STRUCTURES, {
-    //             filter: (structure) => {
-    //                 return structure.structureType == STRUCTURE_POWER_SPAWN;
-    //             }
-    //         });
-
-    //         if (powerSpawns.length > 0) {
-    //             powerSpawn = powerSpawns[0] as StructurePowerSpawn;
-    //             room.memory.powerSpawnID = powerSpawn.id;
-    //         }
-    //     }
-
-    //     // Lab.run(room);
-    //     // powerSpawnRun(room);
-        
-    //     room.powerWork();
-
-    //     room.buyPower();
-    //     const towers = room.find(FIND_STRUCTURES, {
-    //         filter: s => s.structureType == STRUCTURE_TOWER
-    //     }) as StructureTower[];
-    //     towers.forEach(s => s.work());
-    // }
-
     roomWork();
 
-    if (Game.cpu.bucket >= 10000) {
-        console.log('generating pixel');
-        Game.cpu.generatePixel();
-    }
+    // if (Game.cpu.bucket >= 10000) {
+    //     console.log('generating pixel');
+    //     Game.cpu.generatePixel();
+    // }
 
     // console.log("boostType: " + BOOST_RESOURCE_TYPE["attack"][0]);
 
@@ -193,3 +166,6 @@ export const loop = errorMapper(() => {
 global._spawn = addRoleSpawnTask;
 global._spawnBoost = addBoostRole;
 global._sell = sell;
+global._buy = buy;
+global._checkBuy = checkBuy;
+global._addPowerBank = addPowerBank;

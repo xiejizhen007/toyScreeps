@@ -1,4 +1,4 @@
-import { CREEP_STATE } from "setting";
+import { CREEP_STATE, DEPOSIT_MAX_COOLDOWN } from "setting";
 import { Role } from "./role";
 
 /**
@@ -256,14 +256,6 @@ export class RemoteDeposit extends Role {
         if (this.creep_.ticksToLive < 10 &&  this.creep_.memory.isNeeded) {
             if (this.creep_.memory.boost != undefined) {
                 let room = Game.rooms[this.creep_.memory.room];
-                // room.addBoostRole(
-                //     this.creep_.memory.role,
-                //     true,
-                //     this.creep_.memory.boostType,
-                //     this.creep_.memory.boostLevel,
-                //     this.creep_.memory.task.workRoomName,
-                //     this.creep_.memory.task.flagName
-                // );
                 room.addBoostCreep(this.creep_);
             } else {
                 this.creep_.room.addSpawnTask(this.creep_);
@@ -292,8 +284,12 @@ export class RemoteDeposit extends Role {
         } else {
             // 去到沉积物附近
             let target = Game.getObjectById(this.creep_.memory.target as Id<Deposit>);
-            if (!target || target.lastCooldown >= 300) {
-                target = this.creep_.pos.findClosestByRange(FIND_DEPOSITS);
+            if (!target || target.lastCooldown >= DEPOSIT_MAX_COOLDOWN) {
+                target = this.creep_.pos.findClosestByRange(FIND_DEPOSITS, {
+                    filter: d => {
+                        return d.lastCooldown <= DEPOSIT_MAX_COOLDOWN
+                    }
+                });
                 this.creep_.memory.target = target ? target.id : undefined;
                 if (!target) {
                     this.creep_.memory.isNeeded = false;
@@ -312,7 +308,7 @@ export class RemoteDeposit extends Role {
 
     protected override source() {
         let target = Game.getObjectById(this.creep_.memory.target as Id<Deposit>);
-        if (!target) { 
+        if (!target || target.cooldown >= DEPOSIT_MAX_COOLDOWN) { 
             this.creep_.memory.state = CREEP_STATE.PREPARE;
             this.prepare();
             return;
@@ -321,14 +317,10 @@ export class RemoteDeposit extends Role {
         if (target.cooldown == 0) {
             this.creep_.harvest(target);
         } else if (this.creep_.store.getFreeCapacity() == 0
-            || this.creep_.ticksToLive < this.creep_.memory.countTime + 50) {
+            || this.creep_.ticksToLive < this.creep_.memory.countTime + 30) {
 
             this.creep_.memory.state = CREEP_STATE.TARGET;
             this.target();
-        }
-
-        if (target.lastCooldown > 300) {
-            this.creep_.memory.isNeeded = false;
         }
     }
 
@@ -338,10 +330,10 @@ export class RemoteDeposit extends Role {
         const storage = room.storage;
         const terminal = room.terminal;
 
-        if (this.creep_.room.name != room.name || !this.creep_.pos.inRangeTo(terminal, 1)) {
-            this.creep_.farGoTo(terminal.pos);
+        if (this.creep_.room.name != room.name || !this.creep_.pos.inRangeTo(storage, 1)) {
+            this.creep_.farGoTo(storage.pos);
         } else {
-            this.creep_.clearBody(terminal);
+            this.creep_.clearBody(storage);
 
             if (this.creep_.store.getUsedCapacity() == 0) {
                 this.creep_.memory.countTime = Game.time;

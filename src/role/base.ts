@@ -237,6 +237,10 @@ export class BaseUpgrader extends Role {
 
     protected override prepare() {
         if (this.creep_.spawning) { return; }
+        if (this.creep_.memory.boost) {
+            this.creep_.boost();
+            return;
+        }
 
         this.creep_.memory.state = CREEP_STATE.SOURCE;
         this.source();

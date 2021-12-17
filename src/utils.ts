@@ -274,3 +274,35 @@ export function sell(roomName: string, resourceType: ResourceConstant): ScreepsR
     let room = Game.rooms[roomName];
     return room.sell(resourceType);
 }
+
+export function buy(roomName: string, resourceType: ResourceConstant): ScreepsReturnCode {
+    let room = Game.rooms[roomName];
+    return room.buy(resourceType);
+}
+
+export function checkBuy(roomName: string, resourceType: ResourceConstant): ScreepsReturnCode {
+    let room = Game.rooms[roomName];
+    return room.checkBuy(resourceType);
+}
+
+/**
+ * 添加一组 pb 采集队
+ * @param roomName 源房间
+ * @param flagName 目标旗帜
+ */
+export function addPowerBank(roomName: string, flagName: string) {
+    let room = Game.rooms[roomName];
+    if (!room) {
+        return;
+    }
+
+    let flag = Game.flags[flagName];
+    if (!flag) {
+        return;
+    }
+
+    let pos = flag.pos;
+
+    room.addRoleSpawnTask('pbAttacker', true, pos.roomName, flag.name);
+    room.addRoleSpawnTask('pbDocter', true, pos.roomName, flag.name);
+}

@@ -197,6 +197,7 @@ export default class creepExtension extends Creep {
         let resourceType = new Array();
         this.memory.boostType.forEach(f => {
             let resource = BOOST_RESOURCE_TYPE[f][this.memory.boostLevel];
+            // console.log('resource: ' + resource);
             if (!resourceType.includes(resource)) {
                 resourceType.push(resource);
             }

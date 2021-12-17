@@ -213,4 +213,35 @@ export default class RoomExtension extends Room {
         }
         return OK;
     }
+
+    public buy(resourceType: ResourceConstant): ScreepsReturnCode {
+        let orders = Game.market.getAllOrders({
+            type: ORDER_SELL,
+            resourceType: resourceType
+        });
+
+        orders.sort((a, b) => a.price - b.price);
+        if (orders.length > 0) {
+            console.log('buy price: ' + orders[0].price);
+            return Game.market.deal(orders[0].id, orders[0].amount, this.name);
+        }
+
+        return OK;
+    }
+
+    public checkBuy(resourceType: ResourceConstant): ScreepsReturnCode {
+        let orders = Game.market.getAllOrders({
+            type: ORDER_SELL,
+            resourceType: resourceType
+        });
+
+        orders.sort((a, b) => a.price - b.price);
+        if (orders.length > 0) {
+            console.log('buy price: ' + orders[0].price);
+            // return Game.market.deal(orders[0].id, orders[0].amount, this.name);
+        }
+
+        return OK;
+    }
+
 }

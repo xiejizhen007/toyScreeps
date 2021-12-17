@@ -64,7 +64,7 @@ export const roomSpawn = {
         harvesterRoom: {work: 6, carry: 4, move: 6},
         repairer: {work: 6, carry: 6, move: 6},
         repairerWall: {work: 5, carry: 10, move: 10},
-        upgrader: {work: 12, carry: 6, move: 6},
+        upgrader: {work: 20, carry: 10, move: 10},
         builder: {work: 8, carry: 8, move: 8},
         outputer: {carry: 15, move: 15},
         king: {carry: 10, move: 10},
@@ -81,8 +81,6 @@ export const roomSpawn = {
         farmove: {work: 2, carry: 1, move: 2},
         claimer: {move: 5, claim: 1},
         remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
-        // pioneer: {work: 20, carry: 10, move: 20},
-        // pioneer: {work: 13, carry: 10, move: 25, heal: 2},
         pioneer: {work: 10, carry: 10, move: 25, heal: 5},
     },
     8: {
@@ -111,12 +109,15 @@ export const roomSpawn = {
         claimer: {tough: 15, move: 21, claim: 1, heal: 5},
         remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
         pioneer: {work: 10, carry: 10, move: 25, heal: 5},
-        // pioneer: {work: 15, carry: 10, move: 20, heal: 5},
         deposit: {work: 15, carry: 10, move: 25},       // 挖沉积物
+        // power bank
+        pbAttacker: {move: 1, attack: 1},
+        pbDocter: {move: 1, heal: 1},
     }
 }
 
 // 后期再改
+// TODO: 根据房间等级取 body array，当房间能量不足时，往更低等级取
 export const bodyArray = {
     // 挖能量
     harvester: [
@@ -148,12 +149,12 @@ export const bodyArray = {
     // 升级
     upgrader: [
         { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
-        
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 2},
     ],
 
     // 日常工作，修建筑，刷墙
     worker: [
-
+        { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
     ],
 }
 
@@ -210,6 +211,15 @@ export const TOWER_STATE = {
     // ATTACK_CREEP: 'attackCreep',
     DEFENSE_NPC: 'defenseNpc',
     DEFENSE_PLAYER: 'defensePlayer',
+}
+
+/**
+ * powerbank 采集状态
+ */
+export const PB_STATE = {
+    ATTACK: 'pbAttack',         // 正在攻击 pb   
+    PREPARE: 'pbPrepare',       // pb 快坏了，叫 transfer 来搬
+    TRANSFER: 'pbTransfer',     // pb 被拆了，往回送
 }
 
 export const BOOST_RESOURCE = {

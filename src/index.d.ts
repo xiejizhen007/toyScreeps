@@ -105,6 +105,10 @@ interface PowerCreepMemory {
     powerSpawnID?: string,
 }
 
+interface FlagMemory {
+    state?: string,         // powerbank 采集状态
+}
+
 // 原型拓展的信息
 interface Room {
     addHarvestRoom(roomName: string): boolean,
@@ -140,6 +144,8 @@ interface Room {
     // market
     buyPower(): void,
     sell(resourceType: ResourceConstant): ScreepsReturnCode,
+    buy(resourceType: ResourceConstant): ScreepsReturnCode,
+    checkBuy(resourceType: ResourceConstant): ScreepsReturnCode,
 }
 
 interface Creep {
