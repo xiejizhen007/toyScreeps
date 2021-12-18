@@ -72,7 +72,6 @@ export const loop = errorMapper(() => {
             roleKing.run(creep);
         }
         else if (creep.memory.role == 'upgrader') {
-            // roleUpgrader.run(creep);
             let creep_ = new BaseUpgrader(creep);
             creep_.work();
         }
@@ -146,19 +145,10 @@ export const loop = errorMapper(() => {
 
     roomWork();
 
-    // if (Game.cpu.bucket >= 10000) {
-    //     console.log('generating pixel');
-    //     Game.cpu.generatePixel();
-    // }
-
-    // console.log("boostType: " + BOOST_RESOURCE_TYPE["attack"][0]);
-
-    // console.log(roomSpawn[6].tmp);
-    // console.log(getCreepBodys(roomSpawn[6].tmp));
-    // Tower.run();
-    // console.log(bodyArray['harvester'][0][MOVE]);
-    // console.log(bodyArray['queen'][6][CARRY]);
-    // getBodyArray(bodyArray['queen'][6]);
+    if (Game.cpu.bucket >= 10000) {
+        console.log('generating pixel');
+        Game.cpu.generatePixel();
+    }
 });
 
 
