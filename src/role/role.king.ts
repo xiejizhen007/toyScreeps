@@ -83,7 +83,7 @@ export const roleKing = {
         }
 
         if (storage && terminal) {
-            if (terminal.store.getUsedCapacity(RESOURCE_ENERGY) >= 100000) {
+            if (terminal.store.getUsedCapacity(RESOURCE_ENERGY) >= 60000) {
                 if (creep.memory.work) {
                     creep.transfer(storage, RESOURCE_ENERGY);
                 }

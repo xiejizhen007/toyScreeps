@@ -27,6 +27,7 @@ import { BaseUpgrader, RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
 import { Claimer, Pioneer, RemoteDeposit, RemoteHarvester, RemoteSoldier, Signer } from 'role/remote';
 import { PBAttacker, PBDocter } from 'role/team';
+import { Movement } from 'role/Movement';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -122,7 +123,11 @@ export const loop = errorMapper(() => {
             creep_.work();
         }
         else if (creep.memory.role == 'test') {
-            creep.boost();
+            // creep.boost();
+            const flag = Game.flags['Movement'];
+            if (flag) {
+                Movement.goTo(creep, flag.pos);
+            }
         } 
         else if (creep.memory.role == 'pbAttacker') {
             let creep_ = new PBAttacker(creep);

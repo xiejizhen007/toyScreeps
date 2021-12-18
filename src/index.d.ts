@@ -99,6 +99,8 @@ interface CreepMemory {
     boost?: boolean,        // 是否需要 boost
     boostType?: string[],   // 需要 boost 的动作，如 "attack"，具体看 ./setting/BOOST_RESOURCE_TYPE
     boostLevel?: number,    // boost 等级，默认 boost 二级
+
+    move?: MoveData,        // 移动数据
 }
 
 interface PowerCreepMemory {
@@ -290,4 +292,15 @@ interface iCreepTask {
     workRoomName?: string,
     flagName?: string,
     transferTask?: any,
+}
+
+interface MoveData {
+    path: RoomPosition[],           // 路径
+    priority: number,               // 移动优先级，以实现对穿，越低优先级越大
+    destination: RoomPosition,      // 目标地
+    standed?: boolean,              // 禁止对穿
+}
+
+interface MoveOptions {
+    ignoreCreeps?: boolean          // 忽略 creep，默认为 false 
 }
