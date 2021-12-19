@@ -9,7 +9,7 @@ interface Memory {
         docter?: string,            // docter 的名字
     }[],
 
-    attackFlagQuene: string[],      // 攻击队列，记录 flag
+    attackFlagQueue: string[],      // 攻击队列，记录 flag
 }
 
 interface RoomMemory {
@@ -319,7 +319,7 @@ type taskTargetType = {
 }
 
 type taskOptions = {
-
+    range: number,
 }
 
 type taskAttackTarget = Creep | Structure;

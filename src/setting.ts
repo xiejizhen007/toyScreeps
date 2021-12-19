@@ -104,7 +104,7 @@ export const roomSpawn = {
         harvesterRoom: {work: 6, carry: 4, move: 6},
         reserver: {claim: 2, move: 2},
         manager: {carry: 5, move: 5},
-        tmp: {carry: 10, move: 10},
+        tmp: {carry: 32, move: 16},
         powerHarvester: {work: 10, carry: 1, move: 1},
         claimer: {tough: 15, move: 21, claim: 1, heal: 5},
         remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
@@ -113,6 +113,11 @@ export const roomSpawn = {
         // power bank
         pbAttacker: {move: 1, attack: 1},
         pbDocter: {move: 1, heal: 1},
+        superSoldier: {tough: 12, ranged_attack: 5, move: 10, heal: 23},
+        superDismantle: {work: 40, move: 10},
+        superDocter: {tough: 12, move: 10, heal: 28},
+        // superSoldier: {move: 1}, 
+        worker: {move: 25, work: 15, carry: 10},
     }
 }
 

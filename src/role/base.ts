@@ -276,7 +276,7 @@ export class BaseUpgrader extends Role {
         const controller = this.creep_.room.controller;
 
         // 5 级之后，才有 link
-        if (!link && controller.level >= 5) {
+        if (!link && controller && controller.level >= 5) {
             link = controller.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: s => s.structureType == STRUCTURE_LINK 
                     && s.pos.inRangeTo(controller, 4)

@@ -28,6 +28,10 @@ import { RoleTmp } from 'role/tmp';
 import { Claimer, Pioneer, RemoteDeposit, RemoteHarvester, RemoteSoldier, Signer } from 'role/remote';
 import { PBAttacker, PBDocter } from 'role/team';
 import { Movement } from 'role/Movement';
+import { SuperSoldier } from 'role/war/SuperSoldier';
+import { SuperDismantle } from 'role/war/Dismantle';
+import { superDocter } from 'role/war/Docter';
+import { Worker } from 'role/base/Worker';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -136,7 +140,27 @@ export const loop = errorMapper(() => {
         else if (creep.memory.role == 'pbDocter') {
             let creep_ = new PBDocter(creep);
             creep_.work();
+        } 
+        else if (creep.memory.role == 'superSoldier') {
+            let creep_ = new SuperSoldier(creep);
+            creep_.work();
         }
+        else if (creep.memory.role == 'superDismantle') {
+            let creep_ = new SuperDismantle(creep);
+            creep_.work();
+        } 
+        else if (creep.memory.role == 'superDocter') {
+            let creep_ = new superDocter(creep);
+            creep_.work();
+        }
+        else if (creep.memory.role == 'worker') {
+            let creep_ = new Worker(creep);
+            creep_.work();
+        }
+    }
+
+    if (!Memory.attackFlagQueue) {
+        Memory.attackFlagQueue = new Array();
     }
 
     newCreep();
