@@ -7,7 +7,9 @@ interface Memory {
         flagName?: string,
         attacker?: string,          // 记录 attacker 的名字
         docter?: string,            // docter 的名字
-    }[]
+    }[],
+
+    attackFlagQuene: string[],      // 攻击队列，记录 flag
 }
 
 interface RoomMemory {
@@ -259,9 +261,14 @@ interface iHarvestRoom {
     hasReserver?: boolean,
 }
 
-type pcTaskType = iRegenSource;
+type pcTaskType = iRegenSource | iOperatePower;
 
 interface iRegenSource {
+    type: string,
+    id: string,
+}
+
+interface iOperatePower {
     type: string,
     id: string,
 }
@@ -304,3 +311,15 @@ interface MoveData {
 interface MoveOptions {
     ignoreCreeps?: boolean          // 忽略 creep，默认为 false 
 }
+
+// 任务属性
+type taskTargetType = {
+    id: string,
+    pos: RoomPosition,
+}
+
+type taskOptions = {
+
+}
+
+type taskAttackTarget = Creep | Structure;

@@ -10,6 +10,7 @@ export default class powerCreepExtension extends PowerCreep {
         this.say('work');
         this.generateOps();
         this.regenSource();
+        this.operatePower();
     }
 
     private keepAlive(): boolean {
@@ -82,5 +83,26 @@ export default class powerCreepExtension extends PowerCreep {
             }
         }   
         else { this.moveTo(source); }
+    }
+
+    private operatePower(): void {
+        let task = this.room.memory.powerTask[0];
+        if (!task || task.type != PC_TASK.OPERATE_POWER) { return; }
+
+        const target = Game.getObjectById(this.room.memory.powerSpawnID as Id<StructurePowerSpawn>);
+        if (this.store[RESOURCE_OPS] >= 200) {
+            if (this.pos.inRangeTo(target.pos, 3)) {
+                this.usePower(PWR_OPERATE_POWER, target);
+                this.room.removePowerTask();
+            } else {
+                this.moveTo(target);
+            }
+        } else {
+            if (this.pos.inRangeTo(this.room.storage, 1)) {
+                this.withdraw(this.room.storage, RESOURCE_OPS, 200);
+            } else {
+                this.moveTo(this.room.storage);
+            }
+        }
     }
 }

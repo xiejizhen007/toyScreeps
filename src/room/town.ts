@@ -1,5 +1,12 @@
 // 小镇
 
+// 每过一段时间检查当前的建筑
+const TIME_TO_CHECK_STRUCTURES = 10000;
+
+/**
+ * 实际控制的房间，游戏运行的最大工作单位
+ * town => the room under my control
+ */
 export class Town {
     name: string;                                   // the town name
     room: Room;
@@ -27,6 +34,18 @@ export class Town {
 
     constructor(roomName: string) {
         this.room = Game.rooms[roomName];
+    }
+
+    print(): string {
+        return 'town: ' + Game.shard.name + '/' + this.room.name;
+    }
+
+    /**
+     * refresh the state of the town object
+     */
+    refresh(): void {
 
     }
+
+    
 }

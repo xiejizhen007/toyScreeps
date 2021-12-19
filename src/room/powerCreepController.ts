@@ -9,6 +9,7 @@ export default class PowerCreepController extends RoomExtension {
 
         // console.log('work');
         this.regenSource();
+        this.operatePower();
     }
 
     public usePower(): boolean {
@@ -31,12 +32,31 @@ export default class PowerCreepController extends RoomExtension {
             const newTask = {
                 type: PC_TASK.REGEN_SOURCE,
                 id: source.id,
-            }
+            } as iRegenSource;
 
             if (source.effects && !source.effects.find(f => f.effect == PWR_REGEN_SOURCE)) {
                 this.addPowerTask(newTask);
             }
         });
+    }
+
+    public operatePower(): void {
+        const target = Game.getObjectById(this.memory.powerSpawnID as Id<StructurePowerSpawn>);
+        if (!target) {
+            this.memory.powerSpawnID = this.find(FIND_STRUCTURES, {
+                filter: s => s.structureType == STRUCTURE_POWER_SPAWN
+            })[0].id;
+            return;
+        }
+
+        if (!target.effects || !target.effects.find(f => f.effect == PWR_OPERATE_POWER)) {
+            const newTask = {
+                type: PC_TASK.OPERATE_POWER,
+                id: target.id,
+            };
+
+            this.addPowerTask(newTask);
+        }
     }
 
     public hasPowerTask(task: pcTaskType): boolean {

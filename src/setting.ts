@@ -313,6 +313,7 @@ export const BOOST_RESOURCE_TYPE = {
 
 export const PC_TASK = {
     REGEN_SOURCE : 'regenSource',
+    OPERATE_POWER: 'operatePower',
 }
 
 export const labTarget = [
@@ -419,3 +420,8 @@ export const DEPOSIT_MAX_COOLDOWN = 200;
 
 // target room
 // w11s22
+
+// 任务名
+export const TASK_NAME = {
+    ATTACK: "attack",
+}

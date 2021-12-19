@@ -20,12 +20,28 @@ Lab 能够利用基础矿物合成高级化合物，或者将高级化合物还�
 
 ## Flag
 
+## PowerCreep
+
 ## 任务
 
 ### 运输任务
 
-`TransportTask` 负责短距离资源的运输，主要通过 `Creep` 运送
+`TransportTask` 负责短距离资源的运输，主要通过 `Creep` 运送。
 
 `TerminalTask` 负责各个房间之间的资源传输，主要通过 `terminal` 运送。
 
 ### 房间工作任务
+
+## overmind
+
+记录 `overmind` 的设计方法，思路。
+
+### 任务的派发与接收
+
+对于 `Creep` 最基本的操作，`overmind` 基本都设计成 `任务 Task` 的形式。
+
+#### 传输任务抽象 TransportRequestGroup
+
+输入输出任务的请求、获取优先任务。
+
+#### queen
