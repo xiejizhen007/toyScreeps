@@ -35,7 +35,7 @@ export const roomSpawn = {
         builder: {work: 5, carry: 5, move: 2},
         harvester: { work: 5, carry: 1, move: 1},
         queen: {carry: 5, move: 5},
-        upgrader: {work: 8, carry: 5, move: 3},
+        upgrader: {work: 8, carry: 6, move: 8},
         repairer: {work: 2, carry: 3, move: 3},
         outputer: {carry: 4, move: 4},
         transfer: {carry: 8, move: 8},
@@ -92,7 +92,7 @@ export const roomSpawn = {
         upgrader: {work: 10, carry: 10, move: 20},
         builder: {work: 15, carry: 20, move: 15},
         outputer: {carry: 10, move: 10},
-        king: {carry: 10, move: 10},
+        king: {carry: 20, move: 5},
         queen: {carry: 20, move: 20},
         harvesterMineral: {work: 15, carry: 10, move: 25},
         soldier: {tough: 9, attack: 16, move: 25},
@@ -118,6 +118,8 @@ export const roomSpawn = {
         superDocter: {tough: 12, move: 10, heal: 28},
         // superSoldier: {move: 1}, 
         worker: {move: 25, work: 15, carry: 10},
+        fillNuker: {carry: 10, move: 5},
+        thief: {carry: 20, move: 20},
     }
 }
 
@@ -125,12 +127,19 @@ export const roomSpawn = {
 // TODO: 根据房间等级取 body array，当房间能量不足时，往更低等级取
 export const bodyArray = {
     // 挖能量
-    harvester: [
+    ['harvester']: [
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
         { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
     ],
 
     // 房间物流
-    queen: [
+    ['queen']: [
         { [MOVE]: 2, [CARRY]: 2 },
         { [MOVE]: 2, [CARRY]: 2 },
         { [MOVE]: 2, [CARRY]: 2 },
@@ -142,23 +151,41 @@ export const bodyArray = {
     ],
 
     // 中央物流
-    king: [
+    ['king']: [
         { },
         { },
         { },
+        // storage
         { },
-        { },
-        { },        // terminal
+        // link
+        { [CARRY]: 1, [MOVE]: 1},
+        // terminal
+        { [CARRY]: 1, [MOVE]: 1},
+        { [CARRY]: 1, [MOVE]: 1},
+        { [CARRY]: 1, [MOVE]: 1},
     ],
 
     // 升级
-    upgrader: [
+    ['upgrader']: [
         { [WORK]: 2, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 2},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 2},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 2},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 2},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 2},
+        { [WORK]: 2, [CARRY]: 1, [MOVE]: 2},
         { [WORK]: 2, [CARRY]: 1, [MOVE]: 2},
     ],
 
     // 日常工作，修建筑，刷墙
-    worker: [
+    ['worker']: [
+        { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
+        { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
         { [WORK]: 1, [CARRY]: 1, [MOVE]: 1},
     ],
 }
@@ -422,9 +449,6 @@ export const reactionResource = {
 
 // 最大冷却时间
 export const DEPOSIT_MAX_COOLDOWN = 200;
-
-// target room
-// w11s22
 
 // 任务名
 export const TASK_NAME = {

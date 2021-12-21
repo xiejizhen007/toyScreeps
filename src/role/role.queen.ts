@@ -29,6 +29,12 @@ export const roleQueen = {
             creep.memory.work = false;
         }
 
+        if (creep.ticksToLive < 30) {
+            if (creep.room.storage) {
+                creep.clearBody(creep.room.storage);
+            }
+        }
+
         // 送能量
         if (creep.memory.work) {
             let extension = creep.pos.findClosestByPath(FIND_STRUCTURES, {

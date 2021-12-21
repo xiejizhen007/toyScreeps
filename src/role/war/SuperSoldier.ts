@@ -66,30 +66,54 @@ export class SuperSoldier extends Role {
 
             // tower, spawn
             if (!target) {
-                target = flag.pos.findInRange(FIND_STRUCTURES, 3, {
+                target = this.creep_.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: s => {
                         return s.structureType != STRUCTURE_TERMINAL && 
-                            s.structureType != STRUCTURE_STORAGE;
+                            s.structureType != STRUCTURE_STORAGE &&
+                            // !(s.structureType == STRUCTURE_WALL && s.hits == 1) &&
+                            s.structureType != STRUCTURE_ROAD &&
+                            s.structureType != STRUCTURE_CONTROLLER &&
+                            s.structureType != STRUCTURE_WALL
+                            // s.structureType != STRUCTURE_WALL
                     }
-                })[0];
+                });
             }
 
             if (target) {
                 this.creep_.memory.target = target.id;
+            } else {
+                console.log('target clean');
+                flag.remove();
+                Memory.attackFlagQueue.shift();
             }
         }
+
+        /**
+         * TODO: 目标有可能在 rampart 里，尝试找到一个不在 rampart 里的打击对象
+         * 如果找不到，就尽全力攻破某一个 rampart
+         */
 
         if (target && target.hits > 0) {
             const terminal = this.creep_.room.terminal;
             const storage = this.creep_.room.storage;
             if (this.creep_.pos.inRangeTo(target, 3)) {
                 if (this.creep_.getActiveBodyparts(RANGED_ATTACK) > 0) {
-                    // this.creep_.rangedAttack(target);
-                    this.creep_.rangedMassAttack();
-                    this.creep_.moveTo(target);
+                    // // this.creep_.rangedAttack(target);
+                    // this.creep_.rangedMassAttack();
+                    // this.creep_.moveTo(target);
+                    if ((storage && this.creep_.pos.inRangeTo(storage, 3)) || 
+                        (terminal && this.creep_.pos.inRangeTo(terminal, 3))) {
+                        this.creep_.rangedAttack(target);
+                        this.creep_.moveTo(target);
+                    } else {
+                        this.creep_.rangedMassAttack();
+                        this.creep_.moveTo(target);
+                    }
                 }
             } else {
-                this.creep_.moveTo(target);
+                this.creep_.moveTo(target, {
+                    maxRooms: 1
+                });
             }
         }
    }

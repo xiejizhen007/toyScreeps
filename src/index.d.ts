@@ -10,6 +10,7 @@ interface Memory {
     }[],
 
     attackFlagQueue: string[],      // 攻击队列，记录 flag
+    whiteList: string[],            // 白名单，记录对方名字
 }
 
 interface RoomMemory {
@@ -323,3 +324,4 @@ type taskOptions = {
 }
 
 type taskAttackTarget = Creep | Structure;
+type taskBuildTarget = ConstructionSite;

@@ -32,16 +32,20 @@ import { SuperSoldier } from 'role/war/SuperSoldier';
 import { SuperDismantle } from 'role/war/Dismantle';
 import { superDocter } from 'role/war/Docter';
 import { Worker } from 'role/base/Worker';
+import { MMemory } from 'Memory';
+import { FillNuker } from 'role/tmp/FillNuker';
+import { Thief } from 'role/tmp/Thief';
 
 export const loop = errorMapper(() => {
     mountWork();
 
-    for (var name in Memory.creeps) {
-        if (!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-        }
-    }
+    // for (var name in Memory.creeps) {
+    //     if (!Game.creeps[name]) {
+    //         delete Memory.creeps[name];
+    //         console.log('Clearing non-existing creep memory:', name);
+    //     }
+    // }
+    MMemory.clean();
 
     for (let name in Memory.rooms) {
         if (!Game.rooms[name]) {
@@ -157,6 +161,14 @@ export const loop = errorMapper(() => {
             let creep_ = new Worker(creep);
             creep_.work();
         }
+        else if (creep.memory.role == 'fillNuker') {
+            let creep_ = new FillNuker(creep);
+            creep_.work();
+        }
+        else if (creep.memory.role == 'thief') {
+            let creep_ = new Thief(creep);
+            creep_.work();
+        }
     }
 
     if (!Memory.attackFlagQueue) {
@@ -178,6 +190,8 @@ export const loop = errorMapper(() => {
         console.log('generating pixel');
         Game.cpu.generatePixel();
     }
+
+    // console.log(bodyArray['harvester']);
 });
 
 
@@ -188,3 +202,5 @@ global._sell = sell;
 global._buy = buy;
 global._checkBuy = checkBuy;
 global._addPowerBank = addPowerBank;
+global._addWhiteList = MMemory.addWhiteList;
+global._removeWhiteList = MMemory.removeWhiteList;

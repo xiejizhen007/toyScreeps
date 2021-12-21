@@ -50,17 +50,18 @@ export class SuperDismantle extends Role {
 
         let target = Game.getObjectById(this.creep_.memory.target as Id<Structure>);
         if (!target || target.hits <= 0) {
-            const targets = flag.pos.findInRange(FIND_HOSTILE_STRUCTURES, 5, {
+            target = this.creep_.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
                 filter: s => {
                     return s.structureType == STRUCTURE_TOWER || 
-                    s.structureType == STRUCTURE_RAMPART ||
+                    // s.structureType == STRUCTURE_RAMPART ||
                     s.structureType == STRUCTURE_SPAWN ||
                     s.structureType == STRUCTURE_NUKER ||
-                    s.structureType == STRUCTURE_LAB
+                    s.structureType == STRUCTURE_LAB ||
+                    s.structureType == STRUCTURE_EXTENSION
                 }
             });
 
-            target = flag.pos.findClosestByRange(targets);
+            // target = this.creep_.pos.findClosestByRange(targets);
 
             if (target) {
                 this.creep_.memory.target = target.id;

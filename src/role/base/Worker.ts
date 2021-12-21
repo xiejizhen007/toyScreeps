@@ -1,6 +1,7 @@
 import { Role } from "role/role";
 import { CREEP_STATE } from "setting";
 
+// TODO: 检查建筑工地，刷墙
 export class Worker extends Role {
     protected check(): void {
         if (this.creep_.memory.isNeeded && this.creep_.ticksToLive < 50) {
@@ -35,7 +36,7 @@ export class Worker extends Role {
             this.creep_.memory.state = CREEP_STATE.SOURCE;
             this.source();
             return;
-        }        
+        }
 
         const nowWallHits = this.creep_.room.memory.wallHit;
 
