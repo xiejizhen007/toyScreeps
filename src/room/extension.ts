@@ -1,6 +1,7 @@
 import { NumericDictionary } from "lodash";
 
 export default class RoomExtension extends Room {
+
     public addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean {
         if (!this.memory.spawnTasks) { this.memory.spawnTasks = []; }
 

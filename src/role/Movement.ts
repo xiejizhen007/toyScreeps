@@ -1,5 +1,5 @@
 export class Movement {
-    static goTo(creep: Creep, destination: RoomPosition, options: MoveOptions = {}): ScreepsReturnCode {
+    static farGoTo(creep: Creep, destination: RoomPosition, options: MoveOptions = {}): ScreepsReturnCode {
         if (creep.spawning) {
             return ERR_BUSY;
         }

@@ -36,6 +36,9 @@ import { MMemory } from 'Memory';
 import { FillNuker } from 'role/tmp/FillNuker';
 import { Thief } from 'role/tmp/Thief';
 
+// 
+import './room/Room';
+
 export const loop = errorMapper(() => {
     mountWork();
 
@@ -134,7 +137,7 @@ export const loop = errorMapper(() => {
             // creep.boost();
             const flag = Game.flags['Movement'];
             if (flag) {
-                Movement.goTo(creep, flag.pos);
+                // Movement.goTo(creep, flag.pos);
             }
         } 
         else if (creep.memory.role == 'pbAttacker') {
@@ -192,6 +195,11 @@ export const loop = errorMapper(() => {
     }
 
     // console.log(bodyArray['harvester']);
+    const room = Game.rooms['W15N59'];
+    // room.creeps;
+    // console.log(room.creeps.length);
+    // console.log(room.creeps.length);
+    // console.log(room.flags.length);
 });
 
 
@@ -204,3 +212,5 @@ global._checkBuy = checkBuy;
 global._addPowerBank = addPowerBank;
 global._addWhiteList = MMemory.addWhiteList;
 global._removeWhiteList = MMemory.removeWhiteList;
+global._addAvoidRoom = MMemory.addAvoidRoom;
+global._removeAvoidRoom = MMemory.removeAvoidRoom;

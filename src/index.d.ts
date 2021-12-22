@@ -11,6 +11,7 @@ interface Memory {
 
     attackFlagQueue: string[],      // 攻击队列，记录 flag
     whiteList: string[],            // 白名单，记录对方名字
+    avoidRoom: AvoidRoom[],         // 需要避开的房间
 }
 
 interface RoomMemory {
@@ -54,6 +55,7 @@ interface RoomMemory {
     labs?: string[],        // 所有的 lab id
 
     wallHit?: number,       
+    avoid?: boolean,        // 房间是否需要绕开
 }
 
 interface CreepMemory {
@@ -103,7 +105,7 @@ interface CreepMemory {
     boostType?: string[],   // 需要 boost 的动作，如 "attack"，具体看 ./setting/BOOST_RESOURCE_TYPE
     boostLevel?: number,    // boost 等级，默认 boost 二级
 
-    move?: MoveData,        // 移动数据
+    move?: MoveData,        // 缓存的路径等
 }
 
 interface PowerCreepMemory {
@@ -151,6 +153,18 @@ interface Room {
     sell(resourceType: ResourceConstant): ScreepsReturnCode,
     buy(resourceType: ResourceConstant): ScreepsReturnCode,
     checkBuy(resourceType: ResourceConstant): ScreepsReturnCode,
+
+    my: boolean,
+
+    creeps: Creep[],
+    hostiles: Creep[],
+    invaders: Creep[],
+    sourceKeepers: Creep[],
+    players: Creep[],
+
+    structures: Structure[],
+
+    flags: Flag[],
 }
 
 interface Creep {
@@ -310,7 +324,15 @@ interface MoveData {
 }
 
 interface MoveOptions {
-    ignoreCreeps?: boolean          // 忽略 creep，默认为 false 
+    range?: number,                 // 目的地所范围，默认为 0
+    ignoreCreeps?: boolean,         // 忽略 creep，默认为 false 
+    avoidRoom?: string[],           // 避开的房间
+}
+
+interface AvoidRoom {
+    roomName: string,               // 避开的房间名
+    owner: string,                  // 记录一下房主名字，默认是 "Invader"
+    ticksRemaining?: number,        // 主要是 npc 主房
 }
 
 // 任务属性

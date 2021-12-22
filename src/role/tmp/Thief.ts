@@ -8,14 +8,14 @@ export class Thief extends Role {
             this.creep_.memory.isNeeded = false;
         }
 
-        if (this.creep_.ticksToLive < this.creep_.memory.countTime + 30) {
-            this.creep_.memory.state = CREEP_STATE.TARGET;
-        }
+        // if (this.creep_.ticksToLive < this.creep_.memory.countTime + 30) {
+        //     this.creep_.memory.state = CREEP_STATE.TARGET;
+        // }
     }
 
     protected prepare(): void {
         if (this.creep_.spawning) {
-            this.creep_.memory.countTime = Game.time;
+            // this.creep_.memory.countTime = Game.time;
             return;
         }        
 
@@ -47,7 +47,7 @@ export class Thief extends Role {
         }        
 
         if (this.creep_.store.getFreeCapacity() == 0) {
-            this.creep_.memory.countTime = Game.time - this.creep_.memory.countTime;
+            // this.creep_.memory.countTime = Game.time - this.creep_.memory.countTime;
             this.creep_.memory.state = CREEP_STATE.TARGET;
             this.target();
         }
@@ -55,6 +55,7 @@ export class Thief extends Role {
 
     protected target(): void {
         if (this.creep_.store.getUsedCapacity() == 0) {
+            // this.creep_.memory.countTime = Game.time;
             this.creep_.memory.state = CREEP_STATE.PREPARE;
             this.prepare();
             return;

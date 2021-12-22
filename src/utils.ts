@@ -268,6 +268,9 @@ export function roomWork(): void {
             }
         }
     }
+
+    // const room = Game.rooms['W15N59'];
+    // console.log('roomWork: ' + room.creeps.length);
 }
 
 export function sell(roomName: string, resourceType: ResourceConstant): ScreepsReturnCode {

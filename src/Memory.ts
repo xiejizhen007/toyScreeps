@@ -49,10 +49,11 @@ export class MMemory {
     }
 
     static removeWhiteList(name: string): boolean {
-        Memory.whiteList = _.remove(Memory.whiteList, rm => {
-            console.log('white list: ' + rm + ' check with ' + name);
-            return rm != name
-        });
+        // Memory.whiteList = _.remove(Memory.whiteList, rm => {
+        //     console.log('white list: ' + rm + ' check with ' + name);
+        //     return rm != name
+        // });
+        _.remove(Memory.whiteList, rm => rm == name);
         return true;
     }
 
@@ -63,5 +64,27 @@ export class MMemory {
         }
 
         return _.includes(Memory.whiteList, name);
+    }
+
+    static addAvoidRoom(target: AvoidRoom): boolean {
+        if (!Memory.avoidRoom) {
+            Memory.avoidRoom = [];
+        }
+
+        if (!_.find(Memory.avoidRoom, f => f.roomName == target.roomName)) {
+            Memory.avoidRoom.push(target);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static removeAvoidRoom(target: string): boolean {
+        if (!Memory.avoidRoom) {
+            return false;
+        }
+
+        _.remove(Memory.avoidRoom, f => f.roomName == target);
+        return true;
     }
 }

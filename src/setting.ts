@@ -8,7 +8,7 @@ export const roomSpawn = {
     },
     2: {
         harvester: { work: 2, carry: 1, move: 1},
-        upgrader: {work: 2, carry: 1, move: 2},
+        upgrader: {work: 2, carry: 1, move: 1},
         builder: {work: 1, carry: 1, move: 1},
         queen: {carry: 3, move: 3},
         signer: {move: 1},
@@ -30,6 +30,7 @@ export const roomSpawn = {
         repairer: {work: 2, carry: 3, move: 3},
         outputer: {carry: 4, move: 4},
         transfer: {carry: 5, move: 5},
+        claimer: {claim: 1, move: 1},
     },
     5: {
         builder: {work: 5, carry: 5, move: 2},
