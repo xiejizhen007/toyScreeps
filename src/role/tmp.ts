@@ -1,4 +1,4 @@
-import { Movement } from "./Movement";
+import { Movement } from "../Movement";
 
 export class RoleTmp {
     constructor(creep: Creep) {

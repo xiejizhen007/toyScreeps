@@ -1,3 +1,4 @@
+import { MMemory } from "Memory";
 import { CREEP_STATE, DEPOSIT_MAX_COOLDOWN } from "setting";
 import { Role } from "./role";
 
@@ -30,7 +31,8 @@ export class RemoteHarvester extends Role {
 export class RemoteSoldier extends Role {
     protected override prepare() {
         if (this.creep_.memory.task.workRoomName && this.creep_.memory.task.workRoomName != this.creep_.room.name) {
-            this.creep_.farGoTo(new RoomPosition(25, 25, this.creep_.memory.task.workRoomName));
+            let tmp = this.creep_.farGoTo(new RoomPosition(25, 25, this.creep_.memory.task.workRoomName));
+            console.log('fargoto ret: ' + tmp);
         } else {
             this.creep_.memory.state = CREEP_STATE.TARGET;
             this.target();
@@ -95,7 +97,8 @@ export class Signer extends Role {
         }
 
         if (this.creep_.pos.inRangeTo(controller, 1)) {
-            this.creep_.signController(controller, "i will uncliam this room when novice area end. don't hurt me, please!!!");
+            // this.creep_.signController(controller, "i will uncliam this room when novice area end. don't hurt me, please!!!");
+            this.creep_.signController(controller, "");
         } 
         else {
             this.creep_.goTo(controller.pos);

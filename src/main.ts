@@ -27,7 +27,7 @@ import { BaseUpgrader, RoleHarvester } from 'role/base';
 import { RoleTmp } from 'role/tmp';
 import { Claimer, Pioneer, RemoteDeposit, RemoteHarvester, RemoteSoldier, Signer } from 'role/remote';
 import { PBAttacker, PBDocter } from 'role/team';
-import { Movement } from 'role/Movement';
+import { Movement } from 'Movement';
 import { SuperSoldier } from 'role/war/SuperSoldier';
 import { SuperDismantle } from 'role/war/Dismantle';
 import { superDocter } from 'role/war/Docter';

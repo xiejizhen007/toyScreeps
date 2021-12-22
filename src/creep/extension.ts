@@ -1,3 +1,4 @@
+import { Movement } from "Movement";
 import { BOOST_RESOURCE_TYPE } from "setting";
 
 export default class creepExtension extends Creep {
@@ -85,39 +86,40 @@ export default class creepExtension extends Creep {
      * @param target 目标地点
      */
     public farGoTo(target: RoomPosition): CreepMoveReturnCode {
-        if (!this.memory.farMove) { this.memory.farMove = {}; }
+        // if (!this.memory.farMove) { this.memory.farMove = {}; }
 
-        // 目标发生了变化
-        let targetPos = this.memory.farMove.targetPos;
-        if (!targetPos || targetPos != target) {
-            this.memory.farMove.targetPos = target;
-            this.findPath(target);
-        }
+        // // 目标发生了变化
+        // let targetPos = this.memory.farMove.targetPos;
+        // if (!targetPos || targetPos != target) {
+        //     this.memory.farMove.targetPos = target;
+        //     this.findPath(target);
+        // }
 
-        // paths 不存在
-        if (!this.memory.farMove.paths) { this.findPath(target); }
+        // // paths 不存在
+        // if (!this.memory.farMove.paths) { this.findPath(target); }
 
-        // 真没路了
-        if (!this.memory.farMove.paths) { 
-            console.log('no road: delete paths');
-            delete this.memory.farMove.paths;
-            return OK;
-        }
+        // // 真没路了
+        // if (!this.memory.farMove.paths) { 
+        //     console.log('no road: delete paths');
+        //     delete this.memory.farMove.paths;
+        //     return OK;
+        // }
 
-        let targetIndex = this.memory.farMove.index;
-        // 到达目的地了
-        if (targetIndex >= this.memory.farMove.paths.length) {
-            delete this.memory.farMove.index;
-            return OK;
-        }
+        // let targetIndex = this.memory.farMove.index;
+        // // 到达目的地了
+        // if (targetIndex >= this.memory.farMove.paths.length) {
+        //     delete this.memory.farMove.index;
+        //     return OK;
+        // }
 
-        // 还没到目的地，继续前进
-        let ret = this.move(this.pos.getDirectionTo(this.memory.farMove.paths[targetIndex]));
-        // if ()
-        if (ret == OK) { this.memory.farMove.index++; }
-        // console.log(this.name + ' move: ' + ret);
+        // // 还没到目的地，继续前进
+        // let ret = this.move(this.pos.getDirectionTo(this.memory.farMove.paths[targetIndex]));
+        // // if ()
+        // if (ret == OK) { this.memory.farMove.index++; }
+        // // console.log(this.name + ' move: ' + ret);
         
-        return ret;
+        // return ret;
+        return Movement.farGoTo(this, target);
     }
 
     public findPath(target: RoomPosition) {

@@ -31,6 +31,7 @@ export const roomSpawn = {
         outputer: {carry: 4, move: 4},
         transfer: {carry: 5, move: 5},
         claimer: {claim: 1, move: 1},
+        signer: {move: 1},
     },
     5: {
         builder: {work: 5, carry: 5, move: 2},

@@ -87,4 +87,12 @@ export class MMemory {
         _.remove(Memory.avoidRoom, f => f.roomName == target);
         return true;
     }
+
+    static needAvoidRoom(roomName: string): boolean {
+        if (!Memory.avoidRoom) {
+            return false;
+        }
+
+        return _.find(Memory.avoidRoom, f => f.roomName == roomName) ? true : false;
+    }
 }

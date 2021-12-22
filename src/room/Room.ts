@@ -54,7 +54,6 @@ Object.defineProperty(Room.prototype, 'sourceKeepers', {
     configurable: true
 });
 
-
 Object.defineProperty(Room.prototype, 'players', {
     get() {
         if (!this._player) {
