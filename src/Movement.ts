@@ -1,6 +1,9 @@
 import { MMemory } from "Memory";
 
 export class Movement {
+    /**
+     * 短距离移动 
+     */
     static goTo(creep: Creep, destination: RoomPosition, options: MoveOptions = {}): ScreepsReturnCode {
         if (creep.spawning) {
             return ERR_BUSY;
@@ -16,6 +19,9 @@ export class Movement {
         }
     }
 
+    /**
+     * 远距离移动
+     */
     static farGoTo(creep: Creep, destination: RoomPosition, options: MoveOptions = {}): CreepMoveReturnCode {
         if (creep.spawning) {
             return ERR_BUSY;
@@ -68,7 +74,7 @@ export class Movement {
 
                     let costs = new PathFinder.CostMatrix;
 
-                    // room.hostiles.forEach(creep => {
+                    // room.sourceKeepers.forEach(creep => {
                     //     // costs.set(creep.pos.x, creep.pos.y, 0xff);
                     //     let xx = creep.pos.x - 3;
                     //     let yy = creep.pos.y - 3;

@@ -149,22 +149,22 @@ export const roleKing = {
             // return;
         }
 
-        if (containerController && linkCenter && linkController) {
-            if (containerController.store.getFreeCapacity(RESOURCE_ENERGY) >= 1200) {
-                if (creep.memory.work) {
-                    creep.transfer(linkCenter, RESOURCE_ENERGY);
-                }
-                else {
-                    creep.withdraw(storage, RESOURCE_ENERGY);
-                }
+        // if (containerController && linkCenter && linkController) {
+        //     if (containerController.store.getFreeCapacity(RESOURCE_ENERGY) >= 1200) {
+        //         if (creep.memory.work) {
+        //             creep.transfer(linkCenter, RESOURCE_ENERGY);
+        //         }
+        //         else {
+        //             creep.withdraw(storage, RESOURCE_ENERGY);
+        //         }
 
-                if (linkCenter.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && linkCenter.cooldown == 0) {
-                    linkCenter.transferEnergy(linkController);
-                }
+        //         if (linkCenter.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && linkCenter.cooldown == 0) {
+        //             linkCenter.transferEnergy(linkController);
+        //         }
 
-                return;
-            }
-        }
+        //         return;
+        //     }
+        // }
 
     }
 };
