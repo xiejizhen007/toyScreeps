@@ -49,10 +49,6 @@ export class MMemory {
     }
 
     static removeWhiteList(name: string): boolean {
-        // Memory.whiteList = _.remove(Memory.whiteList, rm => {
-        //     console.log('white list: ' + rm + ' check with ' + name);
-        //     return rm != name
-        // });
         _.remove(Memory.whiteList, rm => rm == name);
         return true;
     }
@@ -88,7 +84,7 @@ export class MMemory {
         return true;
     }
 
-    static needAvoidRoom(roomName: string): boolean {
+    static shouldAvoidRoom(roomName: string): boolean {
         if (!Memory.avoidRoom) {
             return false;
         }

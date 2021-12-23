@@ -245,4 +245,13 @@ export default class RoomExtension extends Room {
         return OK;
     }
 
+    get towers(): StructureTower[] {
+        const towers = _.filter(this.structures, f => f.structureType == STRUCTURE_TOWER);
+        // console.log('room structures' + this.structures.length);
+        // console.log('room tower' + towers.length);
+        return towers as StructureTower[];
+    }
+
+    abc: Creep[];
+    
 }

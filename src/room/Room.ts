@@ -84,11 +84,9 @@ Object.defineProperty(Room.prototype, 'structures', {
 
 Object.defineProperty(Room.prototype, 'flags', {
     get() {
-        // let startCpu = Game.cpu.getUsed();
         if (!this._flags) {
             this._flags = this.find(FIND_FLAGS);
         }
-        // console.log('flags use cpu: ' + (Game.cpu.getUsed() -  startCpu));
         return this._flags;
     },
     configurable: true

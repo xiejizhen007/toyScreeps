@@ -62,8 +62,7 @@ export class Movement {
                 swampCost: 10,
                 maxOps: 4000,
                 roomCallback: roomName => {
-                    if (MMemory.needAvoidRoom(roomName)) {
-                        console.log('need avoid');
+                    if (MMemory.shouldAvoidRoom(roomName)) {
                         return false;
                     }
 
@@ -73,25 +72,6 @@ export class Movement {
                     }
 
                     let costs = new PathFinder.CostMatrix;
-
-                    // room.sourceKeepers.forEach(creep => {
-                    //     // costs.set(creep.pos.x, creep.pos.y, 0xff);
-                    //     let xx = creep.pos.x - 3;
-                    //     let yy = creep.pos.y - 3;
-                    //     for (let x = 0; x < 7; x++) {
-                    //         for (let y = 0; y < 7; y++) {
-                    //             let xxx = xx + x;
-                    //             let yyy = yy + x;
-                    //             if (xxx <= 0) xxx = 1;
-                    //             else if (xxx >= 60) xxx = 59;
-                    //             if (yyy <= 0) xxx = 1;
-                    //             else if (yyy >= 60) xxx = 59;
-
-                    //             costs.set(xxx, yyy, 0x1f);
-                    //         }
-                    //     }
-                    // });
-
                     return costs;
                 },
             });

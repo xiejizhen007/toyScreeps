@@ -154,17 +154,18 @@ interface Room {
     buy(resourceType: ResourceConstant): ScreepsReturnCode,
     checkBuy(resourceType: ResourceConstant): ScreepsReturnCode,
 
+    // Room.ts
     my: boolean,
-
     creeps: Creep[],
     hostiles: Creep[],
     invaders: Creep[],
     sourceKeepers: Creep[],
     players: Creep[],
-
     structures: Structure[],
-
     flags: Flag[],
+
+    // extension.ts
+    towers: StructureTower[],
 }
 
 interface Creep {

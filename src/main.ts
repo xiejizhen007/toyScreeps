@@ -196,9 +196,10 @@ export const loop = errorMapper(() => {
 
     // console.log(bodyArray['harvester']);
     const room = Game.rooms['W15N59'];
+    // console.log('towers: ' + room.towers.length);
+    // console.log('room structures: ' + room.structures.length);
     // room.creeps;
-    // console.log(room.creeps.length);
-    // console.log(room.creeps.length);
+    console.log(room.creeps.length);
     // console.log(room.flags.length);
 });
 
