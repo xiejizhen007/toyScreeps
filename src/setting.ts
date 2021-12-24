@@ -58,6 +58,7 @@ export const roomSpawn = {
         reserver: {claim: 2, move: 2},
         manager: {carry: 1, move: 1},
         tmp: {carry: 5, move: 5},
+        thief: {carry: 15, move: 15},
     },
     7: {
         harvester: {work: 6, carry: 1, move: 3}, 
@@ -84,6 +85,7 @@ export const roomSpawn = {
         claimer: {move: 5, claim: 1},
         remoteSoldier: {tough: 5, attack: 10, heal: 5, move: 20},
         pioneer: {work: 10, carry: 10, move: 25, heal: 5},
+        thief: {carry: 20, move: 20},
     },
     8: {
         harvester: {work: 10, carry: 1, move: 5}, 

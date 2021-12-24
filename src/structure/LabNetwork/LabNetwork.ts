@@ -1,4 +1,7 @@
+import { MRoom } from "room/MRoom";
+
 export class LabNetwork {
+    room: MRoom;
     terminal: StructureTerminal;
     labs: StructureLab[];           // Room 内的所有 Lab
     reactionLabs: StructureLab[];   // 反应物 Lab
@@ -6,6 +9,10 @@ export class LabNetwork {
     boostLabs: StructureLab[];      // 用来 boost 的 Lab
 
     // TODO: 添加传输任务
+    constructor(room: MRoom) {
+        this.terminal = room.terminal;
+        this.labs = room.labs;
+    }
 
     // 反应阶段
     runReaction(): void {

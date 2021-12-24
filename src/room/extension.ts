@@ -5,11 +5,11 @@ export default class RoomExtension extends Room {
     linkNetwork: LinkNetwork;
 
     public registerRoom(): void {
-        this.linkNetwork = new LinkNetwork(this);
+        // this.linkNetwork = new LinkNetwork(this);
     }
 
     public registerModule(): void {
-        this.linkNetwork = new LinkNetwork(this);
+        // this.linkNetwork = new LinkNetwork(this);
     }
 
     public addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean {

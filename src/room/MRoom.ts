@@ -1,15 +1,16 @@
 // 小镇
 
+import { LabNetwork } from "structure/LabNetwork/LabNetwork";
 import { LinkNetwork } from "structure/LinkNetwork/LinkNetwork";
 
-// 每过一段时间检查当前的建筑
-const TIME_TO_CHECK_STRUCTURES = 10000;
+// 每过一段时间检查当前的建筑工地
+const TIME_TO_CHECK_CONSTRUCTION_SITE = 10000;
 
 /**
  * 实际控制的房间，游戏运行的最大工作单位
- * town => the room under my control
+ * MRoom => the room under my control
  */
-export class Town {
+export class MRoom {
     name: string;                                   // the town name
     room: Room;
     // 
@@ -36,13 +37,14 @@ export class Town {
 
     // module
     linkNetwork: LinkNetwork;
+    labNetwork: LabNetwork;
 
     constructor(roomName: string) {
         this.room = Game.rooms[roomName];
     }
 
     print(): string {
-        return 'town: ' + Game.shard.name + '/' + this.room.name;
+        return 'MRoom: ' + Game.shard.name + '/' + this.room.name;
     }
 
     /**
@@ -64,10 +66,19 @@ export class Town {
         this.extensions = _.filter(this.room.structures, f => f.structureType == STRUCTURE_EXTENSION) as StructureExtension[];
 
         let endCpu = Game.cpu.getUsed();
-        console.log('cpu used: ' + (endCpu - startCpu));
+        // console.log('cpu used: ' + (endCpu - startCpu));
     }
 
     registerModule(): void {
-        this.linkNetwork = new LinkNetwork(this.room);
+        this.linkNetwork = new LinkNetwork(this);
+        this.labNetwork = new LabNetwork(this);
+    }
+
+    init(): void {
+
+    }
+
+    work(): void {
+
     }
 }

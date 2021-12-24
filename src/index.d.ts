@@ -116,6 +116,10 @@ interface FlagMemory {
     state?: string,         // powerbank 采集状态
 }
 
+interface CenterNetworkMemory {
+    pos?: RoomPosition,
+}
+
 // 原型拓展的信息
 interface Room {
     addHarvestRoom(roomName: string): boolean,
@@ -353,3 +357,21 @@ type taskOptions = {
 
 type taskAttackTarget = Creep | Structure;
 type taskBuildTarget = ConstructionSite;
+
+type TransportNetworkTarget = StructureStorage |
+    StructureTerminal | StructureLink | 
+    StructureSpawn | StructureExtension | 
+    StructureLab | StructureNuker | 
+    StructurePowerSpawn;
+
+// 传输网络属性
+interface TransportNetworkRequests {
+    target: TransportNetworkTarget,
+    amount: number,
+    reosurceType: ResourceConstant,
+}
+
+interface TransportNetworkOptions {
+    amount?: number,
+    reosurceType?: ResourceConstant,
+}

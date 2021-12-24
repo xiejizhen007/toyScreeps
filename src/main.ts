@@ -38,7 +38,7 @@ import { Thief } from 'role/tmp/Thief';
 
 // 
 import './room/Room';
-import { Town } from 'room/Town';
+import { MRoom } from 'room/MRoom';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -221,13 +221,10 @@ export const loop = errorMapper(() => {
     end = Game.cpu.getUsed();
     // console.log('find structure cpu used: ' + (end - start));
 
-    // let town1 = new Town('W15N59');
-    // town1.registerRoomObject();
-    // town1.registerModule();
-
-    // let town2 = new Town('W15N58');
-    // town2.registerRoomObject();
-    // town2.registerModule();
+    let room1 = new MRoom('W15N58');
+    room1.registerRoomObject();
+    room1.registerModule();
+    
 });
 
 
