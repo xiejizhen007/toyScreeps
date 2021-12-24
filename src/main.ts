@@ -38,6 +38,7 @@ import { Thief } from 'role/tmp/Thief';
 
 // 
 import './room/Room';
+import { Town } from 'room/Town';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -50,12 +51,12 @@ export const loop = errorMapper(() => {
     // }
     MMemory.clean();
 
-    for (let name in Memory.rooms) {
-        if (!Game.rooms[name]) {
-            delete Memory.rooms[name];
-            console.log('clear room memory: ', name);
-        }
-    }
+    // for (let name in Memory.rooms) {
+    //     if (!Game.rooms[name]) {
+    //         delete Memory.rooms[name];
+    //         console.log('clear room memory: ', name);
+    //     }
+    // }
 
 
     for (let name in Game.creeps) {
@@ -196,11 +197,37 @@ export const loop = errorMapper(() => {
 
     // console.log(bodyArray['harvester']);
     const room = Game.rooms['W15N59'];
-    // console.log('towers: ' + room.towers.length);
-    // console.log('room structures: ' + room.structures.length);
-    // room.creeps;
-    console.log(room.creeps.length);
-    // console.log(room.flags.length);
+    room.registerRoom();
+
+    let start, end;
+    start = Game.cpu.getUsed();
+    // room.getStructures(STRUCTURE_EXTENSION);
+    // room.find(FIND_STRUCTURES);
+    room.structures;
+    end = Game.cpu.getUsed();
+    // console.log('find structure cpu used: ' + (end - start));
+
+    start = Game.cpu.getUsed();
+    // room.getStructures(STRUCTURE_EXTENSION);
+    // room.find(FIND_STRUCTURES);
+    room.structures;
+    end = Game.cpu.getUsed();
+    // console.log('find structure cpu used: ' + (end - start));
+
+    start = Game.cpu.getUsed();
+    // room.getStructures(STRUCTURE_EXTENSION);
+    // room.find(FIND_STRUCTURES);
+    room.structures;
+    end = Game.cpu.getUsed();
+    // console.log('find structure cpu used: ' + (end - start));
+
+    // let town1 = new Town('W15N59');
+    // town1.registerRoomObject();
+    // town1.registerModule();
+
+    // let town2 = new Town('W15N58');
+    // town2.registerRoomObject();
+    // town2.registerModule();
 });
 
 

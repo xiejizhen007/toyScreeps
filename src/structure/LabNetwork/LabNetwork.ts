@@ -1,4 +1,4 @@
-export class LabGroup {
+export class LabNetwork {
     terminal: StructureTerminal;
     labs: StructureLab[];           // Room 内的所有 Lab
     reactionLabs: StructureLab[];   // 反应物 Lab

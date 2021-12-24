@@ -13,12 +13,9 @@ Object.defineProperty(Room.prototype, 'my', {
 
 Object.defineProperty(Room.prototype, 'creeps', {
     get() {
-        // let startCpu = Game.cpu.getUsed();
         if (!this._creeps) {
             this._creeps = this.find(FIND_MY_CREEPS);
-            // console.log('find');
         }
-        // console.log('creeps use cpu: ' + (Game.cpu.getUsed() -  startCpu));
         return this._creeps;
     },
     configurable: true,
@@ -56,13 +53,13 @@ Object.defineProperty(Room.prototype, 'sourceKeepers', {
 
 Object.defineProperty(Room.prototype, 'players', {
     get() {
-        if (!this._player) {
-            this._player = _.filter(this.hostiles, (creep: Creep) => {
+        if (!this._players) {
+            this._players = _.filter(this.hostiles, (creep: Creep) => {
                 return creep.owner.username != 'Invader'
                     && creep.owner.username != 'Source Keeper';
             });
         }
-        return this._player;
+        return this._players;
     },
     configurable: true
 });
@@ -72,7 +69,9 @@ Object.defineProperty(Room.prototype, 'players', {
 
 Object.defineProperty(Room.prototype, 'structures', {
     get() {
-        if (!this._allStructures) {
+        // 只能说稀奇古怪，只有这个出问题
+        const start = Game.cpu.getUsed();
+        if (!this._allStructures || this._allStructures.length == 0) {
             this._allStructures = this.find(FIND_STRUCTURES);
         }
         return this._allStructures;

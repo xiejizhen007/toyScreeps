@@ -162,10 +162,15 @@ interface Room {
     sourceKeepers: Creep[],
     players: Creep[],
     structures: Structure[],
+    structuresAll: Structure[],
     flags: Flag[],
 
     // extension.ts
     towers: StructureTower[],
+    linkNetwork: any;
+    registerRoom(): void,
+    registerModule(): void,
+    getStructures(structureType: StructureConstant): Structure[],
 }
 
 interface Creep {

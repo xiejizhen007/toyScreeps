@@ -1,4 +1,4 @@
-export class Tower {
+export class TowerNetwork {
     room: Room;                     // room
     towers: StructureTower[];       // all the towers
     repairTower: StructureTower[];  // the towers will be used for repairing.

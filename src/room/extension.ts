@@ -1,6 +1,16 @@
 import { NumericDictionary } from "lodash";
+import { LinkNetwork } from "structure/LinkNetwork/LinkNetwork";
 
 export default class RoomExtension extends Room {
+    linkNetwork: LinkNetwork;
+
+    public registerRoom(): void {
+        this.linkNetwork = new LinkNetwork(this);
+    }
+
+    public registerModule(): void {
+        this.linkNetwork = new LinkNetwork(this);
+    }
 
     public addRoleSpawnTask(role: string, isNeeded?: boolean, workRoomName?: string, flagName?: string): boolean {
         if (!this.memory.spawnTasks) { this.memory.spawnTasks = []; }
@@ -245,13 +255,9 @@ export default class RoomExtension extends Room {
         return OK;
     }
 
-    get towers(): StructureTower[] {
-        const towers = _.filter(this.structures, f => f.structureType == STRUCTURE_TOWER);
-        // console.log('room structures' + this.structures.length);
-        // console.log('room tower' + towers.length);
-        return towers as StructureTower[];
+    public getStructure(structureType: StructureConstant): Structure[] {
+        return this.find(FIND_STRUCTURES, {
+            filter: f => f.structureType == structureType
+        });
     }
-
-    abc: Creep[];
-    
 }

@@ -1,5 +1,7 @@
 // 小镇
 
+import { LinkNetwork } from "structure/LinkNetwork/LinkNetwork";
+
 // 每过一段时间检查当前的建筑
 const TIME_TO_CHECK_STRUCTURES = 10000;
 
@@ -32,6 +34,9 @@ export class Town {
     tombstones: Tombstone[];                        // town 内的墓碑，为了之后取墓碑能量
     drops: { [resourceType: string]: Resource[]};   // town 内掉落的资源
 
+    // module
+    linkNetwork: LinkNetwork;
+
     constructor(roomName: string) {
         this.room = Game.rooms[roomName];
     }
@@ -47,5 +52,22 @@ export class Town {
 
     }
 
-    
+    registerRoomObject(): void {
+        let startCpu = Game.cpu.getUsed();
+        this.storage = this.room.storage;
+        this.terminal = this.room.terminal;
+
+        this.towers = _.filter(this.room.structures, f => f.structureType == STRUCTURE_TOWER) as StructureTower[];
+        this.links = _.filter(this.room.structures, f => f.structureType == STRUCTURE_LINK) as StructureLink[];
+        this.labs = _.filter(this.room.structures, f => f.structureType == STRUCTURE_LAB) as StructureLab[];
+        this.spawns = _.filter(this.room.structures, f => f.structureType == STRUCTURE_SPAWN) as StructureSpawn[];
+        this.extensions = _.filter(this.room.structures, f => f.structureType == STRUCTURE_EXTENSION) as StructureExtension[];
+
+        let endCpu = Game.cpu.getUsed();
+        console.log('cpu used: ' + (endCpu - startCpu));
+    }
+
+    registerModule(): void {
+        this.linkNetwork = new LinkNetwork(this.room);
+    }
 }

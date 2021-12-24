@@ -53,9 +53,11 @@ Link 能将`能量`远距离传送至房间内另外一个 Link 中。
 
 Lab 能够利用基础矿物合成高级化合物，或者将高级化合物还原为反应底物，也能 boost creep 和 unboost creep。
 
-`LabGroup` 是房间内的 `Lab` 实现，负责进行 `Lab` 的基本操作。
+`LabNetwork` 是房间内的 `Lab` 实现，负责进行 `Lab` 的基本操作。
 
 ### StructureTower
+
+`TowerNetwork` 负责房间内的道路维护，防御等。
 
 ## Flag
 
