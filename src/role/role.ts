@@ -58,4 +58,5 @@ export class Role {
     }
 
     protected creep_: Creep;
+    creep: Creep;
 }

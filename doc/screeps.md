@@ -41,6 +41,36 @@ TODO: 尝试使用统一的接口，方便修改
 
 ## Room
 
+<!-- ## Network
+
+### GlobalNetwork
+
+连接各房间的网络，提供下属网络的接口。
+
+#### TerminalNetwork
+
+`TerminalNetwork` 将利用各个房间的 `Terminal` 进行资源共享。
+
+#### MarketNerwork
+
+`MarketNetwork` 利用 `Terminal` 进行市场交易。
+
+贩卖 `Factory` 商品，进行原料采购，与产物销售等。
+
+#### FactoryNetwork
+
+`FactoryNetwork` 利用 `TerminalNetwork` 和 `MarketNetwork` 获取原料，传输产物等。
+
+赚大钱的关键之路。
+
+### RoomNetwork
+
+#### LinkNetwork
+
+利用 `Link` 传输能量
+
+#### BaseNetwork -->
+
 ## Structure
 
 ### StructureLink
@@ -67,9 +97,9 @@ Lab 能够利用基础矿物合成高级化合物，或者将高级化合物还�
 
 ### 运输任务
 
-`TransportTask` 负责短距离资源的运输，主要通过 `Creep` 运送。
+`TransportNetwork` 负责短距离资源的运输，主要通过 `Creep` 运送。
 
-`TerminalTask` 负责各个房间之间的资源传输，主要通过 `terminal` 运送。
+`TerminalNetwork` 负责各个房间之间的资源传输，主要通过 `terminal` 运送。
 
 ### 房间工作任务
 

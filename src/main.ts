@@ -221,10 +221,10 @@ export const loop = errorMapper(() => {
     end = Game.cpu.getUsed();
     // console.log('find structure cpu used: ' + (end - start));
 
-    let room1 = new MRoom('W15N58');
-    room1.registerRoomObject();
-    room1.registerModule();
-    
+    let room1 = new MRoom('W17N54');
+    room1.register();
+    room1.init();
+    room1.work();
 });
 
 

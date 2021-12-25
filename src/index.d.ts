@@ -120,6 +120,10 @@ interface CenterNetworkMemory {
     pos?: RoomPosition,
 }
 
+interface MRoomMemory {
+    transportNetwork: TransportNetworkRequests,
+}
+
 // 原型拓展的信息
 interface Room {
     addHarvestRoom(roomName: string): boolean,
@@ -366,7 +370,7 @@ type TransportNetworkTarget = StructureStorage |
 
 // 传输网络属性
 interface TransportNetworkRequests {
-    target: TransportNetworkTarget,
+    target: TransportNetworkTarget | string,
     amount: number,
     reosurceType: ResourceConstant,
 }

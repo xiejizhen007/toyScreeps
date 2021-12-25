@@ -248,6 +248,11 @@ export function roomWork(): void {
             continue;
         }
 
+        // MRoom test
+        if (roomName == 'W17N54') {
+            // continue;
+        }
+
         room.powerWork();
         room.buyPower();
         room.addMineral();

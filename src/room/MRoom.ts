@@ -1,7 +1,9 @@
 // 小镇
 
+import { CenterNetwork } from "structure/CenterNetwork";
 import { LabNetwork } from "structure/LabNetwork/LabNetwork";
 import { LinkNetwork } from "structure/LinkNetwork/LinkNetwork";
+import { TransportNetwork } from "tasks/TransportNetwork";
 
 // 每过一段时间检查当前的建筑工地
 const TIME_TO_CHECK_CONSTRUCTION_SITE = 10000;
@@ -38,6 +40,8 @@ export class MRoom {
     // module
     linkNetwork: LinkNetwork;
     labNetwork: LabNetwork;
+    transportNetwork: TransportNetwork;
+    centerNetwork: CenterNetwork;
 
     constructor(roomName: string) {
         this.room = Game.rooms[roomName];
@@ -47,14 +51,16 @@ export class MRoom {
         return 'MRoom: ' + Game.shard.name + '/' + this.room.name;
     }
 
-    /**
-     * refresh the state of the town object
-     */
     refresh(): void {
 
     }
 
-    registerRoomObject(): void {
+    register(): void {
+        this.registerRoomObject();
+        this.registerModule();
+    }
+
+    private registerRoomObject(): void {
         let startCpu = Game.cpu.getUsed();
         this.storage = this.room.storage;
         this.terminal = this.room.terminal;
@@ -69,16 +75,21 @@ export class MRoom {
         // console.log('cpu used: ' + (endCpu - startCpu));
     }
 
-    registerModule(): void {
+    private registerModule(): void {
         this.linkNetwork = new LinkNetwork(this);
         this.labNetwork = new LabNetwork(this);
+        this.transportNetwork = new TransportNetwork();
+        this.centerNetwork = new CenterNetwork(this);
     }
 
     init(): void {
-
+        this.linkNetwork.init();
+        // this.labNetwork.init();
+        // this.transportNetwork.init();
+        this.centerNetwork.init();
     }
 
     work(): void {
-
+        this.linkNetwork.work();
     }
 }
