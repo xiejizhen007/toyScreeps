@@ -10,7 +10,7 @@ export default class powerCreepExtension extends PowerCreep {
         this.say('work');
         this.generateOps();
         this.regenSource();
-        this.operatePower();
+        // this.operatePower();
     }
 
     private keepAlive(): boolean {

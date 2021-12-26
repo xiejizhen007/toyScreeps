@@ -1,5 +1,13 @@
+import { BaseNetwork } from "./BaseNetwork/BaseNetwork";
+import { MiningNetwork } from "./BaseNetwork/MiningNetwork";
+import { SourceNetwork } from "./BaseNetwork/SourceNetwork";
+import { SpawnNetwork } from "./BaseNetwork/SpawnNetwork";
+import { TowerNetwork } from "./BaseNetwork/TowerNetwork";
+import { UpgradeNetwork } from "./BaseNetwork/UpgradeNetwork";
 import { CenterNetwork } from "./CenterNetwork";
+import { LabNetwork } from "./LabNetwork";
 import { LinkNetwork } from "./LinkNetwork";
+import { TransportNetwork } from "./TransportNetwork";
 
 export class RoomNetwork {
     name: string;
@@ -20,6 +28,7 @@ export class RoomNetwork {
     powerSpawn: StructurePowerSpawn;
 
     links: StructureLink[];
+    availableLinks: StructureLink[];
     labs: StructureLab[];
     towers: StructureTower[];
 
@@ -31,10 +40,37 @@ export class RoomNetwork {
     drops: Resource[];
 
     linkNetwork: LinkNetwork;
+    labNetwork: LabNetwork;
     centerNetwork: CenterNetwork;
+    transportNetwork: TransportNetwork;
+
+    // base network
+    baseNetworks: BaseNetwork[];
+    miningNetwork: MiningNetwork;
+    sourceNetwork: SourceNetwork[];
+    spawnNetwork: SpawnNetwork;
+    towerNetwork: TowerNetwork;
+    upgradeNetwork: UpgradeNetwork;
 
     constructor(room: Room) {
         this.room = room;
         this.name = room.name;
+    }
+
+    refrash(): void {
+
+    }
+
+    init(): void {
+        _.forEach(this.baseNetworks, baseNetwork => baseNetwork.init());
+
+    }
+
+    work(): void {
+        _.forEach(this.baseNetworks, baseNetwork => baseNetwork.work());
+    }
+
+    private registerRoomObject(): void {
+        
     }
 }

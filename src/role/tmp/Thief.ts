@@ -4,7 +4,9 @@ import { CREEP_STATE } from "setting";
 export class Thief extends Role {
     protected check(): void {
         if (this.creep_.memory.isNeeded && this.creep_.ticksToLive < 150) {
-            this.creep_.room.addSpawnTask(this.creep_);
+            // this.creep_.room.addSpawnTask(this.creep_);
+            const room = Game.rooms[this.creep_.memory.room];
+            room.addSpawnTask(this.creep_);
             this.creep_.memory.isNeeded = false;
         }
 
@@ -29,22 +31,42 @@ export class Thief extends Role {
     }
 
     protected source(): void {
-        let storage = this.creep_.room.storage;
-        if (storage && storage.store.getUsedCapacity()) {
-            if (this.creep_.pos.isNearTo(storage)) {
-                for (const target in storage.store) {
-                    // console.log()
-                    const amount = Math.min(this.creep_.store.getFreeCapacity(), storage.store[target]);
-                    if (this.creep_.withdraw(storage, target as ResourceConstant, amount) == OK) {
+        const storage = this.creep_.room.storage;
+        const terminal = this.creep_.room.terminal;
+
+        // let target: StructureStorage | StructureTerminal | Ruin;
+        let target = Game.getObjectById(this.creep_.memory.target as Id<StructureStorage> | Id<StructureTerminal> | Id<Ruin>);
+
+        if (target && target.store.getUsedCapacity()) {
+            if (this.creep_.pos.isNearTo(target)) {
+                for (const resourceType in target.store) {
+                    const amount = Math.min(this.creep_.store.getFreeCapacity(), target.store[resourceType]);
+                    if (this.creep_.withdraw(target, resourceType as ResourceConstant, amount) == OK) {
                         break;
                     }
                 }
             } else {
-                this.creep_.moveTo(storage, {
+                this.creep_.moveTo(target, {
                     reusePath: 20
                 });
             }
-        }        
+        } else {
+            if (storage && storage.store.getUsedCapacity()) {
+                target = storage;
+            } else if (terminal && terminal.store.getUsedCapacity()) {
+                target = terminal;
+            } else {
+                target = this.creep_.pos.findClosestByRange(FIND_RUINS, {
+                    filter: r => r.store.getUsedCapacity() > 0
+                });
+            }
+            
+            if (target) {
+                this.creep_.memory.target = target.id;
+            } else {
+                this.creep_.memory.isNeeded = false;
+            }
+        }
 
         if (this.creep_.store.getFreeCapacity() == 0) {
             // this.creep_.memory.countTime = Game.time - this.creep_.memory.countTime;

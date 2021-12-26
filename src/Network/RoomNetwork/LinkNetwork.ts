@@ -24,6 +24,12 @@ export class LinkNetwork {
         return this.transportLinks.push(link);
     }
 
+    public claimLink(link: StructureLink | undefined): void {
+        if (link) {
+            _.remove(this.roomNetwork.availableLinks, l => l.id == link.id);
+        }
+    }
+
     public init(): void {
 
     }
@@ -36,7 +42,7 @@ export class LinkNetwork {
                 const amount = _.min([closestTransportLink.store[RESOURCE_ENERGY], receiveLink.store.getFreeCapacity(RESOURCE_ENERGY)]);
                 closestTransportLink.transferEnergy(receiveLink, amount);
                 // 发送的 link 陷入冷却，移除以免卡住
-                _.remove(this.transportLinks, link => link == closestTransportLink);
+                _.remove(this.transportLinks, link => link.id == closestTransportLink.id);
             }
         }
         // TODO: 发往 CenterNetwork
