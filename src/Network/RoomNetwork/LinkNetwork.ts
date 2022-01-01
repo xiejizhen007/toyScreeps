@@ -38,7 +38,9 @@ export class LinkNetwork {
         // 向需要接收能量的 link 发送能量
         for (const receiveLink of this.receiveLinks) {
             const closestTransportLink = receiveLink.pos.findClosestByRange(this.transportLinks);
+            console.log('should transfer link');
             if (closestTransportLink) {
+                console.log('transfer link');
                 const amount = _.min([closestTransportLink.store[RESOURCE_ENERGY], receiveLink.store.getFreeCapacity(RESOURCE_ENERGY)]);
                 closestTransportLink.transferEnergy(receiveLink, amount);
                 // 发送的 link 陷入冷却，移除以免卡住
@@ -46,5 +48,12 @@ export class LinkNetwork {
             }
         }
         // TODO: 发往 CenterNetwork
+        if (this.roomNetwork.centerNetwork && this.roomNetwork.centerNetwork.link) {
+            const centerLink = this.roomNetwork.centerNetwork.link;
+            for (const transportLink of this.transportLinks) {
+                transportLink.transferEnergy(centerLink);
+            }
+        }
+        console.log('link work');
     }
 }

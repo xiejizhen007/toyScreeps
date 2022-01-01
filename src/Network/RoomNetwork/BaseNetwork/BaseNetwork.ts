@@ -6,7 +6,7 @@ export abstract class BaseNetwork {
     pos: RoomPosition;
     memory: any;
 
-    constructor(roomNetwork: RoomNetwork, object: RoomObject, name: string, includePos = false) {
+    constructor(roomNetwork: RoomNetwork, object: RoomObject, name: string) {
         this.roomNetwork = roomNetwork;
         this.room = object.room!;
         this.pos = object.pos;

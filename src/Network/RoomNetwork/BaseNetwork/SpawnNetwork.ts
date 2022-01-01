@@ -1,8 +1,6 @@
 import { RoomNetwork } from "../RoomNetwork";
 import { BaseNetwork } from "./BaseNetwork";
 
-// TODO: 模仿 tigga 的孵化场
-
 export class SpawnNetwork extends BaseNetwork {
     spawns: StructureSpawn[];
     availableSpawns: StructureSpawn[];
