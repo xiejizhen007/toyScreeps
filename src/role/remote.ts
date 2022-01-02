@@ -73,7 +73,6 @@ export class RemoteSoldier extends Role {
 
 /**
  * 签名
- * （反复横跳中）
  */
 export class Signer extends Role {
     protected override prepare() {
@@ -97,8 +96,9 @@ export class Signer extends Role {
         }
 
         if (this.creep_.pos.inRangeTo(controller, 1)) {
+            this.creep_.signController(controller, "relay room");
             // this.creep_.signController(controller, "i will uncliam this room when novice area end. don't hurt me, please!!!");
-            this.creep_.signController(controller, "");
+            // this.creep_.signController(controller, "");
         } 
         else {
             this.creep_.goTo(controller.pos);

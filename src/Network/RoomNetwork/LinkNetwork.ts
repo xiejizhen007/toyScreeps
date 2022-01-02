@@ -17,10 +17,12 @@ export class LinkNetwork {
     }
 
     public requestReceive(link: StructureLink): number {
+        console.log('requestReceive');
         return this.receiveLinks.push(link);
     }
 
     public requestTransport(link: StructureLink): number {
+        console.log('requestTransport');
         return this.transportLinks.push(link);
     }
 
@@ -35,6 +37,10 @@ export class LinkNetwork {
     }
 
     public work(): void {
+        console.log('link work');
+        console.log('link transport size: ' + this.transportLinks.length);
+        console.log('link receive size: ' + this.receiveLinks.length);
+
         // 向需要接收能量的 link 发送能量
         for (const receiveLink of this.receiveLinks) {
             const closestTransportLink = receiveLink.pos.findClosestByRange(this.transportLinks);
@@ -54,6 +60,6 @@ export class LinkNetwork {
                 transportLink.transferEnergy(centerLink);
             }
         }
-        console.log('link work');
+
     }
 }

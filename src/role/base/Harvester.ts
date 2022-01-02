@@ -24,7 +24,7 @@ export class Harvester {
             return;
         }
 
-        const flagCenter = Game.flags['W15N59Center'];
+        const flagCenter = Game.flags[this.creep.room.name + 'Center'];
         const linkCenter = flagCenter.pos.findClosestByRange(this.roomNetwork.links);
         // console.log(linkCenter + ' ' + linkCenter.store[RESOURCE_ENERGY]);
 
@@ -37,18 +37,22 @@ export class Harvester {
 
         if (this.creep.store.getFreeCapacity() < 10) {
             this.creep.transfer(link, RESOURCE_ENERGY);
-            return;
+            // return;
         }
 
         console.log('link store: ' + link.store[RESOURCE_ENERGY]);
 
         if (link.store[RESOURCE_ENERGY] > 600) {
+            console.log('need link');
             this.roomNetwork.linkNetwork.requestTransport(link);
             this.roomNetwork.linkNetwork.requestReceive(linkCenter);
-            console.log('need link');
         }
 
-        this.creep.harvest(source);        
+        if (this.creep.store.getFreeCapacity() >= 10) {
+            // this.creep.transfer(link, RESOURCE_ENERGY);
+            this.creep.harvest(source);        
+            // return;
+        }
     }
 
 

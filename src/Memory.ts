@@ -91,4 +91,18 @@ export class MMemory {
 
         return _.find(Memory.avoidRoom, f => f.roomName == roomName) ? true : false;
     }
+
+    static wrap(memory: any, name: string, defaults = {}, deep = false): void {
+        if (!memory[name]) {
+            memory[name] = _.clone(defaults);
+        }
+
+        if (deep) {
+            _.defaultsDeep(memory[name])
+        } else {
+            _.defaults(memory[name]);
+        }
+
+        return memory[name];
+    }
 }

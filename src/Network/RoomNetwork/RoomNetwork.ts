@@ -124,7 +124,10 @@ export class RoomNetwork {
         // room network
         this.linkNetwork = new LinkNetwork(this);
         this.labNetwork = new LabNetwork(this);
-        this.centerNetwork = new CenterNetwork(this, this.storage!);
+
+        if (this.storage) {
+            this.centerNetwork = new CenterNetwork(this, this.storage);
+        }
         this.transportNetwork = new TransportNetwork();
 
         // base network

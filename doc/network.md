@@ -4,9 +4,20 @@
 
 ### TerminalNetwork
 
+各房间之间的资源共享，记录各个房间的资源状况。
+
+主要工作
+
+- 当 A 房间缺少资源了，如能量，矿物等，向该网络注册需要的资源类型与数量。
+- 检查注册的资源请求，如果存在足够多的资源，处理该请求。
+
 ### MarketNetwork
 
 ### FactoryNetwork
+
+### WarNetwork
+
+矛与盾。主动防御，进攻等。
 
 ## RoomNetwork
 
@@ -30,7 +41,9 @@
 
 #### SpawnNetwork
 
-持续孵化 `Creep`
+持续孵化 `Creep`。
+
+为 `creep` 们提供孵化的接口。
 
 #### TowerNetwork
 
@@ -47,6 +60,8 @@
 #### MiningNetwork
 
 围绕 `Mineral` 组成的网络，包括 Mineral, container。
+
+检查 `mineral` 的采集情况，适当的孵化 `creep`。
 
 #### UpgradeNetwork
 
