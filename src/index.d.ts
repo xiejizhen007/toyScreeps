@@ -12,6 +12,7 @@ interface Memory {
     attackFlagQueue: string[],      // 攻击队列，记录 flag
     whiteList: string[],            // 白名单，记录对方名字
     avoidRoom: AvoidRoom[],         // 需要避开的房间
+    roomNetwork: { [name: string]: RoomNetworkMemory },
 }
 
 interface RoomMemory {
@@ -362,20 +363,16 @@ type taskOptions = {
 type taskAttackTarget = Creep | Structure;
 type taskBuildTarget = ConstructionSite;
 
-type TransportNetworkTarget = StructureStorage |
-    StructureTerminal | StructureLink | 
-    StructureSpawn | StructureExtension | 
-    StructureLab | StructureNuker | 
-    StructurePowerSpawn;
-
-// 传输网络属性
-interface TransportNetworkRequests {
-    target: TransportNetworkTarget | string,
+interface TerminalNetworkRequest {
+    roomName: string,
+    resourceType: ResourceConstant,
     amount: number,
-    reosurceType: ResourceConstant,
 }
 
-interface TransportNetworkOptions {
-    amount?: number,
-    reosurceType?: ResourceConstant,
+interface HasId {
+    id: Id<Structure> | Id<Creep>,
+}
+
+interface HasName {
+    name: string,
 }

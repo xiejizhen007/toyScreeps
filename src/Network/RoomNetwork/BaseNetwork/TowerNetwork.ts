@@ -23,12 +23,16 @@ export class TowerNetwork extends BaseNetwork {
     }
 
     work(): void {
-        
+
     }
 
     private attack(creep: Creep): void {
         for (const tower of this.towers) {
             tower.attack(creep);
         }
+    }
+
+    private repair(target: Structure): void {
+
     }
 }

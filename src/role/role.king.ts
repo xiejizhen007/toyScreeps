@@ -75,6 +75,14 @@ export const roleKing = {
             }
         }
 
+        if (linkCenter && linkCenter.store[RESOURCE_ENERGY] > 0 && creep.store.getFreeCapacity() > 0) {
+            const amount = _.min([linkCenter.store[RESOURCE_ENERGY], creep.store.getFreeCapacity()]);
+            creep.withdraw(linkCenter, RESOURCE_ENERGY, amount);
+            // console.log('king' + linkCenter + ' ' + amount);
+            creep.memory.work = true;
+            return;
+        }
+
         if (creep.store.getFreeCapacity() == 0) {
             creep.memory.work = true;
         }

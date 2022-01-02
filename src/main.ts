@@ -35,10 +35,14 @@ import { Worker } from 'role/base/Worker';
 import { MMemory } from 'Memory';
 import { FillNuker } from 'role/tmp/FillNuker';
 import { Thief } from 'role/tmp/Thief';
+import { RoomNetwork } from 'Network/RoomNetwork/RoomNetwork'
+import { Harvester } from 'role/base/Harvester'
+
 
 // 
 import './room/Room';
 import { MRoom } from 'room/MRoom';
+import { Cache } from 'Cache';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -191,40 +195,23 @@ export const loop = errorMapper(() => {
     roomWork();
 
     // if (Game.cpu.bucket >= 10000) {
-    //     console.log('generating pixel');
-    //     Game.cpu.generatePixel();
+        // console.log('generating pixel');
+        // Game.cpu.generatePixel();
     // }
 
-    // console.log(bodyArray['harvester']);
-    const room = Game.rooms['W15N59'];
-    room.registerRoom();
+    let startCpu = Game.cpu.getUsed();
+    const roomNetwork = new RoomNetwork(Game.rooms['W7N4']);
+    roomNetwork.init();
+    let endCpu = Game.cpu.getUsed();
 
-    let start, end;
-    start = Game.cpu.getUsed();
-    // room.getStructures(STRUCTURE_EXTENSION);
-    // room.find(FIND_STRUCTURES);
-    room.structures;
-    end = Game.cpu.getUsed();
-    // console.log('find structure cpu used: ' + (end - start));
+    const harvesterTest = _.find(Game.creeps, f => f.memory.role == 'harvesterTest');
+    if (harvesterTest) {
+        const test = new Harvester(roomNetwork, harvesterTest.name);
+        test.work();
+    }
 
-    start = Game.cpu.getUsed();
-    // room.getStructures(STRUCTURE_EXTENSION);
-    // room.find(FIND_STRUCTURES);
-    room.structures;
-    end = Game.cpu.getUsed();
-    // console.log('find structure cpu used: ' + (end - start));
-
-    start = Game.cpu.getUsed();
-    // room.getStructures(STRUCTURE_EXTENSION);
-    // room.find(FIND_STRUCTURES);
-    room.structures;
-    end = Game.cpu.getUsed();
-    // console.log('find structure cpu used: ' + (end - start));
-
-    let room1 = new MRoom('W17N54');
-    room1.register();
-    room1.init();
-    room1.work();
+    roomNetwork.work();
+    console.log('roomNetwork W15N59 cpu used' + (endCpu - startCpu));
 });
 
 

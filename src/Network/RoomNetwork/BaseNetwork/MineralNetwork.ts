@@ -1,11 +1,12 @@
 import { RoomNetwork } from "../RoomNetwork";
 import { BaseNetwork } from "./BaseNetwork";
 
-export class MiningNetwork extends BaseNetwork {
+export class MineralNetwork extends BaseNetwork {
     mineral: Mineral;
+    container: StructureContainer;
 
     constructor(roomNetwork: RoomNetwork, mineral: Mineral) {
-        super(roomNetwork, mineral, 'MiningNetwork');
+        super(roomNetwork, mineral, 'MineralNetwork');
         this.mineral = mineral;
     }
 

@@ -9,7 +9,7 @@ export default class PowerCreepController extends RoomExtension {
 
         // console.log('work');
         this.regenSource();
-        this.operatePower();
+        // this.operatePower();
     }
 
     public usePower(): boolean {
