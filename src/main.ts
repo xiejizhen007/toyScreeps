@@ -190,10 +190,10 @@ export const loop = errorMapper(() => {
 
     roomWork();
 
-    if (Game.cpu.bucket >= 10000) {
-        console.log('generating pixel');
-        Game.cpu.generatePixel();
-    }
+    // if (Game.cpu.bucket >= 10000) {
+    //     console.log('generating pixel');
+    //     Game.cpu.generatePixel();
+    // }
 
     // console.log(bodyArray['harvester']);
     const room = Game.rooms['W15N59'];

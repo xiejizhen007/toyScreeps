@@ -37,11 +37,18 @@ export class Thief extends Role {
         // let target: StructureStorage | StructureTerminal | Ruin;
         let target = Game.getObjectById(this.creep_.memory.target as Id<StructureStorage> | Id<StructureTerminal> | Id<Ruin>);
 
-        if (target && target.store.getUsedCapacity()) {
+        // console.log('')
+        if (target) {
+            console.log(target.pos + ' store ' + target.store.getUsedCapacity());
+        }
+
+        if (target && target.store.getUsedCapacity() > 0) {
             if (this.creep_.pos.isNearTo(target)) {
                 for (const resourceType in target.store) {
                     const amount = Math.min(this.creep_.store.getFreeCapacity(), target.store[resourceType]);
-                    if (this.creep_.withdraw(target, resourceType as ResourceConstant, amount) == OK) {
+                    const ret = this.creep_.withdraw(target, resourceType as ResourceConstant, amount);
+                    console.log('reosurceType: ' + resourceType + ' minAmount: ' + amount + 'ret: ' + ret);
+                    if (ret == OK) {
                         break;
                     }
                 }
@@ -57,7 +64,10 @@ export class Thief extends Role {
                 target = terminal;
             } else {
                 target = this.creep_.pos.findClosestByRange(FIND_RUINS, {
-                    filter: r => r.store.getUsedCapacity() > 0
+                    filter: r => {
+                        console.log(r.pos + ' store ' + r.store.getUsedCapacity());
+                        return r.store.getUsedCapacity() > 0;
+                    }
                 });
             }
             
