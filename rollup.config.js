@@ -18,11 +18,11 @@ const pluginBeforeBuild = config && config.copyPath ?
     copy({
         targets: [
             {
-                src: 'main.js',
+                src: 'dist/main.js',
                 dest: config.copyPath
             },
             {
-                src: 'main.js.map',
+                src: 'dist/main.js.map',
                 dest: config.copyPath,
                 rename: name => name + '.map.js',
                 transform: contents => `module.exports = ${contents.toString()};`
@@ -37,7 +37,7 @@ const pluginBeforeBuild = config && config.copyPath ?
 export default {
     input: 'src/main.ts',
     output: {
-        file: './main.js',
+        file: 'dist/main.js',
         format: 'cjs',
         sourcemap: true
     },
