@@ -1,15 +1,11 @@
 .secret.json
 
-// 插件
 node_modules/
 
-// 输出代码
 dist/
 
-// 游戏代码
 main.js
 main.js.map.js
 main.js.map
 
-// 运行脚本
 run
