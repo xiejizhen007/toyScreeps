@@ -28,3 +28,10 @@ interface TransportNetworkOptions {
     amount?: number,
     reosurceType?: ResourceConstant,
 }
+
+// terminal
+interface TerminalNetworkRequest {
+    roomName: string,
+    resourceType: ResourceConstant,
+    amount: number,
+}

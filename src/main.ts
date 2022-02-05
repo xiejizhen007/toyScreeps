@@ -43,6 +43,7 @@ import { Harvester } from 'role/base/Harvester'
 import './room/Room';
 import { MRoom } from 'room/MRoom';
 import { Cache } from 'Cache';
+import { King } from 'role/base/King';
 
 export const loop = errorMapper(() => {
     mountWork();
@@ -193,6 +194,7 @@ export const loop = errorMapper(() => {
     }
 
     roomWork();
+    Cache.init();
 
     // if (Game.cpu.bucket >= 10000) {
         // console.log('generating pixel');
@@ -200,7 +202,7 @@ export const loop = errorMapper(() => {
     // }
 
     let startCpu = Game.cpu.getUsed();
-    const roomNetwork = new RoomNetwork(Game.rooms['W7N4']);
+    const roomNetwork = new RoomNetwork(Game.rooms['W3N7']);
     roomNetwork.init();
     let endCpu = Game.cpu.getUsed();
 
@@ -211,6 +213,14 @@ export const loop = errorMapper(() => {
     }
 
     roomNetwork.work();
+
+    const kingTest = _.find(Game.creeps, f => f.memory.role == 'kingTest');
+    if (kingTest) {
+        const test = new King(roomNetwork, kingTest.name);
+        test.init();
+        test.work();
+    }
+
     console.log('roomNetwork W15N59 cpu used' + (endCpu - startCpu));
 });
 

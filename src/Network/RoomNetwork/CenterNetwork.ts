@@ -41,6 +41,28 @@ export class CenterNetwork {
     }
 
     work(): void {
+        this.linkWork();
+        this.powerSpawnWork();
+    }
 
+    private powerSpawnWork(): void {
+        if (this.powerSpawn) {
+            if (this.powerSpawn.store[RESOURCE_ENERGY] >= 50 && this.powerSpawn.store[RESOURCE_POWER] >= 1) {
+                this.powerSpawn.generatePower();
+            } else {
+                const resourceType = this.powerSpawn.store[RESOURCE_ENERGY] <= this.powerSpawn.store[RESOURCE_POWER] * 50 ? RESOURCE_ENERGY : RESOURCE_POWER;
+                this.transportNetwork.requestInput(this.powerSpawn, {
+                    reosurceType: resourceType,
+                });
+            }
+        }
+    }
+
+    private linkWork(): void {
+        if (this.link && this.link.cooldown <= 1 && this.link.store[RESOURCE_ENERGY] < 0.9 * this.link.store.getCapacity(RESOURCE_ENERGY)) {
+            if (this.roomNetwork.linkNetwork.receiveLinks.length > 0) {
+                this.transportNetwork.requestInput(this.link, {});
+            }
+        }
     }
 }

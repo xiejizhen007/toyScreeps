@@ -363,12 +363,6 @@ type taskOptions = {
 type taskAttackTarget = Creep | Structure;
 type taskBuildTarget = ConstructionSite;
 
-interface TerminalNetworkRequest {
-    roomName: string,
-    resourceType: ResourceConstant,
-    amount: number,
-}
-
 interface HasId {
     id: Id<Structure> | Id<Creep>,
 }

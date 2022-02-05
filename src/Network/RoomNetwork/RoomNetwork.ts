@@ -34,6 +34,7 @@ export class RoomNetwork {
     observer: StructureObserver;
     powerSpawn: StructurePowerSpawn;
 
+    containers: StructureContainer[];
     links: StructureLink[];
     availableLinks: StructureLink[];
     labs: StructureLab[];
@@ -87,12 +88,14 @@ export class RoomNetwork {
     init(): void {
         _.forEach(this.baseNetworks, baseNetwork => baseNetwork.init());
         this.linkNetwork.init();
-        
+        this.centerNetwork.init();
     }
 
     work(): void {
         _.forEach(this.baseNetworks, baseNetwork => baseNetwork.work());
         this.linkNetwork.work();
+        this.labNetwork.work();
+        this.centerNetwork.work();
     }
 
     private registerRoomObject(): void {
@@ -110,6 +113,7 @@ export class RoomNetwork {
         this.observer = _.filter(this.room.structures, f => f.structureType == STRUCTURE_OBSERVER)[0] as StructureObserver;
         this.powerSpawn = _.filter(this.room.structures, f => f.structureType == STRUCTURE_POWER_SPAWN)[0] as StructurePowerSpawn;
 
+        this.containers = _.filter(this.room.structures, f => f.structureType == STRUCTURE_CONTAINER) as StructureContainer[];
         this.links = _.filter(this.room.structures, f => f.structureType == STRUCTURE_LINK) as StructureLink[];
         this.availableLinks = _.clone(this.links);
         this.labs = _.filter(this.room.structures, f => f.structureType == STRUCTURE_LAB) as StructureLab[];

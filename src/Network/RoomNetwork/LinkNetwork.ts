@@ -37,16 +37,16 @@ export class LinkNetwork {
     }
 
     public work(): void {
-        console.log('link work');
-        console.log('link transport size: ' + this.transportLinks.length);
-        console.log('link receive size: ' + this.receiveLinks.length);
+        // console.log('link work');
+        // console.log('link transport size: ' + this.transportLinks.length);
+        // console.log('link receive size: ' + this.receiveLinks.length);
 
         // 向需要接收能量的 link 发送能量
         for (const receiveLink of this.receiveLinks) {
             const closestTransportLink = receiveLink.pos.findClosestByRange(this.transportLinks);
-            console.log('should transfer link');
+            // console.log('should transfer link');
             if (closestTransportLink) {
-                console.log('transfer link');
+                // console.log('transfer link');
                 const amount = _.min([closestTransportLink.store[RESOURCE_ENERGY], receiveLink.store.getFreeCapacity(RESOURCE_ENERGY)]);
                 closestTransportLink.transferEnergy(receiveLink, amount);
                 // 发送的 link 陷入冷却，移除以免卡住

@@ -10,6 +10,10 @@ export class UpgradeNetwork extends BaseNetwork {
         super(roomNetwork, controller, 'UpgradeNetwork');
         
         this.controller = controller;
+        this.container = _.find(roomNetwork.containers, f => {
+            const noSource = _.filter(roomNetwork.containers, container => container.pos.findInRange(FIND_SOURCES, 1).length == 0);
+            return controller.pos.findClosestByRange(noSource);
+        });
         this.link = controller.pos.findClosestByRange(roomNetwork.links, {
             filter: (link: StructureLink) => link.pos.inRangeTo(controller, 3)
         });
@@ -24,7 +28,9 @@ export class UpgradeNetwork extends BaseNetwork {
     }
 
     init(): void {
-        
+        if (this.link && this.link.store[RESOURCE_ENERGY] <= 400) {
+            this.roomNetwork.linkNetwork.requestReceive(this.link);
+        }
     }
 
     work(): void {

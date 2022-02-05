@@ -96,7 +96,7 @@ export const roomSpawn = {
         repairer: {work: 6, carry: 6, move: 6},
         repairerWall: {work: 5, carry: 10, move: 10},
         upgrader: {work: 10, carry: 10, move: 20},
-        builder: {work: 15, carry: 20, move: 15},
+        builder: {work: 1, carry: 1, move: 2},
         outputer: {carry: 10, move: 10},
         king: {carry: 20, move: 5},
         queen: {carry: 20, move: 20},
@@ -127,6 +127,7 @@ export const roomSpawn = {
         fillNuker: {carry: 10, move: 5},
         thief: {carry: 20, move: 20},
         harvesterTest: {work: 10, carry: 5, move: 10},
+        kingTest: {carry: 5, move: 5},
     }
 }
 
@@ -460,4 +461,9 @@ export const DEPOSIT_MAX_COOLDOWN = 200;
 // 任务名
 export const TASK_NAME = {
     ATTACK: "attack",
+}
+
+
+export const MEMORY = {
+    ROOM_NETWORK: "RoomNetwork",
 }
