@@ -1,11 +1,15 @@
+import { RoomNetwork } from "./RoomNetwork";
+
 export class LinkNetwork {
     room: Room;
+    roomNetwork: RoomNetwork;
     
     receiveLinks: StructureLink[];
     sendLinks: StructureLink[];
 
-    constructor(room: Room) {
-        this.room = room;
+    constructor(roomNetwork: RoomNetwork) {
+        this.room = roomNetwork.room;
+        this.roomNetwork = roomNetwork;
 
         this.receiveLinks = [];
         this.sendLinks = [];
@@ -16,7 +20,16 @@ export class LinkNetwork {
     }
 
     work(): void {
+        for (const receiveLink of this.receiveLinks) {
+            const closestSendLink = receiveLink.pos.findClosestByRange(this.sendLinks);
+            if (closestSendLink) {
+                const amount = _.min([closestSendLink.store[RESOURCE_ENERGY], receiveLink.store.getFreeCapacity()]);
+                closestSendLink.transferEnergy(receiveLink, amount);
+                _.remove(this.sendLinks, link => link == closestSendLink);
+            }
+        }
 
+        
     }
 
     registerReceive(link: StructureLink): void {

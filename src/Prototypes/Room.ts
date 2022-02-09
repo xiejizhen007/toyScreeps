@@ -8,6 +8,16 @@ Object.defineProperty(Room.prototype, 'creeps', {
     configurable: true,
 });
 
+Object.defineProperty(Room.prototype, 'myCreeps', {
+    get() {
+        if (!this._myCreeps) {
+            this._myCreeps = this.find(FIND_MY_CREEPS);
+        }
+        return this._myCreeps;
+    },
+    configurable: true,
+});
+
 Object.defineProperty(Room.prototype, 'structures', {
     get() {
         if (!this._structures) {

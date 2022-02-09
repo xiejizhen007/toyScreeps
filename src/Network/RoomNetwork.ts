@@ -1,0 +1,85 @@
+import { CreepController } from "./CreepController";
+import { LinkNetwork } from "./LinkNetwork";
+import { SourceNetwork } from "./SourceNetwork";
+import { SpawnNetwork } from "./SpawnNetwork";
+
+export class RoomNetwork {
+    room: Room;
+    memory: RoomNetworkMemory;
+
+    creepController: CreepController;
+    linkNetwork: LinkNetwork;
+    spawnNetwork: SpawnNetwork;
+
+    // sourceNetworks: SourceNetwork[];
+    sourceNetworks: {[name: Id<Source>]: SourceNetwork};
+
+    constructor(room: Room) {
+        this.room = room;
+
+        this.creepController = new CreepController(this);
+        this.linkNetwork = new LinkNetwork(this);
+        this.spawnNetwork = new SpawnNetwork(this);
+
+        this.sourceNetworks = {};
+        const sources = this.room.find(FIND_SOURCES);
+        _.forEach(sources, s => {
+            let tmp = new SourceNetwork(this, s);
+            // this.sourceNetworks.push(tmp);
+            this.sourceNetworks[s.id] = tmp;
+        })
+    }
+
+    init(): void {
+        this.initMemory();
+
+        this.creepController.init();
+        this.linkNetwork.init();
+        this.spawnNetwork.init();
+
+        _.forEach(this.sourceNetworks, f => f.init());
+    }
+
+    work(): void {
+        this.creepController.work();
+        this.linkNetwork.work();
+        this.spawnNetwork.work();
+
+        _.forEach(this.sourceNetworks, f => f.work());
+
+        this.clearUselessMemory();
+    }
+
+    private initMemory(): void {
+        if (!Memory.roomNetworks) {
+            Memory.roomNetworks = {};
+        }
+
+        if (Memory.roomNetworks[this.room.name]) {
+            this.memory = Memory.roomNetworks[this.room.name];
+            this.memory.room = this.room.name;
+            
+            if (!this.memory.myCreeps) {
+                this.memory.myCreeps = [];
+            }
+
+            if (!this.memory.networks) {
+                this.memory.networks = {};
+                this.memory.networks.sources = {};
+            }
+        } else {
+            Memory.roomNetworks[this.room.name] = {};
+        }
+    }
+
+    private clearUselessMemory(): void {
+        let myCreeps = [];
+        for (const name of this.memory.myCreeps) {
+            if (Game.creeps[name]) {
+                myCreeps.push(name);
+            }
+        }
+
+        this.memory.myCreeps = myCreeps;
+    }
+}
