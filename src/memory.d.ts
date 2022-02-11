@@ -1,5 +1,6 @@
 interface Memory {
     roomNetworks: {[name: string]: RoomNetworkMemory};
+    constructionSites: {[name: Id<ConstructionSite>]: ConstructionSiteMemory};
 }
 
 interface RoomMemory {
@@ -17,6 +18,7 @@ interface CreepMemory {
     task?: {
         type: string;
         target?: string;
+        targetPos?: RoomPosition;
         resourceType?: ResourceConstant;
         amount?: number;
     }
@@ -26,19 +28,26 @@ interface RoomNetworkMemory {
     room?: string;
     myCreeps?: string[];            // creep name
     networks?: {
-        // sources?: {
-        //     sourceId: Id<Source>;
-        //     pos: RoomPosition;
-        //     timeout: number;        // timeout > 300 => spawn harvester
-        //     creeps?: string[];           // name
-        //     isoutSource?: boolean;  // 外矿？
-        // }[];
-        sources?: {[name: Id<Source>]: {
-            sourceId: Id<Source>;
-            pos: RoomPosition;
-            timeout: number;        // timeout > 300 => spawn harvester
-            creeps?: string[];           // name
-            isoutSource?: boolean;  // 外矿？
-        }}
+        // sources?: {[name: Id<Source>]: {
+            // sourceId: Id<Source>;
+            // pos: RoomPosition;
+            // timeout: number;        // timeout > 300 => spawn harvester
+            // creeps?: string[];           // name
+            // isoutSource?: boolean;  // 外矿？
+        // }}
+        sources?: {[name: Id<Source>]: SourceNetworkMemory};
     }
+}
+
+interface SourceNetworkMemory {
+    sourceId: Id<Source>;
+    pos: RoomPosition;
+    timeout: number;
+    creeps: string[];           // name
+    isoutSource?: boolean;      // 外矿？
+}
+
+interface ConstructionSiteMemory {
+    tick: number;
+    pos: RoomPosition;
 }
