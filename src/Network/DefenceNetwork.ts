@@ -9,7 +9,6 @@ export class DefenceNetwork {
         this.roomNetwork = roomNetwork;        
     }
 
-
     // TODO: check enemy
     init(): void {
 

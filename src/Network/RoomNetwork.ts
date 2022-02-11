@@ -2,14 +2,20 @@ import { CreepController } from "./CreepController";
 import { LinkNetwork } from "./LinkNetwork";
 import { SourceNetwork } from "./SourceNetwork";
 import { SpawnNetwork } from "./SpawnNetwork";
+import { UpgradeSite } from "./UpgradeSite";
 
 export class RoomNetwork {
     room: Room;
     memory: RoomNetworkMemory;
 
+    spawns: StructureSpawn[];
+    links: StructureLink[];
+    containers: StructureContainer[];
+
     creepController: CreepController;
     linkNetwork: LinkNetwork;
     spawnNetwork: SpawnNetwork;
+    upgradeSite: UpgradeSite;
 
     // sourceNetworks: SourceNetwork[];
     sourceNetworks: {[name: Id<Source>]: SourceNetwork};
@@ -20,6 +26,7 @@ export class RoomNetwork {
         this.creepController = new CreepController(this);
         this.linkNetwork = new LinkNetwork(this);
         this.spawnNetwork = new SpawnNetwork(this);
+        this.upgradeSite = new UpgradeSite(this, this.room.controller);
 
         this.sourceNetworks = {};
         const sources = this.room.find(FIND_SOURCES);
@@ -32,10 +39,12 @@ export class RoomNetwork {
 
     init(): void {
         this.initMemory();
+        this.registerObject();
 
         this.creepController.init();
         this.linkNetwork.init();
         this.spawnNetwork.init();
+        this.upgradeSite.init();
 
         _.forEach(this.sourceNetworks, f => f.init());
     }
@@ -44,6 +53,7 @@ export class RoomNetwork {
         this.creepController.work();
         this.linkNetwork.work();
         this.spawnNetwork.work();
+        this.upgradeSite.work();
 
         _.forEach(this.sourceNetworks, f => f.work());
 
@@ -81,5 +91,10 @@ export class RoomNetwork {
         }
 
         this.memory.myCreeps = myCreeps;
+    }
+
+    private registerObject(): void {
+        this.spawns = this.room.spawns;
+        this.links = this.room.links;
     }
 }

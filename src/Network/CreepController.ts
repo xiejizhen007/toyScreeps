@@ -1,6 +1,11 @@
 import { Harvester } from "Creeps/Base/Harvester";
 import { Queen } from "Creeps/Base/Queen";
+import { Upgrader } from "Creeps/Base/Upgrader";
+import { Worker } from "Creeps/Base/Worker";
+import { CreepSetup } from "Creeps/CreepSetup";
 import { Role } from "Creeps/Role";
+import { CreepRolePriority } from "Creeps/setting";
+import { Roles, Setups } from "Creeps/setups";
 import { RoomNetwork } from "./RoomNetwork";
 
 export class CreepController {
@@ -25,8 +30,19 @@ export class CreepController {
                 this.roles.push(role);
             }
 
-            if (creep.memory.role == 'harvester') {
+            else if (creep.memory.role == 'harvester') {
                 const role = new Harvester(creep.name, this.roomNetwork);
+                this.roles.push(role);
+            }
+
+            else if (creep.memory.role == 'upgrader') {
+                const role = new Upgrader(creep.name, this.roomNetwork);
+                this.roles.push(role);
+            }
+
+            else if (creep.memory.role == 'worker') {
+                const role = new Worker(creep.name, this.roomNetwork);
+                // Worker
                 this.roles.push(role);
             }
         }
@@ -37,6 +53,8 @@ export class CreepController {
     work(): void {
         this.spawnQueen();
         this.spawnHarvester();
+        this.spawnUpgrader();
+        this.spawnWorker();
 
         _.forEach(this.roles, r => r.work());
     }
@@ -50,13 +68,8 @@ export class CreepController {
             // console.log('have queen');
         } else {
             this.roomNetwork.spawnNetwork.registerCreep({
-                role: 'queen',
-                setup: {
-                    body: [CARRY, MOVE],
-                    limit: 5,
-                    ordered: true,
-                },
-                priority: 0,
+                setup: Setups.queen.default,
+                priority: CreepRolePriority.queen,
             });
             console.log('need spawn queen');
         }
@@ -64,19 +77,37 @@ export class CreepController {
 
     private spawnHarvester(): void {
         const target = _.find(this.roomNetwork.memory.networks.sources, f => {
-            return f.timeout > 300;
+            const role = _.find(f.creeps, c => Game.creeps[c] && Game.creeps[c].memory.role == Roles.harvester);
+            return f.timeout > 300 || !role;
         });
 
         if (target) {
             this.roomNetwork.spawnNetwork.registerCreep({
-                role: 'harvester',
-                setup: {
-                    body: [WORK, CARRY, MOVE],
-                    limit: 6,
-                    ordered: false,
-                },
-                priority: 0,
+                setup: Setups.harvester.default,
+                priority: CreepRolePriority.harvester,
             });
+        }
+    }
+
+    private spawnUpgrader(): void {
+        const target = _.find(this.roomNetwork.room.myCreeps, f => f.memory.role == Roles.upgrader);
+        if (!target) {
+            this.roomNetwork.spawnNetwork.registerCreep({
+                setup: Setups.upgrader.default,
+                priority: CreepRolePriority.upgrader,
+            });
+            console.log('spawn upgrader');
+        }
+    }
+
+    private spawnWorker(): void {
+        const target = _.find(this.roomNetwork.room.myCreeps, f => f.memory.role == Roles.worker);
+        if (!target) {
+            this.roomNetwork.spawnNetwork.registerCreep({
+                setup: Setups.worker.default,
+                priority: CreepRolePriority.worker,
+            });
+            console.log('spawn worker');
         }
     }
 }

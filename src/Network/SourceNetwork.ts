@@ -13,15 +13,22 @@ export class SourceNetwork {
     }
 
     init(): void {
-        if (this.roomNetwork.memory.networks.sources[this.source.id]) {
-            let s = this.roomNetwork.memory.networks.sources[this.source.id];
-            // this.source.energy
+        const memory = this.roomNetwork.memory.networks.sources[this.source.id];
+        if (memory) {
             if (this.source.energy == this.source.energyCapacity) {
-                s.timeout++;
+                memory.timeout++;
             } else {
-                s.timeout = 0;
+                memory.timeout = 0;
             }
-            // console.log('source ' + this.source.id + ' timeout: ' + s.timeout);
+
+            // 检查 memory.creeps，去除死去得 creep
+            let target = _.find(memory.creeps, f => Game.creeps[f] == undefined);
+            while (target) {
+                console.log('sourceNetwork remove creep\'s name: ' + target);
+                _.remove(memory.creeps, f => f == target);
+                target = _.find(memory.creeps, f => Game.creeps[f] == undefined);
+            }
+
         } else {
             this.roomNetwork.memory.networks.sources[this.source.id] = {
                 sourceId: this.source.id,
@@ -33,6 +40,10 @@ export class SourceNetwork {
     }
 
     work(): void {
+        this.spawnRoleToWork();
+    }
 
+    spawnRoleToWork(): void {
+        
     }
 }
