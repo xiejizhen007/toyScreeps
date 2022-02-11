@@ -1,16 +1,11 @@
 import { Role } from "Creeps/Role";
-import { TaskType } from "Creeps/setting";
+import { UpgradeSite } from "Network/UpgradeSite";
 
-export class Worker extends Role {
-    // TODO: get task
+export class Upgrader extends Role {
+    upgradeSite: UpgradeSite;
+
     init(): void {
-        if (!this.creep.memory.task) {
-            this.creep.memory.task = {
-                type: TaskType.err
-            };
-        }
-
-        this.getTask();
+        this.upgradeSite = this.roomNetwork.upgradeSite;
 
         if (this.creep.store[RESOURCE_ENERGY] == 0) {
             this.creep.memory.working = false;
@@ -19,39 +14,18 @@ export class Worker extends Role {
         }
     }
 
-    // TODO: do something
     work(): void {
         if (this.creep.memory.working) {
-            if (this.creep.memory.task.type == TaskType.build) {
-                const target = Game.constructionSites[this.creep.memory.task.target];
-                if (target) {
-                    if (this.creep.pos.inRangeTo(target, 3)) {
-                        this.creep.build(target);
-                    } else {
-                        this.creep.goto(target.pos);
-                    }
-                } else {
-                    this.creep.memory.task.type = TaskType.err;
-                }
+            if (this.creep.pos.inRangeTo(this.roomNetwork.upgradeSite.controller, 3)) {
+                this.creep.upgradeController(this.roomNetwork.upgradeSite.controller);
+            } else {
+                this.creep.goto(this.roomNetwork.upgradeSite.controller.pos);
             }
         } else {
-            this.getEnergy();
-        }
-    }
-
-    private getTask(): void {
-        // console.log(this.creep.room.construcutionSites);
-        if (this.roomNetwork.room.constructionSites.length && this.creep.memory.task.type == TaskType.err) {
-            const target = this.creep.pos.findClosestByRange(this.roomNetwork.room.constructionSites);
-            // this.creep.
-            // this.creep.memory.task.target = target.id;
-            this.creep.memory.task = {
-                type: TaskType.build,
-                target: target.id,
-                targetPos: target.pos,
-            };
-
-            return;
+            const ret = this.getEnergy();
+            if (ret == OK) {
+                this.creep.memory.working = true;
+            }
         }
     }
 
