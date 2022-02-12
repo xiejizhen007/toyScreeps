@@ -1,6 +1,7 @@
 import { Role } from "Creeps/Role";
 import { TaskType } from "Creeps/setting";
 import { Roles } from "Creeps/setups";
+import { Tasks } from "Creeps/Task/Tasks";
 
 export class Harvester extends Role {
     init(): void {
@@ -20,17 +21,20 @@ export class Harvester extends Role {
         if (target) {
             target.timeout = 0;
             target.creeps.push(this.creep.name);
-
-            if (!this.creep.memory.task) {
-                this.creep.memory.task = {
-                    type: TaskType.free
-                };
-            }
-
-            this.creep.memory.task.type = TaskType.harveste;
-            this.creep.memory.task.target = target.sourceId;
-            this.creep.memory.task.targetPos = target.pos;
+            const source = Game.getObjectById(target.sourceId);
+            this.task = Tasks.harvest(source);
         }
+
+        // const tmp = _.find(sourceMemory, f => {
+        //     return _.include(f.creeps, this.creep.name);
+        // });
+
+        // // console.log(tmp.pos);
+        // if (tmp) {
+        //     // console.log(tmp.sourceId);
+        //     const source = Game.getObjectById(tmp.sourceId);
+        //     this.task = Tasks.harvest(source);
+        // }
     }
 
     work(): void {
@@ -38,19 +42,27 @@ export class Harvester extends Role {
             return;
         }
 
-        if (!this.creep.memory.task || this.creep.memory.task.type != TaskType.harveste) {
-            return;
+        if (this.task) {
+            this.task.autoWork();
         }
 
-        const source = Game.getObjectById(this.creep.memory.task.target as Id<Source>);
-        if (source) {
-            if (this.creep.pos.isNearTo(source) && source.energy > 0) {
-                this.creep.harvest(source);
-            } else {
-                this.creep.moveTo(source);
-            }
-        } else {
-            this.creep.memory.task.type = TaskType.err;
-        }
+        // if (!this.creep.memory.task || this.creep.memory.task.type != TaskType.harvest) {
+        //     return;
+        // }
+
+        // const source = Game.getObjectById(this.creep.memory.task._target.id as Id<Source>);
+        // if (source) {
+            // if (this.creep.pos.isNearTo(source) && source.energy > 0) {
+            //     this.creep.harvest(source);
+            // } else {
+            //     this.creep.moveTo(source);
+            // }
+        //     this.task = Tasks.harvest(source);
+        //     this.task.creep = this.creep;
+        //     this.task.autoWork();
+        // } else {
+            // this.creep.memory.task.type = TaskType.err;
+        // }
+        // this.handleTask();
     }
 }

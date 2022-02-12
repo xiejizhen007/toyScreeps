@@ -10,7 +10,9 @@ export enum CreepRolePriority {
 export const TaskType = {
     'err': 'err',
     'free': 'free',
-    'harveste': 'harveste',
+    'harvest': 'harvest',
     'upgrade': 'upgrade',
     'build': 'build',
+    'transfer': 'transfer',
+    'withdraw': 'withdraw',
 }

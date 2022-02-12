@@ -15,13 +15,14 @@ interface CreepMemory {
     room: string;
     isNeeded: boolean;
     working?: boolean;
-    task?: {
-        type: string;
-        target?: string;
-        targetPos?: RoomPosition;
-        resourceType?: ResourceConstant;
-        amount?: number;
-    }
+    // task?: {
+    //     type: string;
+    //     target?: string;
+    //     targetPos?: RoomPosition;
+    //     resourceType?: ResourceConstant;
+    //     amount?: number;
+    // }
+    task?: TaskMemory;
 }
 
 interface RoomNetworkMemory {
