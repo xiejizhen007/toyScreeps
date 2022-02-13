@@ -1,6 +1,7 @@
 interface TaskSetting {
     targetRange: number;
     timeout: number;
+    oneShot: boolean
 }
 
 interface TaskData {
@@ -17,12 +18,17 @@ interface TaskMemory {
         id: string;
         pos: RoomPosition;
     };
+    _parent: TaskMemory;
     tick: number;
     data: TaskData;
 }
 
 // task details
+type buildTargetType = ConstructionSite;
+
 type harvestTargetType = Source | Mineral | Deposit;
+
+type pickupTargetType = Resource;
 
 type transferTargetType = 
     StructureSpawn 
@@ -36,6 +42,8 @@ type transferTargetType =
     | StructureLab
     | StructurePowerSpawn
     | StructureContainer;
+
+type upgradeTargetType = StructureController;
 
 type withdrawTargetType = 
     StructureSpawn 

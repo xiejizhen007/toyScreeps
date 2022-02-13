@@ -1,9 +1,11 @@
+import { Global } from 'Global/Global';
 import { RoomNetwork } from 'Network/RoomNetwork';
 import { errorMapper } from './modules/errorMapper'
 
 import './Prototypes/Mount';
 
 export const loop = errorMapper(() => {
+    console.log('loop begin -----------------');
     initMemory();
 
     let cpuStart = Game.cpu.getUsed();
@@ -17,17 +19,36 @@ export const loop = errorMapper(() => {
         const room = Game.rooms[roomName];
         if (room && room.controller && room.controller.my) {
             const roomNetwork = new RoomNetwork(Game.rooms[roomName]);
+            Global.roomNetworks[roomName] = roomNetwork;
             roomNetwork.init();
             
             roomNetwork.work();
         }
     }
+    
+
+    let i = 0;
+    for (const role in Global.roles) {
+        if (Game.creeps[role]) {
+            const creep = Global.roles[role];
+            creep.init();
+            creep.work();
+            i++;
+        }
+        else {
+            Global.roles[role] = null;
+        }
+    }
+
+    // console.log('role : ' + i);
 
     let cpuEnd = Game.cpu.getUsed();
     
     if (Game.time % 5 == 0) {
         console.log('cpu used: ' + (cpuEnd - cpuStart));
     }
+
+    console.log('loop end -----------------');
 });
 
 function initMemory(): void {

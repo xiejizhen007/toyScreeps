@@ -2,6 +2,7 @@ import { CreepController } from "./CreepController";
 import { LinkNetwork } from "./LinkNetwork";
 import { SourceNetwork } from "./SourceNetwork";
 import { SpawnNetwork } from "./SpawnNetwork";
+import { TransportNetwork } from "./TransportNetwork";
 import { UpgradeSite } from "./UpgradeSite";
 
 export class RoomNetwork {
@@ -12,10 +13,13 @@ export class RoomNetwork {
     links: StructureLink[];
     containers: StructureContainer[];
 
+    constructionSites: ConstructionSite[];
+
     creepController: CreepController;
     linkNetwork: LinkNetwork;
     spawnNetwork: SpawnNetwork;
     upgradeSite: UpgradeSite;
+    transportNetwork: TransportNetwork;
 
     // sourceNetworks: SourceNetwork[];
     sourceNetworks: {[name: Id<Source>]: SourceNetwork};
@@ -27,6 +31,7 @@ export class RoomNetwork {
         this.linkNetwork = new LinkNetwork(this);
         this.spawnNetwork = new SpawnNetwork(this);
         this.upgradeSite = new UpgradeSite(this, this.room.controller);
+        this.transportNetwork = new TransportNetwork();
 
         this.sourceNetworks = {};
         const sources = this.room.find(FIND_SOURCES);
@@ -96,5 +101,6 @@ export class RoomNetwork {
     private registerObject(): void {
         this.spawns = this.room.spawns;
         this.links = this.room.links;
+        this.constructionSites = this.room.constructionSites;
     }
 }

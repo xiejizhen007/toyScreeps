@@ -26,28 +26,28 @@ export class CreepController {
             }
 
             if (creep.memory.role == 'queen') {
-                const role = new Queen(creep.name, this.roomNetwork);
+                const role = new Queen(creep, this.roomNetwork);
                 this.roles.push(role);
             }
 
             else if (creep.memory.role == 'harvester') {
-                const role = new Harvester(creep.name, this.roomNetwork);
+                const role = new Harvester(creep, this.roomNetwork);
                 this.roles.push(role);
             }
 
             else if (creep.memory.role == 'upgrader') {
-                const role = new Upgrader(creep.name, this.roomNetwork);
+                const role = new Upgrader(creep, this.roomNetwork);
                 this.roles.push(role);
             }
 
             else if (creep.memory.role == 'worker') {
-                const role = new Worker(creep.name, this.roomNetwork);
+                const role = new Worker(creep, this.roomNetwork);
                 // Worker
                 this.roles.push(role);
             }
         }
 
-        _.forEach(this.roles, r => r.init());
+        // _.forEach(this.roles, r => r.init());
     }
 
     work(): void {
@@ -56,7 +56,7 @@ export class CreepController {
         this.spawnUpgrader();
         this.spawnWorker();
 
-        _.forEach(this.roles, r => r.work());
+        // _.forEach(this.roles, r => r.work());
     }
 
     private spawnQueen(): void {

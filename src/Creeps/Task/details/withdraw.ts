@@ -1,13 +1,14 @@
 import { TaskType } from "Creeps/setting";
 import { Task } from "../Task";
 
-export class taskWithdraw extends Task {
+export class TaskWithdraw extends Task {
     target: withdrawTargetType;
 
     constructor(target: withdrawTargetType, resourceType: ResourceConstant,
                 amount?: number) {
         super(TaskType.withdraw, target);
 
+        this.setting.oneShot = true;
         this.data.resourceType = resourceType;
         this.data.amount = amount;
     }
@@ -22,6 +23,6 @@ export class taskWithdraw extends Task {
     }
 
     work(): ScreepsReturnCode {
-        return this.creep.withdraw(this.target, this.data.resourceType, this.data.amount);        
+        return this.creep.creep.withdraw(this.target, this.data.resourceType, this.data.amount);        
     }
 }

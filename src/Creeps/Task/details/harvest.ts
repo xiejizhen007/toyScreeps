@@ -9,7 +9,8 @@ export class TaskHarvest extends Task {
     }
 
     isValidTask(): boolean {
-        return this.creep.store.getFreeCapacity() > 0;
+        // return this.creep.store.getFreeCapacity() > 0;
+        return true;
     }
 
     isValidTarget(): boolean {
@@ -23,6 +24,6 @@ export class TaskHarvest extends Task {
     }
 
     work(): ScreepsReturnCode {
-        return this.creep.harvest(this.target);
+        return this.creep.creep.harvest(this.target);
     }
 }

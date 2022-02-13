@@ -11,6 +11,8 @@ export class TaskTransfer extends Task {
     constructor(target: transferTargetType, resourceType: ResourceConstant = RESOURCE_ENERGY,
                 amount?: number) {
         super(TaskType.transfer, target);
+
+        this.setting.oneShot = true;
         this.data.resourceType = resourceType;
         this.data.amount = amount;
     }
@@ -28,6 +30,6 @@ export class TaskTransfer extends Task {
     }
 
     work(): ScreepsReturnCode {
-        return this.creep.transfer(this.target, this.data.resourceType, this.data.amount);
+        return this.creep.creep.transfer(this.target, this.data.resourceType, this.data.amount);
     }
 }

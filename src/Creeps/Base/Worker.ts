@@ -1,87 +1,83 @@
 import { Role } from "Creeps/Role";
 import { TaskType } from "Creeps/setting";
+import { Task } from "Creeps/Task/Task";
+import { Tasks } from "Creeps/Task/Tasks";
+import { Global } from "Global/Global";
 
 export class Worker extends Role {
-    // TODO: get task
+
+    constructionSites: ConstructionSite[];
+
     init(): void {
-        // if (!this.creep.memory.task) {
-        //     this.creep.memory.task = {
-        //         type: TaskType.err
-        //     };
-        // }
-
-        // this.getTask();
-
-        // if (this.creep.store[RESOURCE_ENERGY] == 0) {
-        //     this.creep.memory.working = false;
-        // } else if (this.creep.store.getFreeCapacity() == 0) {
-        //     this.creep.memory.working = true;
-        // }
+        this.registerObjects();
     }
 
-    // TODO: do something
     work(): void {
-        // if (this.creep.memory.working) {
-        //     if (this.creep.memory.task.type == TaskType.build) {
-        //         const target = Game.constructionSites[this.creep.memory.task.target];
-        //         if (target) {
-        //             if (this.creep.pos.inRangeTo(target, 3)) {
-        //                 this.creep.build(target);
-        //             } else {
-        //                 this.creep.goto(target.pos);
-        //             }
-        //         } else {
-        //             this.creep.memory.task.type = TaskType.err;
-        //         }
-        //     }
-        // } else {
-        //     this.getEnergy();
-        // }
+        this.handleTask(this);
+        if (this.task) {
+            this.task.autoWork();
+        }
     }
 
-    // private getTask(): void {
-    //     // console.log(this.creep.room.construcutionSites);
-    //     if (this.roomNetwork.room.constructionSites.length && this.creep.memory.task.type == TaskType.err) {
-    //         const target = this.creep.pos.findClosestByRange(this.roomNetwork.room.constructionSites);
-    //         // this.creep.
-    //         // this.creep.memory.task.target = target.id;
-    //         this.creep.memory.task = {
-    //             type: TaskType.build,
-    //             target: target.id,
-    //             targetPos: target.pos,
-    //         };
+    private registerObjects(): void {
+        this.constructionSites = this.roomNetwork.constructionSites;
+    }
 
-    //         return;
-    //     }
-    // }
+    private buildAction(creep: Role): boolean {
+        if (this.constructionSites.length > 0) {
+            if (creep.task && creep.task.taskName == TaskType.build && creep.task.isValidTarget()) {
+                return true;
+            } else {
+                const closest = creep.pos.findClosestByRange(this.constructionSites);
+                creep.task = Tasks.build(closest);
+                return true;
+            }
+        }
 
-    // private getEnergy(): ScreepsReturnCode {
-    //     let energy: Structure | Resource;
-    //     if (this.creep.room.storage && this.creep.room.storage.store[RESOURCE_ENERGY] > 0) {
-    //         energy = this.creep.room.storage;
-    //     } else if (this.creep.room.terminal && this.creep.room.terminal.store[RESOURCE_ENERGY] > 0) {
-    //         energy = this.creep.room.terminal;
-    //     } else if (this.creep.room.find(FIND_DROPPED_RESOURCES).length) {
-    //         energy = this.creep.pos.findClosestByRange(this.creep.room.find(FIND_DROPPED_RESOURCES, {
-    //             filter: d => d.resourceType == RESOURCE_ENERGY
-    //         }));
-    //     }
+        return false;
+    }
 
-    //     if (energy) {
-    //         // console.log('energy: ' + energy);
-    //         if (energy instanceof Structure) {
-    //             return this.creep.withdrawFrom(energy, RESOURCE_ENERGY);
-    //         } else {
-    //             if (this.creep.pos.isNearTo(energy)) {
-    //                 return this.creep.pickup(energy);
-    //             } else {
-    //                 this.creep.goto(energy.pos);
-    //                 return ERR_NOT_IN_RANGE;
-    //             }
-    //         }
-    //     } else {
-    //         console.log('room ' + this.creep.room.name + ' no energy');
-    //         return ERR_NOT_ENOUGH_ENERGY;
-    //     }
-    // }
+    private handleTask(creep: Role): void {
+        if (creep.store[RESOURCE_ENERGY] > 0) {
+            if (this.constructionSites.length > 0) {
+                if (this.buildAction(creep)) return;
+            }
+
+
+        } else {
+            const energy = this.findResource(creep);
+            if (energy) {
+                if (energy instanceof Resource) {
+                    // creep.task = Tasks.pickup(energy);
+                    if (creep.task && creep.task.taskName != TaskType.pickup) {
+                        creep.task.fork(Tasks.pickup(energy));
+                        console.log('new task');
+                    } else {
+                        creep.task = Tasks.pickup(energy);
+                    }
+
+                    if (creep.task) {
+                        // console.log(creep.task.taskName + ' parent: ' + creep.task.parent ? creep.task.parent.taskName : 'no');
+                        if (creep.task.parent) {
+                            console.log(creep.task.taskName + ' parent: ' + creep.task.parent.taskName);
+                            console.log(creep.memory.task._parent.name + ' child is ' + creep.memory.task.name);
+                            // console.log('creep task parent\'s memory: ' + creep.task.parent.memory.name);
+                            // creep.memory.task = creep.task.memory;
+                        } else {
+                            console.log(creep.task.taskName + ' parent: ' + 'no');
+                        }
+
+                        // console.log('creep meomry: ' + creep.creep.memory.task._parent);
+                    }
+                }
+            }
+        }
+    }
+
+    private findResource(creep: Role, resourceType: ResourceConstant = RESOURCE_ENERGY): Structure | Resource {
+        const resources = creep.room.find(FIND_DROPPED_RESOURCES);
+        if (resources.length > 0) {
+            return creep.pos.findClosestByRange(resources);
+        }
+    }
 }
