@@ -5,7 +5,7 @@ import { errorMapper } from './modules/errorMapper'
 import './Prototypes/Mount';
 
 export const loop = errorMapper(() => {
-    console.log('loop begin -----------------');
+    // console.log('loop begin -----------------');
     initMemory();
 
     let cpuStart = Game.cpu.getUsed();
@@ -48,7 +48,7 @@ export const loop = errorMapper(() => {
         console.log('cpu used: ' + (cpuEnd - cpuStart));
     }
 
-    console.log('loop end -----------------');
+    // console.log('loop end -----------------');
 });
 
 function initMemory(): void {

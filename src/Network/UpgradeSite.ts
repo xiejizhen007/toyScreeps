@@ -13,7 +13,7 @@ export class UpgradeSite {
 
         // 7 级才有四个 link
         if (this.roomNetwork.room.controller.level >= 7) {
-            this.link = this.controller.pos.findClosestByLimitedRange(this.roomNetwork.links, 3);
+            // this.link = this.controller.pos.findClosestByLimitedRange(this.roomNetwork.links, 3);
         }
     }
 

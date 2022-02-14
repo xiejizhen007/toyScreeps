@@ -5,7 +5,7 @@ import { initTask } from "./tool";
 
 type targetType = {
     id: string;
-    pos: RoomPosition;
+    pos: PosMemory;
 }
 
 
@@ -19,7 +19,7 @@ export abstract class Task {
 
     _target: {
         id: string;
-        pos: RoomPosition;
+        pos: PosMemory;
     }
 
     _parent: TaskMemory | null;
@@ -31,10 +31,7 @@ export abstract class Task {
 
     constructor(taskName: string, target: targetType) {
         this.taskName = taskName;
-        if (taskName != TaskType.harvest) {
-            // console.log('task ' + taskName + ' constructor');
-        }
-
+        
         this._creep = {
             name: '',
         };
@@ -49,7 +46,11 @@ export abstract class Task {
         } else {
             this._target = {
                 id: '',
-                pos: new RoomPosition(25, 25, 'W15N59'),
+                pos: {
+                    x: -1,
+                    y: -1,
+                    roomName: '',
+                }
             }
         }
 
@@ -69,14 +70,11 @@ export abstract class Task {
     set creep(creep: Role) {
         this._creep.name = creep.name;
         if (this._parent) {
-            // console.log('creep name ' + creep.name);
-            // this.parent!.creep = creep;
-            this.parent.creep = creep;
+            this.parent!.creep = creep;
         }
     }
 
     get creep(): Role {
-        // return Game.creeps[this._creep.name];
         return Global.roles[this._creep.name];
     }
 
@@ -100,8 +98,8 @@ export abstract class Task {
         };
     }
 
-    set parent(parent: Task | null) {
-        this._parent = parent ? parent.memory : null;
+    set parent(parentTask: Task | null) {
+        this._parent = parentTask ? parentTask.memory : null;
 
         if (this.creep) {
             this.creep.task = this;
@@ -110,11 +108,6 @@ export abstract class Task {
 
     get parent(): Task | null {
         return this._parent ? initTask(this._parent) : null;
-        // if (this.creep && this.creep.memory.task) {
-        //     return this.creep.memory.task._parent ? initTask(this.creep.memory.task._parent) : null;
-        // }
-
-        // return null;
     }
 
     fork(newTask: Task): Task {
@@ -173,11 +166,7 @@ export abstract class Task {
 
     finish(): void {
         if (this.creep) {
-            // this.creep.memory.task = this.parent ? this.parent.memory : null;
             this.creep.task = this.parent;
-            // if (this.parent) {
-            //     this.creep.memory.task = this.parent.memory;
-            // }
         }
     }
 }

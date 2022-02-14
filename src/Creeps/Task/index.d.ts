@@ -16,7 +16,7 @@ interface TaskMemory {
     };
     _target: {
         id: string;
-        pos: RoomPosition;
+        pos: PosMemory;
     };
     _parent: TaskMemory;
     tick: number;

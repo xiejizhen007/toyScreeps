@@ -3,7 +3,11 @@ import { Task } from "../Task";
 
 const invalidTarget = {
     id: '',
-    pos: new RoomPosition(25, 25, 'W15N59'),
+    pos: {
+        x: -1,
+        y: -1,
+        roomName: '',
+    } as PosMemory
 };
 
 export class TaskInvalid extends Task {

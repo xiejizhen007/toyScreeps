@@ -1,7 +1,14 @@
 import { Role } from "Creeps/Role";
+import { Tasks } from "Creeps/Task/Tasks";
 
 export class Queen extends Role {
+    extensions: (StructureExtension | StructureSpawn)[];
+
     init(): void {
+        this.extensions = _.filter(this.roomNetwork.room.structures, (f: StructureSpawn | StructureExtension) => {
+            return (f.structureType == STRUCTURE_EXTENSION || f.structureType == STRUCTURE_SPAWN) && f.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+        }) as (StructureExtension | StructureSpawn)[];
+
         if (this.creep.store[RESOURCE_ENERGY] == 0) {
             this.creep.memory.working = false;
         } else if (this.creep.store.getFreeCapacity() == 0) {
@@ -13,12 +20,12 @@ export class Queen extends Role {
         const storage = this.creep.room.storage;
         const terminal = this.creep.room.terminal;
 
-        // let energy: StructureStorage | StructureTerminal;
-        // if (storage && storage.store[RESOURCE_ENERGY] > 0) {
-        //     energy = storage;
-        // } else if (terminal && terminal.store[RESOURCE_ENERGY] > 0) {
-        //     energy = terminal;
-        // }
+        let energy: StructureStorage | StructureTerminal;
+        if (storage && storage.store[RESOURCE_ENERGY] > 0) {
+            energy = storage;
+        } else if (terminal && terminal.store[RESOURCE_ENERGY] > 0) {
+            energy = terminal;
+        }
 
         if (this.creep.memory.working) {
             const extensions = _.filter(this.creep.room.structures, f => f.structureType == STRUCTURE_SPAWN 

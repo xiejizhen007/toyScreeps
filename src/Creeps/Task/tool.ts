@@ -45,10 +45,6 @@ export function initTask(memory: TaskMemory): Task {
             break;
     }
 
-    if (taskName == TaskType.pickup) {
-        console.log(memory.name + ' initTask _parent: ' + memory._parent);
-    }
-
     task.memory = memory;
     return task;
 }

@@ -51,7 +51,7 @@ export class Worker extends Role {
                     // creep.task = Tasks.pickup(energy);
                     if (creep.task && creep.task.taskName != TaskType.pickup) {
                         creep.task.fork(Tasks.pickup(energy));
-                        console.log('new task');
+                        // console.log('new task');
                     } else {
                         creep.task = Tasks.pickup(energy);
                     }
@@ -60,11 +60,12 @@ export class Worker extends Role {
                         // console.log(creep.task.taskName + ' parent: ' + creep.task.parent ? creep.task.parent.taskName : 'no');
                         if (creep.task.parent) {
                             console.log(creep.task.taskName + ' parent: ' + creep.task.parent.taskName);
-                            console.log(creep.memory.task._parent.name + ' child is ' + creep.memory.task.name);
+                            // console.log(creep.memory.task._parent.name + ' child is ' + creep.memory.task.name);
                             // console.log('creep task parent\'s memory: ' + creep.task.parent.memory.name);
                             // creep.memory.task = creep.task.memory;
                         } else {
-                            console.log(creep.task.taskName + ' parent: ' + 'no');
+                            console.log(creep.task.taskName + ' parent: ' + 'null');
+                            // creep.task.fork(Tasks.pickup(energy));
                         }
 
                         // console.log('creep meomry: ' + creep.creep.memory.task._parent);
@@ -75,7 +76,10 @@ export class Worker extends Role {
     }
 
     private findResource(creep: Role, resourceType: ResourceConstant = RESOURCE_ENERGY): Structure | Resource {
-        const resources = creep.room.find(FIND_DROPPED_RESOURCES);
+        const resources = creep.room.find(FIND_DROPPED_RESOURCES, {
+            filter: f => f.resourceType == resourceType
+        });
+
         if (resources.length > 0) {
             return creep.pos.findClosestByRange(resources);
         }

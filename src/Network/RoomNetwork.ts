@@ -1,4 +1,5 @@
 import { CreepController } from "./CreepController";
+import { DefenceNetwork } from "./DefenceNetwork";
 import { LinkNetwork } from "./LinkNetwork";
 import { SourceNetwork } from "./SourceNetwork";
 import { SpawnNetwork } from "./SpawnNetwork";
@@ -16,6 +17,7 @@ export class RoomNetwork {
     constructionSites: ConstructionSite[];
 
     creepController: CreepController;
+    defenceNetwork: DefenceNetwork;
     linkNetwork: LinkNetwork;
     spawnNetwork: SpawnNetwork;
     upgradeSite: UpgradeSite;
@@ -28,6 +30,7 @@ export class RoomNetwork {
         this.room = room;
 
         this.creepController = new CreepController(this);
+        this.defenceNetwork = new DefenceNetwork(this);
         this.linkNetwork = new LinkNetwork(this);
         this.spawnNetwork = new SpawnNetwork(this);
         this.upgradeSite = new UpgradeSite(this, this.room.controller);
@@ -47,6 +50,7 @@ export class RoomNetwork {
         this.registerObject();
 
         this.creepController.init();
+        this.defenceNetwork.init();
         this.linkNetwork.init();
         this.spawnNetwork.init();
         this.upgradeSite.init();
@@ -56,6 +60,7 @@ export class RoomNetwork {
 
     work(): void {
         this.creepController.work();
+        this.defenceNetwork.work();
         this.linkNetwork.work();
         this.spawnNetwork.work();
         this.upgradeSite.work();

@@ -52,3 +52,9 @@ interface ConstructionSiteMemory {
     tick: number;
     pos: RoomPosition;
 }
+
+interface PosMemory {
+    x: number;
+    y: number;
+    roomName: string;
+}
