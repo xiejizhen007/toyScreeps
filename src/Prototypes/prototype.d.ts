@@ -1,9 +1,15 @@
 interface Room {
     creeps: Creep[];
     myCreeps: Creep[];
+    enemies: Creep[];
+
     structures: Structure[];
+
     spawns: StructureSpawn[];
+    extensions: StructureExtension[];
+
     links: StructureLink[];
+    towers: StructureTower[];
 
     constructionSites: ConstructionSite[];
 
@@ -13,6 +19,8 @@ interface Room {
 interface Creep {
     goto(pos: RoomPosition): ScreepsReturnCode;
     withdrawFrom(target: Structure | Tombstone | Ruin, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;
+
+    sayHello(): void;
 }
 
 interface RoomPosition {

@@ -16,3 +16,9 @@ Creep.prototype.withdrawFrom = function(target: Structure | Tombstone | Ruin,
         return ERR_NOT_IN_RANGE;
     }
 }
+
+export class CreepExtension extends Creep {
+    sayHello(): void {
+        this.say('hello');
+    }
+}
