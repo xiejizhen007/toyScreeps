@@ -21,20 +21,13 @@ export class Harvester extends Role {
         if (target) {
             target.timeout = 0;
             target.creeps.push(this.creep.name);
-            const source = Game.getObjectById(target.sourceId);
-            this.task = Tasks.harvest(source);
+            // const source = Game.getObjectById(target.sourceId);
+            // this.task = Tasks.harvest(source);
+            this.creep.memory.tempTask = {
+                type: 'harvester',
+                target: target.sourceId
+            }
         }
-
-        // const tmp = _.find(sourceMemory, f => {
-        //     return _.include(f.creeps, this.creep.name);
-        // });
-
-        // // console.log(tmp.pos);
-        // if (tmp) {
-        //     // console.log(tmp.sourceId);
-        //     const source = Game.getObjectById(tmp.sourceId);
-        //     this.task = Tasks.harvest(source);
-        // }
     }
 
     work(): void {
@@ -42,27 +35,45 @@ export class Harvester extends Role {
             return;
         }
 
-        if (this.task) {
-            this.task.autoWork();
-        }
-
-        // if (!this.creep.memory.task || this.creep.memory.task.type != TaskType.harvest) {
-        //     return;
-        // }
-
-        // const source = Game.getObjectById(this.creep.memory.task._target.id as Id<Source>);
-        // if (source) {
-            // if (this.creep.pos.isNearTo(source) && source.energy > 0) {
-            //     this.creep.harvest(source);
-            // } else {
-            //     this.creep.moveTo(source);
-            // }
-        //     this.task = Tasks.harvest(source);
-        //     this.task.creep = this.creep;
+        // if (this.task) {
         //     this.task.autoWork();
-        // } else {
-            // this.creep.memory.task.type = TaskType.err;
         // }
-        // this.handleTask();
+        if (this.creep.memory.tempTask) {
+            // const sourceNetwork = this.roomNetwork.sourceNetworks[this.creep.memory.tempTask.target as Id<Source>];
+            // sourceNetwork.link
+            const source = Game.getObjectById(this.creep.memory.tempTask.target as Id<Source>);
+            const sourceNetwork = this.roomNetwork.sourceNetworks[source.id];
+            if (!source || !sourceNetwork) {
+                return;
+            }
+
+
+            if (this.creep.store.getFreeCapacity() == 0) {
+                if (sourceNetwork.link) {
+                    if (this.creep.pos.isNearTo(sourceNetwork.link)) {
+                        this.creep.transfer(sourceNetwork.link, RESOURCE_ENERGY);
+                    } else {
+                        this.creep.goto(sourceNetwork.link.pos);
+                    }
+                }
+
+                return;
+            } 
+
+            if (this.creep.pos.isNearTo(source)) {
+                // if (this.creep.store.getFreeCapacity() == 0) {
+                //     if (sourceNetwork.link) {
+                //         if (this.creep.pos.isNearTo(sourceNetwork.link)) {
+                //             this.creep.transfer(sourceNetwork.link, RESOURCE_ENERGY);
+                //         } else {
+                //             this.creep.goto(sourceNetwork.link.pos);
+                //         }
+                //     }
+                // } 
+                this.creep.harvest(source);
+            } else {
+                this.creep.goto(source.pos);
+            }
+        }
     }
 }

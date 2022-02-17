@@ -23,6 +23,15 @@ interface CreepMemory {
     //     amount?: number;
     // }
     task?: TaskMemory;
+    tempTask?: TempTaskMemory;
+}
+
+interface TempTaskMemory {
+    type: string;
+    target?: string;
+    targetPos?: RoomPosition;
+    resourceType?: ResourceConstant;
+    amount?: number;
 }
 
 interface RoomNetworkMemory {
@@ -37,6 +46,8 @@ interface RoomNetworkMemory {
             // isoutSource?: boolean;  // 外矿？
         // }}
         sources?: {[name: Id<Source>]: SourceNetworkMemory};
+
+        lab?: LabClusterMemory;
     }
 }
 
@@ -57,4 +68,19 @@ interface PosMemory {
     x: number;
     y: number;
     roomName: string;
+}
+
+
+// lab
+interface LabClusterMemory {
+    // lab state
+    state: string;
+
+    // bak
+    labs: Id<StructureLab>[];
+    productLabs: Id<StructureLab>[];
+    reactionLabs: Id<StructureLab>[];
+    boostLabs: Id<StructureLab>[];
+
+    
 }

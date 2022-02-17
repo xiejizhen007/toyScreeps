@@ -1,4 +1,5 @@
 import { CreepSetup } from "Creeps/CreepSetup";
+import { Roles } from "Creeps/setups";
 import { RoomNetwork } from "./RoomNetwork";
 
 export interface SpawnRequest {
@@ -49,7 +50,9 @@ export class SpawnNetwork {
                 // console.log('i am free ' + spawn);
 
                 if (request) {
-                    const ret = spawn.spawnCreep(request.setup.generateBody(this.room.energyCapacityAvailable), request.setup.role + Game.time, {
+                    const energy = request.setup.role == Roles.queen ? this.room.energyAvailable : this.room.energyCapacityAvailable;
+
+                    const ret = spawn.spawnCreep(request.setup.generateBody(energy), request.setup.role + Game.time, {
                         memory: {role: request.setup.role, room: this.room.name, isNeeded: false},
                     });
 

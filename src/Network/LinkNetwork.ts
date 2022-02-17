@@ -20,6 +20,7 @@ export class LinkNetwork {
     }
 
     work(): void {
+        console.log('links, ' + this.sendLinks.length);
         for (const receiveLink of this.receiveLinks) {
             const closestSendLink = receiveLink.pos.findClosestByRange(this.sendLinks);
             if (closestSendLink) {
@@ -29,7 +30,11 @@ export class LinkNetwork {
             }
         }
 
-        
+        if (this.roomNetwork.commandCenter && this.roomNetwork.commandCenter.link) {
+            for (const link of this.sendLinks) {
+                link.transferEnergy(this.roomNetwork.commandCenter.link);
+            }
+        }
     }
 
     registerReceive(link: StructureLink): void {

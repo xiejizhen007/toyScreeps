@@ -10,6 +10,9 @@ export class SourceNetwork {
     constructor(roomNetwork: RoomNetwork, source: Source) {
         this.roomNetwork = roomNetwork;
         this.source = source;
+
+        this.container = source.pos.findInRange(roomNetwork.containers, 1)[0];
+        this.link = source.pos.findInRange(roomNetwork.links, 2)[0];
     }
 
     init(): void {
@@ -41,9 +44,19 @@ export class SourceNetwork {
 
     work(): void {
         this.spawnRoleToWork();
+        this.registerLinkSend();
     }
 
     spawnRoleToWork(): void {
         
+    }
+
+    registerLinkSend(): boolean {
+        if (this.link && this.link.store[RESOURCE_ENERGY] >= 700) {
+            this.roomNetwork.linkNetwork.registerSend(this.link);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

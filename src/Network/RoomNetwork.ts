@@ -1,5 +1,7 @@
+import { CommandCenter } from "./CommandCenter";
 import { CreepController } from "./CreepController";
 import { DefenceNetwork } from "./DefenceNetwork";
+import { LabCluster } from "./LabCluster";
 import { LinkNetwork } from "./LinkNetwork";
 import { SourceNetwork } from "./SourceNetwork";
 import { SpawnNetwork } from "./SpawnNetwork";
@@ -11,7 +13,15 @@ export class RoomNetwork {
     memory: RoomNetworkMemory;
 
     spawns: StructureSpawn[];
+    extensions: StructureExtension[];
+
+    storage: StructureStorage;
+    terminal: StructureTerminal;
+    factory: StructureFactory;
+
     links: StructureLink[];
+    labs: StructureLab[];
+    towers: StructureTower[];
     containers: StructureContainer[];
 
     constructionSites: ConstructionSite[];
@@ -22,6 +32,8 @@ export class RoomNetwork {
     spawnNetwork: SpawnNetwork;
     upgradeSite: UpgradeSite;
     transportNetwork: TransportNetwork;
+    labCluster: LabCluster;
+    commandCenter: CommandCenter;
 
     // sourceNetworks: SourceNetwork[];
     sourceNetworks: {[name: Id<Source>]: SourceNetwork};
@@ -29,31 +41,34 @@ export class RoomNetwork {
     constructor(room: Room) {
         this.room = room;
 
-        this.creepController = new CreepController(this);
-        this.defenceNetwork = new DefenceNetwork(this);
-        this.linkNetwork = new LinkNetwork(this);
-        this.spawnNetwork = new SpawnNetwork(this);
-        this.upgradeSite = new UpgradeSite(this, this.room.controller);
-        this.transportNetwork = new TransportNetwork();
+        // this.creepController = new CreepController(this);
+        // this.defenceNetwork = new DefenceNetwork(this);
+        // this.linkNetwork = new LinkNetwork(this);
+        // this.spawnNetwork = new SpawnNetwork(this);
+        // this.upgradeSite = new UpgradeSite(this, this.room.controller);
+        // this.transportNetwork = new TransportNetwork();
 
-        this.sourceNetworks = {};
-        const sources = this.room.find(FIND_SOURCES);
-        _.forEach(sources, s => {
-            let tmp = new SourceNetwork(this, s);
-            // this.sourceNetworks.push(tmp);
-            this.sourceNetworks[s.id] = tmp;
-        })
+        // this.sourceNetworks = {};
+        // const sources = this.room.find(FIND_SOURCES);
+        // _.forEach(sources, s => {
+        //     let tmp = new SourceNetwork(this, s);
+        //     // this.sourceNetworks.push(tmp);
+        //     this.sourceNetworks[s.id] = tmp;
+        // })
     }
 
     init(): void {
         this.initMemory();
-        this.registerObject();
+        this.registerObjects();
+        this.registerModules();
 
         this.creepController.init();
         this.defenceNetwork.init();
         this.linkNetwork.init();
         this.spawnNetwork.init();
         this.upgradeSite.init();
+        this.labCluster.init();
+        this.commandCenter.init();
 
         _.forEach(this.sourceNetworks, f => f.init());
     }
@@ -61,11 +76,14 @@ export class RoomNetwork {
     work(): void {
         this.creepController.work();
         this.defenceNetwork.work();
-        this.linkNetwork.work();
         this.spawnNetwork.work();
         this.upgradeSite.work();
+        this.labCluster.work();
+        this.commandCenter.work();
 
         _.forEach(this.sourceNetworks, f => f.work());
+
+        this.linkNetwork.work();
 
         this.clearUselessMemory();
     }
@@ -103,9 +121,44 @@ export class RoomNetwork {
         this.memory.myCreeps = myCreeps;
     }
 
-    private registerObject(): void {
+    private registerObjects(): void {
         this.spawns = this.room.spawns;
+        // this.extensions = this.room.extensions;
+        this.extensions = _.filter(this.room.structures, f => f.structureType == STRUCTURE_EXTENSION) as StructureExtension[];
+
+        // console.log('roomNetwork ' + this.extensions.length);        
+
+        this.storage = this.room.storage;
+        this.terminal = this.room.terminal;
+        this.factory = this.room.factory;
+
         this.links = this.room.links;
+        this.towers = this.room.towers;
+        this.labs = _.filter(this.room.structures, f => f.structureType == STRUCTURE_LAB) as StructureLab[];
+        this.containers = _.filter(this.room.structures, f => f.structureType == STRUCTURE_CONTAINER) as StructureContainer[];
         this.constructionSites = this.room.constructionSites;
+    }
+
+    private registerModules(): void {
+        this.creepController = new CreepController(this);
+        this.defenceNetwork = new DefenceNetwork(this);
+        this.linkNetwork = new LinkNetwork(this);
+        this.spawnNetwork = new SpawnNetwork(this);
+        this.upgradeSite = new UpgradeSite(this, this.room.controller);
+        this.transportNetwork = new TransportNetwork();
+        
+        this.commandCenter = new CommandCenter(this);
+
+        // if (this.room.controller && this.room.controller.level >= 6) {
+            this.labCluster = new LabCluster(this);
+        // }
+
+        this.sourceNetworks = {};
+        const sources = this.room.find(FIND_SOURCES);
+        _.forEach(sources, s => {
+            let tmp = new SourceNetwork(this, s);
+            // this.sourceNetworks.push(tmp);
+            this.sourceNetworks[s.id] = tmp;
+        });
     }
 }

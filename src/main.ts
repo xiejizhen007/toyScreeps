@@ -3,10 +3,13 @@ import { RoomNetwork } from 'Network/RoomNetwork';
 import { errorMapper } from './modules/errorMapper'
 
 import './Prototypes/Mount';
+import { mountPrototype } from './Prototypes/Mount';
 
 export const loop = errorMapper(() => {
     // console.log('loop begin -----------------');
     initMemory();
+
+    mountPrototype();
 
     let cpuStart = Game.cpu.getUsed();
     for (const creepName in Memory.creeps) {

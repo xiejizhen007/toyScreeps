@@ -14,6 +14,8 @@ export class CreepSetup {
             body:   [],
             limit:  Infinity,
             orderd: true,
+            head: [],
+            tail: [],
         });
         this.bodySetup = bodySetup as CreepBodySetup;
     }

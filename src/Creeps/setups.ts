@@ -31,7 +31,10 @@ export const Setups = {
     },
 
     king: {
-
+        default: new CreepSetup(Roles.king, {
+            body: [CARRY, CARRY, CARRY, CARRY, MOVE],
+            limit: 4,
+        }),
     },
 
     worker: {
