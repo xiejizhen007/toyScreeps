@@ -21,4 +21,13 @@ export class CreepExtension extends Creep {
     sayHello(): void {
         this.say('hello');
     }
+
+    // get isWorking(): boolean {
+    //     return Game.creeps[this.name] && this.memory.working;
+    // }
+
+    // set isWorking(yes: boolean) {
+    //     if (Game.creeps[this.name])
+    //         this.memory.working = yes;
+    // }
 }

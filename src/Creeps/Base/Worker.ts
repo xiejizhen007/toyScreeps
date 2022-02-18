@@ -10,78 +10,133 @@ export class Worker extends Role {
 
     init(): void {
         this.registerObjects();
+
+        if (!this.creep.memory.tempTask) {
+            this.creep.memory.tempTask = {
+                type: 'build',
+            }
+        }
     }
 
     work(): void {
-        this.handleTask(this);
-        if (this.task) {
-            this.task.autoWork();
-        }
+        if (this.buildAction()) { return; }
+
+
+        if (this.upgradeAction()) { return; }
     }
 
     private registerObjects(): void {
         this.constructionSites = this.roomNetwork.constructionSites;
     }
 
-    private buildAction(creep: Role): boolean {
+    private buildAction(): boolean {
         if (this.constructionSites.length > 0) {
-            if (creep.task && creep.task.taskName == TaskType.build && creep.task.isValidTarget()) {
-                return true;
+            if (this.creep.store[RESOURCE_ENERGY] == 0) {
+                const energy = this.getEnergy();
+                if (energy) {
+                    this.getResource(energy, RESOURCE_ENERGY);
+                }
             } else {
-                const closest = creep.pos.findClosestByRange(this.constructionSites);
-                creep.task = Tasks.build(closest);
-                return true;
+                let target = Game.getObjectById(this.creep.memory.tempTask.target as Id<ConstructionSite>);
+                if (target) {
+                    if (this.creep.pos.inRangeTo(target, 3)) {
+                        this.creep.build(target);
+                    } else {
+                        this.creep.goto(target.pos);
+                    }
+                } else {
+                    target = this.creep.pos.findClosestByRange(this.constructionSites);
+                    if (target) {
+                        this.creep.memory.tempTask.target = target.id;
+                    }
+                }
             }
+
+
+            return true;
         }
 
         return false;
     }
+    
+    private upgradeAction(): boolean {
+        
 
-    private handleTask(creep: Role): void {
-        if (creep.store[RESOURCE_ENERGY] > 0) {
-            if (this.constructionSites.length > 0) {
-                if (this.buildAction(creep)) return;
+        if (this.creep.store[RESOURCE_ENERGY] == 0) {
+            // const energy = this.getEnergy();
+            // if (energy) {
+            //     this.getResource(energy, RESOURCE_ENERGY);
+            // }
+            const link = this.roomNetwork.upgradeSite.link;
+            if (link && link.store[RESOURCE_ENERGY] > 0) {
+                this.getResourceFrom(link);
+            } else {
+                const energy = this.getEnergy();
+                if (energy) {
+                    this.getResource(energy, RESOURCE_ENERGY);
+                }
             }
-
-
         } else {
-            const energy = this.findResource(creep);
-            if (energy) {
-                if (energy instanceof Resource) {
-                    // creep.task = Tasks.pickup(energy);
-                    if (creep.task && creep.task.taskName != TaskType.pickup) {
-                        creep.task.fork(Tasks.pickup(energy));
-                        // console.log('new task');
-                    } else {
-                        creep.task = Tasks.pickup(energy);
-                    }
-
-                    if (creep.task) {
-                        // console.log(creep.task.taskName + ' parent: ' + creep.task.parent ? creep.task.parent.taskName : 'no');
-                        if (creep.task.parent) {
-                            console.log(creep.task.taskName + ' parent: ' + creep.task.parent.taskName);
-                            // console.log(creep.memory.task._parent.name + ' child is ' + creep.memory.task.name);
-                            // console.log('creep task parent\'s memory: ' + creep.task.parent.memory.name);
-                            // creep.memory.task = creep.task.memory;
-                        } else {
-                            console.log(creep.task.taskName + ' parent: ' + 'null');
-                            // creep.task.fork(Tasks.pickup(energy));
-                        }
-
-                        // console.log('creep meomry: ' + creep.creep.memory.task._parent);
-                    }
+            const controller = this.roomNetwork.room.controller;
+            if (controller) {
+                if (this.creep.pos.inRangeTo(controller, 3)) {
+                    this.creep.upgradeController(controller);
+                } else {
+                    this.creep.goto(controller.pos);
                 }
             }
         }
+        return true;
     }
 
-    private findResource(creep: Role, resourceType: ResourceConstant = RESOURCE_ENERGY): Structure | Resource {
-        const resources = creep.room.find(FIND_DROPPED_RESOURCES, {
-            filter: f => f.resourceType == resourceType
-        });
+    private getEnergy(): StructureStorage | StructureTerminal | StructureContainer | Resource | Tombstone | undefined {
+        let target: StructureStorage | StructureTerminal | StructureContainer | Resource | Tombstone;
 
-        if (resources.length > 0) {
-            return creep.pos.findClosestByRange(resources);
+        if (this.roomNetwork.room.storage && this.roomNetwork.room.storage.store[RESOURCE_ENERGY] > 0) {
+            target = this.roomNetwork.room.storage;
+        } else if (this.roomNetwork.room.terminal && this.roomNetwork.room.terminal.store[RESOURCE_ENERGY] > 0) {
+            target = this.roomNetwork.room.terminal;
+        } else if (this.roomNetwork.room.find(FIND_DROPPED_RESOURCES).length) {
+            target = this.creep.pos.findClosestByRange(this.roomNetwork.room.find(FIND_DROPPED_RESOURCES));
+        }
+
+        return target;
+    }
+
+    private getResource(target: Structure | Resource | Tombstone, resourceType = RESOURCE_ENERGY as ResourceConstant,
+                        amount?: number): ScreepsReturnCode {
+        if (target instanceof StructureStorage || target instanceof StructureTerminal 
+            || target instanceof StructureContainer) {
+            const minAmount = Math.min(target.store[resourceType], this.creep.store.getFreeCapacity(), amount);
+            return this.creep.withdrawFrom(target, resourceType, minAmount);
+        } else if (target instanceof Resource) {
+            if (this.creep.pos.isNearTo(target)) {
+                this.creep.pickup(target);
+            } else {
+                this.creep.goto(target.pos);
+            }
+        }
+        return OK;
+    }
+
+    private getResourceFrom(target: Structure | Resource | Tombstone | Ruin, resourceType = RESOURCE_ENERGY as ResourceConstant,
+                            amount?: number): ScreepsReturnCode {
+        if (this.creep.pos.isNearTo(target)) {
+            if (target instanceof Tombstone || target instanceof Ruin) {
+                const minAmount = Math.min(target.store[resourceType], this.creep.store.getFreeCapacity(), amount);
+                this.creep.withdraw(target, resourceType, minAmount);
+            } else if (target instanceof Resource) {
+                this.creep.pickup(target);
+            } else if ( target instanceof StructureStorage
+                        || target instanceof StructureTerminal
+                        || target instanceof StructureContainer
+                        || target instanceof StructureLink) {
+                const minAmount = Math.min(target.store[resourceType], this.creep.store.getFreeCapacity(), amount);
+                this.creep.withdraw(target, resourceType, minAmount);
+            }
+        } else {
+            this.creep.goto(target.pos);
+            return ERR_NOT_IN_RANGE;
         }
     }
 }

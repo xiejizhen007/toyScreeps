@@ -20,7 +20,7 @@ export class LinkNetwork {
     }
 
     work(): void {
-        console.log('links, ' + this.sendLinks.length);
+        // console.log('links, ' + this.sendLinks.length);
         for (const receiveLink of this.receiveLinks) {
             const closestSendLink = receiveLink.pos.findClosestByRange(this.sendLinks);
             if (closestSendLink) {

@@ -108,7 +108,9 @@ export class CreepController {
     }
 
     private spawnWorker(): void {
-        const target = _.find(this.roomNetwork.room.myCreeps, f => f.memory.role == Roles.worker);
+        const target = _.find(this.roomNetwork.memory.myCreeps, f => {
+            return Game.creeps[f] && Game.creeps[f].memory.role == Roles.worker
+        });
         if (!target) {
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.worker.default,

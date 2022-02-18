@@ -5,7 +5,10 @@ import { Tasks } from "Creeps/Task/Tasks";
 
 export class Harvester extends Role {
     init(): void {
-        if (this.creep.memory.task) {
+        // if (this.creep.memory.task) {
+        //     return;
+        // }
+        if (this.creep.memory.tempTask) {
             return;
         }
 
@@ -24,7 +27,7 @@ export class Harvester extends Role {
             // const source = Game.getObjectById(target.sourceId);
             // this.task = Tasks.harvest(source);
             this.creep.memory.tempTask = {
-                type: 'harvester',
+                type: 'harveste',
                 target: target.sourceId
             }
         }

@@ -31,7 +31,10 @@ export class Upgrader extends Role {
 
     private getEnergy(): ScreepsReturnCode {
         let energy: Structure | Resource;
-        if (this.creep.room.storage && this.creep.room.storage.store[RESOURCE_ENERGY] > 0) {
+
+        if (this.upgradeSite.link && this.upgradeSite.link.store[RESOURCE_ENERGY] > 0) {
+            energy = this.upgradeSite.link;
+        } else if (this.creep.room.storage && this.creep.room.storage.store[RESOURCE_ENERGY] > 0) {
             energy = this.creep.room.storage;
         } else if (this.creep.room.terminal && this.creep.room.terminal.store[RESOURCE_ENERGY] > 0) {
             energy = this.creep.room.terminal;
@@ -54,7 +57,7 @@ export class Upgrader extends Role {
                 }
             }
         } else {
-            console.log('room ' + this.creep.room.name + ' no energy');
+            // console.log('room ' + this.creep.room.name + ' no energy');
             return ERR_NOT_ENOUGH_ENERGY;
         }
     }

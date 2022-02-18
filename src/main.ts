@@ -29,6 +29,7 @@ export const loop = errorMapper(() => {
         }
     }
     
+    // console.log('room network is still alive');
 
     let i = 0;
     for (const role in Global.roles) {

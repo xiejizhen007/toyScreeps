@@ -19,4 +19,9 @@ interface CreepBodySetup {
 //     directions?: DirectionConstant[];
 // }
 
-type StoreStructure = StructureStorage | StructureTerminal | StructureContainer;
+type StoreStructure = StructureStorage | StructureTerminal | StructureContainer | StructureLink;
+
+type EnergyStructure =  StructureStorage 
+                        | StructureTerminal
+                        | StructureContainer 
+                        | StructureLink;

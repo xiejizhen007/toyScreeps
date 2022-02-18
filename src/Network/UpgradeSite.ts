@@ -13,7 +13,7 @@ export class UpgradeSite {
 
         // 7 级才有四个 link
         if (this.roomNetwork.room.controller.level >= 7) {
-            // this.link = this.controller.pos.findClosestByLimitedRange(this.roomNetwork.links, 3);
+            this.link = this.controller.pos.findClosestByLimitedRange(this.roomNetwork.links, 3);
         }
     }
 
@@ -22,6 +22,19 @@ export class UpgradeSite {
     }
 
     work(): void {
+        this.registerLinkRequest();
+    }
 
+    private registerLinkRequest(): boolean {
+        if (this.link) {
+            if (this.link.store[RESOURCE_ENERGY] <= 300) {
+                this.roomNetwork.linkNetwork.registerReceive(this.link);
+                // console.log('upgrade site register link');
+            }
+            
+            return true;
+        }
+
+        return false;
     }
 }
