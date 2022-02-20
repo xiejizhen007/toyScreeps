@@ -69,6 +69,16 @@ export abstract class Role {
         return this._task;
     }
 
+    get isWorking(): boolean {
+        return this.creep && !this.creep.spawning && this.creep.memory.working;
+    }
+
+    set isWorking(working: boolean) {
+        if (this.creep) {
+            this.creep.memory.working = working;
+        }
+    }
+
     abstract init(): void;
     abstract work(): void;
 

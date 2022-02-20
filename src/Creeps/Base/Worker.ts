@@ -63,10 +63,6 @@ export class Worker extends Role {
         
 
         if (this.creep.store[RESOURCE_ENERGY] == 0) {
-            // const energy = this.getEnergy();
-            // if (energy) {
-            //     this.getResource(energy, RESOURCE_ENERGY);
-            // }
             const link = this.roomNetwork.upgradeSite.link;
             if (link && link.store[RESOURCE_ENERGY] > 0) {
                 this.getResourceFrom(link);

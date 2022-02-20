@@ -1,5 +1,6 @@
 import { Harvester } from "Creeps/Base/Harvester";
 import { King } from "Creeps/Base/King";
+import { Miner } from "Creeps/Base/Miner";
 import { Queen } from "Creeps/Base/Queen";
 import { Upgrader } from "Creeps/Base/Upgrader";
 import { Worker } from "Creeps/Base/Worker";
@@ -51,6 +52,11 @@ export class CreepController {
                 const role = new King(creep, this.roomNetwork);
                 this.roles.push(role);
             }
+
+            else if (creep.memory.role == 'miner') {
+                const role = new Miner(creep, this.roomNetwork);
+                this.roles.push(role);
+            }
         }
 
         // _.forEach(this.roles, r => r.init());
@@ -62,6 +68,7 @@ export class CreepController {
         this.spawnUpgrader();
         this.spawnWorker();
         this.spawnKing();
+        this.spawnMiner();
 
         // _.forEach(this.roles, r => r.work());
     }
@@ -132,6 +139,21 @@ export class CreepController {
                 priority: CreepRolePriority.king,
             });
             console.log('need spawn king');
+        }
+    }
+
+    private spawnMiner(): void {
+        if (this.roomNetwork.mineSite) {
+            const target = _.find(this.roomNetwork.memory.myCreeps, f => {
+                return Game.creeps[f] && Game.creeps[f].memory.role == 'miner';
+            });
+
+            if (!target) {
+                this.roomNetwork.spawnNetwork.registerCreep({
+                    setup: Setups.miner.default,
+                    priority: CreepRolePriority.miner,
+                });
+            }
         }
     }
 }

@@ -28,10 +28,26 @@ export class DefenceNetwork {
 
     // TODO: defence room and call soldier
     work(): void {
-        for (const tower of this.towers) {
-            if (tower.store[RESOURCE_ENERGY] > 0) {
-                tower.attack(tower.pos.findClosestByRange(this.enemies));
+        if (this.enemies.length > 0) {
+            for (const tower of this.towers) {
+                if (tower.store[RESOURCE_ENERGY] > 0) {
+                    tower.attack(tower.pos.findClosestByRange(this.enemies));
+                }
             }
+        } else {
+            this.repairStructure();
         }
+    }
+
+    private repairStructure(): boolean {
+        const target = this.roomNetwork.containers.find(f => f.hits + 5000 < f.hitsMax);
+        if (target) {
+            if (this.towers[0]) {
+                this.towers[0].repair(target);
+            }
+            return true;
+        }
+
+        return false;
     }
 }

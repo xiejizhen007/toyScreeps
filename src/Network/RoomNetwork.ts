@@ -3,6 +3,7 @@ import { CreepController } from "./CreepController";
 import { DefenceNetwork } from "./DefenceNetwork";
 import { LabCluster } from "./LabCluster";
 import { LinkNetwork } from "./LinkNetwork";
+import { MineSite } from "./MineSite";
 import { SourceNetwork } from "./SourceNetwork";
 import { SpawnNetwork } from "./SpawnNetwork";
 import { TransportNetwork } from "./TransportNetwork";
@@ -31,12 +32,15 @@ export class RoomNetwork {
     linkNetwork: LinkNetwork;
     spawnNetwork: SpawnNetwork;
     upgradeSite: UpgradeSite;
-    transportNetwork: TransportNetwork;
+    
+    transportNetwork: TransportNetwork;             // queen
+    transportNetworkForTransfer: TransportNetwork;  // transfer
     labCluster: LabCluster;
     commandCenter: CommandCenter;
 
     // sourceNetworks: SourceNetwork[];
     sourceNetworks: {[name: Id<Source>]: SourceNetwork};
+    mineSite: MineSite;
 
     constructor(room: Room) {
         this.room = room;
@@ -69,17 +73,26 @@ export class RoomNetwork {
         this.upgradeSite.init();
         this.labCluster.init();
         this.commandCenter.init();
+        
+        if (this.mineSite) {
+            this.mineSite.init();
+        }
 
         _.forEach(this.sourceNetworks, f => f.init());
+
     }
 
     work(): void {
-        this.creepController.work();
         this.defenceNetwork.work();
+        this.creepController.work();
         this.spawnNetwork.work();
         this.upgradeSite.work();
         this.labCluster.work();
         this.commandCenter.work();
+
+        if (this.mineSite) {
+            this.mineSite.work();
+        }
 
         _.forEach(this.sourceNetworks, f => f.work());
 
@@ -146,6 +159,7 @@ export class RoomNetwork {
         this.spawnNetwork = new SpawnNetwork(this);
         this.upgradeSite = new UpgradeSite(this, this.room.controller);
         this.transportNetwork = new TransportNetwork();
+        this.transportNetworkForTransfer = new TransportNetwork();
         
         this.commandCenter = new CommandCenter(this);
 
@@ -160,5 +174,13 @@ export class RoomNetwork {
             // this.sourceNetworks.push(tmp);
             this.sourceNetworks[s.id] = tmp;
         });
+
+        const mineral = this.room.find(FIND_MINERALS)[0];
+        if (mineral) {
+            const extractor = mineral.pos.lookFor(LOOK_STRUCTURES).find(f => f.structureType == STRUCTURE_EXTRACTOR) as StructureExtractor;
+            if (extractor) {
+                this.mineSite = new MineSite(this, mineral, extractor);
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ export enum CreepRolePriority {
     'harvester',
     'worker',
     'upgrader',
+    'miner',
 }
 
 export const TaskType = {

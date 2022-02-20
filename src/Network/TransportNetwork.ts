@@ -21,11 +21,11 @@ export class TransportNetwork {
         this.output = [];
     }
 
-    get haveInputRequest(): boolean {
+    haveInputRequest(): boolean {
         return this.input.length > 0;
     }
 
-    get haveOutputRequest(): boolean {
+    haveOutputRequest(): boolean {
         return this.output.length > 0;
     }
 
@@ -73,13 +73,13 @@ export class TransportNetwork {
         }
     }
 
-    get findHighPriorityInputRequest(): TransportRequest | undefined {
+    findHighPriorityInputRequest(): TransportRequest | undefined {
         const minPriority = _.min(this.input, f => f.priority);
         const ret = _.find(this.input, f => f == minPriority);
         return ret;
     }
     
-    get findHighPriorityOutputRequest(): TransportRequest | undefined {
+    findHighPriorityOutputRequest(): TransportRequest | undefined {
         const minPriority = _.min(this.output, f => f.priority);
         const ret = _.find(this.output, f => f == minPriority);
         return ret;

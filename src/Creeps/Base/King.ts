@@ -30,12 +30,12 @@ export class King extends Role {
     }
 
     private tempWork(): void {
-        if (this.commandCenter.transportNetwork.haveInputRequest) {
+        if (this.commandCenter.transportNetwork.haveInputRequest()) {
             // console.log('transfer');
             if (this.transferActions()) { return; }
         }
 
-        if (this.commandCenter.transportNetwork.haveOutputRequest) {
+        if (this.commandCenter.transportNetwork.haveOutputRequest()) {
             // console.log('withdraw');
             if (this.withdrawActions()) { return; } 
         }
@@ -44,7 +44,7 @@ export class King extends Role {
     }
 
     private transferActions(): boolean {
-        const request = this.commandCenter.transportNetwork.findHighPriorityInputRequest;
+        const request = this.commandCenter.transportNetwork.findHighPriorityInputRequest();
         if (request) {
             // console.log('have transfer request');
             const amount = Math.min(request.amount, this.creep.store.getCapacity());
@@ -63,7 +63,7 @@ export class King extends Role {
     }
 
     private withdrawActions(): boolean {
-        const request = this.commandCenter.transportNetwork.findHighPriorityOutputRequest;
+        const request = this.commandCenter.transportNetwork.findHighPriorityOutputRequest();
         if (request) {
             // console.log('target: ' + request.target);
             const amount = Math.min(request.amount, this.creep.store.getCapacity());

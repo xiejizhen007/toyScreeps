@@ -7,6 +7,7 @@ export const Roles = {
     worker: 'worker',
     harvester: 'harvester',
     upgrader: 'upgrader',
+    miner: 'miner',
 };
 
 export enum RolePriority {
@@ -14,6 +15,7 @@ export enum RolePriority {
     queen,
     worker,
     harvester,
+    miner,
 };
 
 export const Setups = {
@@ -65,5 +67,13 @@ export const Setups = {
             limit: 5,
             ordered: false,
         }),
-    }
+    },
+
+    miner: {
+        default: new CreepSetup(Roles.miner, {
+            body: [WORK, WORK, WORK, WORK, CARRY, MOVE],
+            limit: Infinity,
+            ordered: false
+        }),
+    },
 };
