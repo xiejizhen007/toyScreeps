@@ -10,7 +10,9 @@ export class King extends Role {
     init(): void {
         this.commandCenter = this.roomNetwork.commandCenter;
         this.linkNetwork = this.roomNetwork.linkNetwork;
-        this.storage = this.commandCenter.storage;
+        
+        if (this.commandCenter)
+            this.storage = this.commandCenter.storage;
     }
 
     work(): void {

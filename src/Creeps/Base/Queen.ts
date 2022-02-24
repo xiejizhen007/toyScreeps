@@ -1,5 +1,4 @@
 import { Role } from "Creeps/Role";
-import { Tasks } from "Creeps/Task/Tasks";
 
 export class Queen extends Role {
     spawns: StructureSpawn[];
@@ -122,7 +121,7 @@ export class Queen extends Role {
                 let ret: ScreepsReturnCode;
                 if (this.pos.isNearTo(target)) {
                     const amount = Math.min(target.store.getFreeCapacity(), this.store[RESOURCE_ENERGY]);
-                    ret = this.transfer(target, RESOURCE_ENERGY, amount);
+                    ret = this.creep.transfer(target, RESOURCE_ENERGY, amount);
                 } else {
                     ret = ERR_NOT_IN_RANGE;
                     this.creep.goto(target.pos);
@@ -167,7 +166,7 @@ export class Queen extends Role {
                 let ret: ScreepsReturnCode;
                 if (this.pos.isNearTo(target)) {
                     const amount = Math.min(this.creep.store[RESOURCE_ENERGY], target.store.getFreeCapacity());
-                    ret = this.transfer(target, RESOURCE_ENERGY, amount);
+                    ret = this.creep.transfer(target, RESOURCE_ENERGY, amount);
                 } else {
                     ret = ERR_NOT_IN_RANGE;
                     this.creep.goto(target.pos);

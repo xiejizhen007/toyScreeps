@@ -15,15 +15,36 @@ interface CreepMemory {
     room: string;
     isNeeded: boolean;
     working?: boolean;
-    // task?: {
-    //     type: string;
-    //     target?: string;
-    //     targetPos?: RoomPosition;
-    //     resourceType?: ResourceConstant;
-    //     amount?: number;
-    // }
-    task?: TaskMemory;
     tempTask?: TempTaskMemory;
+    // task?: 
+}
+
+interface TaskMemory {
+    type: string;
+    
+    _creep: {
+        name: string;
+    };
+
+    _target: {
+        id: string;
+        _pos: PosMemory;
+    };
+
+    _parent: TaskMemory | null;
+
+    tick: number;
+    options: TaskOptions;
+    data: TaskData;
+}
+
+interface TaskOptions {
+    nextPos?: PosMemory;
+}
+
+interface TaskData {
+    resourceType?: ResourceConstant;
+    amount?: number;
 }
 
 interface TempTaskMemory {
@@ -38,15 +59,7 @@ interface RoomNetworkMemory {
     room?: string;
     myCreeps?: string[];            // creep name
     networks?: {
-        // sources?: {[name: Id<Source>]: {
-            // sourceId: Id<Source>;
-            // pos: RoomPosition;
-            // timeout: number;        // timeout > 300 => spawn harvester
-            // creeps?: string[];           // name
-            // isoutSource?: boolean;  // 外矿？
-        // }}
         sources?: {[name: Id<Source>]: SourceNetworkMemory};
-
         lab?: LabClusterMemory;
     }
 }

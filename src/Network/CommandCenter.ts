@@ -16,17 +16,17 @@ export class CommandCenter {
 
     transportNetwork: TransportNetwork;
 
-    constructor(roomNetwork: RoomNetwork) {
+    constructor(roomNetwork: RoomNetwork, storage: StructureStorage) {
         this.roomNetwork = roomNetwork;
 
-        this.storage = roomNetwork.room.storage;
-        this.pos = new RoomPosition(this.storage.pos.x + 1, this.storage.pos.y, this.storage.pos.roomName);
+        this.storage = storage;
+        this.pos = new RoomPosition(storage.pos.x + 1, storage.pos.y, storage.pos.roomName);
         this.terminal = roomNetwork.room.terminal;
         // this.factory = _.find(this.roomNetwork.room.structures, f => f.structureType == STRUCTURE_FACTORY) as StructureFactory;
         this.factory = roomNetwork.room.factory;
         
-        this.spawn = this.storage.pos.findClosestByLimitedRange(this.roomNetwork.spawns, 2);
-        this.link = this.storage.pos.findClosestByLimitedRange(this.roomNetwork.links, 2);
+        this.spawn = storage.pos.findClosestByLimitedRange(this.roomNetwork.spawns, 2);
+        this.link = storage.pos.findClosestByLimitedRange(this.roomNetwork.links, 2);
 
         this.transportNetwork = new TransportNetwork;
     }

@@ -1,7 +1,6 @@
 import { Role } from "Creeps/Role";
 import { TaskType } from "Creeps/setting";
 import { Roles } from "Creeps/setups";
-import { Tasks } from "Creeps/Task/Tasks";
 
 export class Harvester extends Role {
     init(): void {
@@ -38,18 +37,12 @@ export class Harvester extends Role {
             return;
         }
 
-        // if (this.task) {
-        //     this.task.autoWork();
-        // }
         if (this.creep.memory.tempTask) {
-            // const sourceNetwork = this.roomNetwork.sourceNetworks[this.creep.memory.tempTask.target as Id<Source>];
-            // sourceNetwork.link
             const source = Game.getObjectById(this.creep.memory.tempTask.target as Id<Source>);
             const sourceNetwork = this.roomNetwork.sourceNetworks[source.id];
             if (!source || !sourceNetwork) {
                 return;
             }
-
 
             if (this.creep.store.getFreeCapacity() == 0) {
                 if (sourceNetwork.link) {
@@ -58,21 +51,14 @@ export class Harvester extends Role {
                     } else {
                         this.creep.goto(sourceNetwork.link.pos);
                     }
+                
+                    return;
                 }
 
-                return;
+                this.creep.drop(RESOURCE_ENERGY);
             } 
 
             if (this.creep.pos.isNearTo(source)) {
-                // if (this.creep.store.getFreeCapacity() == 0) {
-                //     if (sourceNetwork.link) {
-                //         if (this.creep.pos.isNearTo(sourceNetwork.link)) {
-                //             this.creep.transfer(sourceNetwork.link, RESOURCE_ENERGY);
-                //         } else {
-                //             this.creep.goto(sourceNetwork.link.pos);
-                //         }
-                //     }
-                // } 
                 this.creep.harvest(source);
             } else {
                 this.creep.goto(source.pos);

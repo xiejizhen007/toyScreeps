@@ -1,8 +1,4 @@
 import { Role } from "Creeps/Role";
-import { TaskType } from "Creeps/setting";
-import { Task } from "Creeps/Task/Task";
-import { Tasks } from "Creeps/Task/Tasks";
-import { Global } from "Global/Global";
 
 export class Worker extends Role {
 

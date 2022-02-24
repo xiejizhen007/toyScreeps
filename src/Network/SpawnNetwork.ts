@@ -28,17 +28,7 @@ export class SpawnNetwork {
     }
 
     init(): void {
-        if (Game.time % 10 == 0) {
-            // this.registerCreep({
-            //     role: 'queen', 
-            //     setup: {
-            //         body: [CARRY, MOVE],
-            //         limit: 10,
-            //         ordered: true,
-            //     },
-            //     priority: 0,
-            // });
-        }
+
     }
 
     work(): void {
@@ -51,6 +41,13 @@ export class SpawnNetwork {
 
                 if (request) {
                     const energy = request.setup.role == Roles.queen ? this.room.energyAvailable : this.room.energyCapacityAvailable;
+                    const body = request.setup.generateBody(energy);
+                    // let ret: ScreepsReturnCode = ERR_NOT_ENOUGH_ENERGY;
+                    // if (this.room.energyAvailable > this.calculatorEnergy(body)) {
+                    //     ret = spawn.spawnCreep(request.setup.generateBody(energy), request.setup.role + Game.time, {
+                    //         memory: {role: request.setup.role, room: this.room.name, isNeeded: false},
+                    //     });
+                    // }
 
                     const ret = spawn.spawnCreep(request.setup.generateBody(energy), request.setup.role + Game.time, {
                         memory: {role: request.setup.role, room: this.room.name, isNeeded: false},
@@ -70,6 +67,10 @@ export class SpawnNetwork {
     registerCreep(request: SpawnRequest): boolean {
         this.requests.push(request);
         return true;
+    }
+
+    private calculatorEnergy(body: BodyPartConstant[]): number {
+        return _.sum(body, f => BODYPART_COST[f]);
     }
 
     // generateBody(setup: CreepBodySetup, availableEnergy: number = this.room.energyCapacityAvailable): BodyPartConstant[] {

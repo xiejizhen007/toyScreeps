@@ -85,7 +85,7 @@ export class CreepController {
                 setup: Setups.queen.default,
                 priority: CreepRolePriority.queen,
             });
-            console.log('need spawn queen');
+            console.log('spawn queen');
         }
     }
 
@@ -100,6 +100,8 @@ export class CreepController {
                 setup: Setups.harvester.default,
                 priority: CreepRolePriority.harvester,
             });
+
+            console.log('spawn harvester');
         }
     }
 
@@ -131,14 +133,14 @@ export class CreepController {
         const target = _.find(this.roomNetwork.memory.myCreeps, f => {
             return Game.creeps[f] && Game.creeps[f].memory.role == 'king';
         });
-        if (target) {
-            // console.log('have queen');
+        if (target || !this.roomNetwork.commandCenter) {
+            // console.log('spawn king no target');
         } else {
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.king.default,
                 priority: CreepRolePriority.king,
             });
-            console.log('need spawn king');
+            console.log('spawn king');
         }
     }
 
@@ -155,5 +157,9 @@ export class CreepController {
                 });
             }
         }
+    }
+
+    private spawnTransfer(): void {
+        
     }
 }

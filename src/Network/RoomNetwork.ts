@@ -72,7 +72,9 @@ export class RoomNetwork {
         this.spawnNetwork.init();
         this.upgradeSite.init();
         this.labCluster.init();
-        this.commandCenter.init();
+        
+        if (this.commandCenter) 
+            this.commandCenter.init();
         
         if (this.mineSite) {
             this.mineSite.init();
@@ -88,7 +90,9 @@ export class RoomNetwork {
         this.spawnNetwork.work();
         this.upgradeSite.work();
         this.labCluster.work();
-        this.commandCenter.work();
+        
+        if (this.commandCenter)
+            this.commandCenter.work();
 
         if (this.mineSite) {
             this.mineSite.work();
@@ -161,7 +165,9 @@ export class RoomNetwork {
         this.transportNetwork = new TransportNetwork();
         this.transportNetworkForTransfer = new TransportNetwork();
         
-        this.commandCenter = new CommandCenter(this);
+        if (this.storage) {
+            this.commandCenter = new CommandCenter(this, this.storage);
+        }
 
         // if (this.room.controller && this.room.controller.level >= 6) {
             this.labCluster = new LabCluster(this);

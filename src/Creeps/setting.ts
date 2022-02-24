@@ -1,6 +1,6 @@
 export enum CreepRolePriority {
-    'king',
     'queen',
+    'king',
     'manager',
     'harvester',
     'worker',
