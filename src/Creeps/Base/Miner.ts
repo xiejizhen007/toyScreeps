@@ -7,16 +7,46 @@ export class Miner extends Role {
 
     init(): void {
         this.mineSite = this.roomNetwork.mineSite;
-        this.mineral = this.mineSite.mineral;
     }
 
     work(): void {
-        if (this.mineral.mineralAmount > 0 && this.mineSite.container) {
-            if (this.creep.pos.isEqualTo(this.mineSite.container) && this.mineSite.extractor.cooldown == 0) {
-                this.creep.harvest(this.mineral);
-            } else {
-                this.creep.goto(this.mineSite.container.pos);
+        if (this.timeToDie()) { return; }
+
+        if (this.mineSite) {
+            this.mineral = this.mineSite.mineral;
+
+            if (this.mineSite.container) {
+                const lookResource = this.mineSite.container.pos.lookFor(LOOK_RESOURCES)[0];
+                if (lookResource) {
+                    if (this.creep.store.getFreeCapacity() == 0 && this.mineSite.container.store.getFreeCapacity() > 0) {
+                        this.creep.drop(this.mineral.mineralType);
+                    } else if (this.creep.store.getFreeCapacity() > 0) {
+                        this.creep.pickup(lookResource);
+                    }
+                }
             }
-        }        
+
+            if (this.mineral.mineralAmount > 0 && this.mineSite.container) {
+                if (this.creep.pos.isEqualTo(this.mineSite.container) && this.mineSite.extractor.cooldown == 0) {
+                    this.creep.harvest(this.mineral);
+                } else {
+                    this.creep.goto(this.mineSite.container.pos);
+                }
+            }        
+        }
+    }
+
+    private timeToDie(): boolean {
+        if (this.creep.ticksToLive < 3) {
+            if (this.creep.store.getUsedCapacity() > 0) {
+                for (const resourceType in this.creep.store) {
+                    this.creep.drop(resourceType as ResourceConstant);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

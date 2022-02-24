@@ -2,6 +2,10 @@ import { RoomNetwork } from "./RoomNetwork";
 
 const LabState = {
     'idle': 'idle',
+    'loading': 'loading',
+    'unloading': 'unloading',
+    'working': 'working',
+    'boosting': 'boosting',
 }
 
 export class LabCluster {
@@ -26,7 +30,27 @@ export class LabCluster {
     }
 
     work(): void {
+        switch (this.memory.state) {
+            case LabState.idle:
+                break;
+            
+            case LabState.loading:
+                break;
 
+            case LabState.unloading:
+                break;
+
+            case LabState.working:
+                this.runReaction();
+                break;
+
+            case LabState.boosting:
+                break;
+            
+            default:
+                this.memory.state = LabState.idle;
+                break;
+        }
     }
 
     private registeLabs(): void {
@@ -44,5 +68,24 @@ export class LabCluster {
         });
 
         this.productLabs = _.filter(this.labs, f => !this.reactionLabs.includes(f));
+    }
+
+    private runReaction(): void {
+        const [lab1, lab2] = this.reactionLabs;
+
+        if (!lab1 || !lab2) {
+            console.log('runReaction: not reaction lab');
+            return;
+        }
+
+        for (const lab of this.productLabs) {
+            if (lab.cooldown == 0) {
+                const ret = lab.runReaction(lab1, lab2);
+
+                if (ret != OK) {
+                    console.log('runReaction return: ' + ret);
+                }
+            }
+        }
     }
 }

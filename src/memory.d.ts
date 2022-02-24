@@ -95,5 +95,10 @@ interface LabClusterMemory {
     reactionLabs: Id<StructureLab>[];
     boostLabs: Id<StructureLab>[];
 
-    
+    reaction: {
+        lab1ResourceType: ResourceConstant;
+        lab2ResourceType: ResourceConstant;
+
+        productResourceType: ResourceConstant;
+    }
 }

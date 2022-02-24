@@ -16,6 +16,10 @@ export class Transfer extends Role {
         if (this.isWorking) {           // 去 output target 处取物质
             this.handleOutputTask();
         } else {                        // 送回中央
+            // if (this.creep.store.getUsedCapacity() == 0) {
+            //     this.isWorking = true;
+            // }
+
             const storage = this.roomNetwork.storage;
             const terminal = this.roomNetwork.terminal;
 
@@ -35,7 +39,6 @@ export class Transfer extends Role {
 
     private getOutputTask(): void {
         if (!this.isWorking && this.creep.store.getUsedCapacity() == 0) {
-            // this.creep.memory.tempTask
             const req = this.transportNetwork.findHighPriorityOutputRequest();
             
             if (req) {

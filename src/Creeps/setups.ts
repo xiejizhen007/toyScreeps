@@ -8,6 +8,7 @@ export const Roles = {
     harvester: 'harvester',
     upgrader: 'upgrader',
     miner: 'miner',
+    transfer: 'transfer',
 };
 
 export enum RolePriority {
@@ -76,4 +77,12 @@ export const Setups = {
             ordered: false
         }),
     },
+
+    transfer: {
+        default: new CreepSetup(Roles.transfer, {
+            body: [CARRY, MOVE],
+            limit: Infinity,
+            ordered: false
+        }),
+    }
 };

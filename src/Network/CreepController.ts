@@ -2,6 +2,7 @@ import { Harvester } from "Creeps/Base/Harvester";
 import { King } from "Creeps/Base/King";
 import { Miner } from "Creeps/Base/Miner";
 import { Queen } from "Creeps/Base/Queen";
+import { Transfer } from "Creeps/Base/Transfer";
 import { Upgrader } from "Creeps/Base/Upgrader";
 import { Worker } from "Creeps/Base/Worker";
 import { CreepSetup } from "Creeps/CreepSetup";
@@ -57,6 +58,11 @@ export class CreepController {
                 const role = new Miner(creep, this.roomNetwork);
                 this.roles.push(role);
             }
+
+            else if (creep.memory.role == Roles.transfer) {
+                const role = new Transfer(creep, this.roomNetwork);
+                this.roles.push(role);
+            }
         }
 
         // _.forEach(this.roles, r => r.init());
@@ -70,6 +76,7 @@ export class CreepController {
         this.spawnKing();
         this.spawnMiner();
 
+        this.spawnTransfer();
         // _.forEach(this.roles, r => r.work());
     }
 
@@ -90,12 +97,36 @@ export class CreepController {
     }
 
     private spawnHarvester(): void {
-        const target = _.find(this.roomNetwork.memory.networks.sources, f => {
-            const role = _.find(f.creeps, c => Game.creeps[c] && Game.creeps[c].memory.role == Roles.harvester);
-            return f.timeout > 300 || !role;
-        });
+        // const amount = _.filter(this.roomNetwork.memory.myCreeps, f => Game.creeps[f] && Game.creeps[f].memory.role == Roles.harvester);
 
-        if (target) {
+        // const target = _.find(this.roomNetwork.memory.networks.sources, f => {
+        //     const role = _.find(f.creeps, c => Game.creeps[c] && Game.creeps[c].memory.role == Roles.harvester);
+        //     return f.timeout > 300 || !role;
+        // });
+
+        // if (target) {
+        //     this.roomNetwork.spawnNetwork.registerCreep({
+        //         setup: Setups.harvester.default,
+        //         priority: CreepRolePriority.harvester,
+        //     });
+
+        //     console.log('spawn harvester');
+        // }
+
+        // console.log('amount: ' + amount.length);
+
+        let needAmount = 0;
+        _.forEach(this.roomNetwork.sourceNetworks, s => {
+            // if ()
+            const target = _.find(s.memory.creeps, c => Game.creeps[c] && Game.creeps[c].memory.role == Roles.harvester);
+            if (!target) {
+                needAmount++;
+            }
+        });
+        
+        // console.log('needAmount: ' + needAmount);
+
+        if (needAmount > 0 && Game.time % 3 == 0) {
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.harvester.default,
                 priority: CreepRolePriority.harvester,
@@ -106,7 +137,7 @@ export class CreepController {
     }
 
     private spawnUpgrader(): void {
-        const target = _.find(this.roomNetwork.room.myCreeps, f => f.memory.role == Roles.upgrader);
+        const target = _.find(this.roomNetwork.memory.myCreeps, f => Game.creeps[f] && Game.creeps[f].memory.role == Roles.upgrader);
         if (!target) {
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.upgrader.default,
@@ -145,7 +176,7 @@ export class CreepController {
     }
 
     private spawnMiner(): void {
-        if (this.roomNetwork.mineSite) {
+        if (this.roomNetwork.mineSite && this.roomNetwork.mineSite.mineral.mineralAmount > 0) {
             const target = _.find(this.roomNetwork.memory.myCreeps, f => {
                 return Game.creeps[f] && Game.creeps[f].memory.role == 'miner';
             });
@@ -160,6 +191,26 @@ export class CreepController {
     }
 
     private spawnTransfer(): void {
+        // 当前运输者的数量
+        const amount = _.filter(this.roomNetwork.memory.myCreeps, f => Game.creeps[f] && Game.creeps[f].memory.role == Roles.transfer);
         
+        // 需要的数量
+        let needAmount = 0;
+        _.forEach(this.roomNetwork.sourceNetworks, s => {
+            if (s.container && !s.link) {
+                needAmount++;
+            }
+        });
+
+        if (this.roomNetwork.mineSite && this.roomNetwork.mineSite.container) {
+            needAmount++;
+        }
+
+        if (needAmount > amount.length && Game.time % 3 == 0) {
+            this.roomNetwork.spawnNetwork.registerCreep({
+                setup: Setups.transfer.default,
+                priority: CreepRolePriority.transfer,
+            })
+        }
     }
 }

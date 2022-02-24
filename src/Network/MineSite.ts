@@ -25,9 +25,10 @@ export class MineSite {
     private registerOutputRequest(): boolean {
         if (this.container && this.container.store.getUsedCapacity() > 1000) {
             this.roomNetwork.transportNetworkForTransfer.requestOutput(this.container, Priority.High, {
-                resourceType: this.mineral.mineralType
+                resourceType: this.mineral.mineralType,
+                amount: this.container.store[this.mineral.mineralType]
             });
-            console.log('mine site need transport resource');
+            // console.log('mine site need transport resource');
             return true;
         }
 

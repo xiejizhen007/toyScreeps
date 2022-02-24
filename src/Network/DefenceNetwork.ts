@@ -42,8 +42,12 @@ export class DefenceNetwork {
     private repairStructure(): boolean {
         const target = this.roomNetwork.containers.find(f => f.hits + 5000 < f.hitsMax);
         if (target) {
-            if (this.towers[0]) {
-                this.towers[0].repair(target);
+            // if (this.towers[0]) {
+            //     this.towers[0].repair(target);
+            // }
+            const tower = _.find(this.towers, t => t.store[RESOURCE_ENERGY] > 500);
+            if (tower) {
+                tower.repair(target);
             }
             return true;
         }
