@@ -71,10 +71,14 @@ export class RoomNetwork {
         this.linkNetwork.init();
         this.spawnNetwork.init();
         this.upgradeSite.init();
-        this.labCluster.init();
         
-        if (this.commandCenter) 
+        if (this.labCluster) {
+            this.labCluster.init();
+        }
+        
+        if (this.commandCenter) {
             this.commandCenter.init();
+        }
         
         if (this.mineSite) {
             this.mineSite.init();
@@ -89,7 +93,10 @@ export class RoomNetwork {
         this.creepController.work();
         this.spawnNetwork.work();
         this.upgradeSite.work();
-        this.labCluster.work();
+
+        if (this.labCluster) {
+            this.labCluster.work();
+        }
         
         if (this.commandCenter)
             this.commandCenter.work();
@@ -169,9 +176,9 @@ export class RoomNetwork {
             this.commandCenter = new CommandCenter(this, this.storage);
         }
 
-        // if (this.room.controller && this.room.controller.level >= 6) {
+        if (this.room.controller && this.room.controller.level >= 6) {
             this.labCluster = new LabCluster(this);
-        // }
+        }
 
         this.sourceNetworks = {};
         const sources = this.room.find(FIND_SOURCES);

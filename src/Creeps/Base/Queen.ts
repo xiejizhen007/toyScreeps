@@ -38,6 +38,9 @@ export class Queen extends Role {
             target = this.roomNetwork.room.storage;
         } else if (this.roomNetwork.room.terminal && this.roomNetwork.room.terminal.store[RESOURCE_ENERGY] > 0) {
             target = this.roomNetwork.room.terminal;
+        } else if (_.find(this.roomNetwork.containers, f => f.store[RESOURCE_ENERGY] > 100)) {
+            const containers = _.filter(this.roomNetwork.containers, f => f.store[RESOURCE_ENERGY] > 100);
+            target = this.creep.pos.findClosestByRange(containers);
         } else if (this.roomNetwork.room.find(FIND_DROPPED_RESOURCES).length) {
             target = this.creep.pos.findClosestByRange(this.roomNetwork.room.find(FIND_DROPPED_RESOURCES));
         }

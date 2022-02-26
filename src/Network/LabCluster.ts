@@ -26,10 +26,15 @@ export class LabCluster {
     }
 
     init(): void {
+        this.initMemory();
         this.registeLabs();
     }
 
     work(): void {
+        // _.defaults(this.memory, {
+        //     state: LabState.idle
+        // });
+
         switch (this.memory.state) {
             case LabState.idle:
                 break;
@@ -50,6 +55,21 @@ export class LabCluster {
             default:
                 this.memory.state = LabState.idle;
                 break;
+        }
+    }
+
+    private initMemory(): void {
+        if (!this.memory) {
+            this.memory = {
+                state: LabState.idle,
+
+                labs: [],
+                reactionLabs: [],
+                productLabs: [],
+                boostLabs: [],
+
+                reaction: null,
+            }
         }
     }
 
@@ -87,5 +107,9 @@ export class LabCluster {
                 }
             }
         }
+    }
+
+    private loadingLab(): void {
+        
     }
 }

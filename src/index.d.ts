@@ -19,6 +19,10 @@ interface CreepBodySetup {
 //     directions?: DirectionConstant[];
 // }
 
+interface IReactionTable {
+    [targetResourceType: string]: ResourceConstant[];
+}
+
 type StoreStructure = StructureStorage | StructureTerminal | StructureContainer | StructureLink;
 
 type EnergyStructure =  StructureStorage 
