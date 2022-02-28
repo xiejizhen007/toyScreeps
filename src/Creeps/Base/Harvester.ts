@@ -63,12 +63,16 @@ export class Harvester extends Role {
             // }
 
             if (this.creep.pos.isNearTo(source)) {
-                if (sourceNetwork.container) {
-                    this.creep.goto(sourceNetwork.container.pos);
-                }
+                // if (sourceNetwork.container) {
+                //     this.creep.goto(sourceNetwork.container.pos);
+                // }
                 this.creep.harvest(source);
             } else {
-                this.creep.goto(source.pos);
+                if (sourceNetwork.container) {
+                    this.creep.goto(sourceNetwork.container.pos);
+                } else {
+                    this.creep.goto(source.pos);
+                }
             }
         }
     }

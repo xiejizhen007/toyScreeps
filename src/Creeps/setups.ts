@@ -68,6 +68,12 @@ export const Setups = {
             limit: 5,
             ordered: false,
         }),
+
+        advanced: new CreepSetup(Roles.upgrader, {
+            body: [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE],
+            limit: 5,
+            ordered: false
+        }),
     },
 
     miner: {

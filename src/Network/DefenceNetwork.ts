@@ -1,5 +1,11 @@
 import { RoomNetwork } from "./RoomNetwork";
 
+/**
+ * 房间的防御系统
+ * 1. 由 tower 攻击敌人
+ * 2. 由 tower 维护建筑血线（暂时）
+ * 3. TODO: 添加主动防御
+ */
 export class DefenceNetwork {
     roomNetwork: RoomNetwork;
 
@@ -39,8 +45,11 @@ export class DefenceNetwork {
         }
     }
 
+    // 暂时由塔维护建筑血量
     private repairStructure(): boolean {
-        const target = this.roomNetwork.containers.find(f => f.hits + 5000 < f.hitsMax);
+        // const target = this.roomNetwork.containers.find(f => f.hits + 5000 < f.hitsMax);
+        const target = this.roomNetwork.room.structures.find(f => f.hits < f.hitsMax / 2 
+            && f.structureType != STRUCTURE_WALL && f.structureType != STRUCTURE_RAMPART);
         if (target) {
             // if (this.towers[0]) {
             //     this.towers[0].repair(target);

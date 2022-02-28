@@ -4,10 +4,14 @@ interface Memory {
 }
 
 interface RoomMemory {
-    _cache?: {
-        creeps?: Id<AnyCreep>[];
-        structures?: Id<Structure>[];
-    }
+    // _cache?: {
+    //     creeps?: Id<AnyCreep>[];
+    //     structures?: Id<Structure>[];
+    // }
+    owner: string;
+    tick: number;
+
+    isOutSource?: boolean;
 }
 
 interface CreepMemory {
@@ -16,7 +20,7 @@ interface CreepMemory {
     isNeeded: boolean;
     working?: boolean;
     tempTask?: TempTaskMemory;
-    // task?: 
+    task?: TaskMemory;
 }
 
 interface TaskMemory {

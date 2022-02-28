@@ -164,7 +164,7 @@ export class CreepController {
         const target = _.find(this.roomNetwork.memory.myCreeps, f => {
             return Game.creeps[f] && Game.creeps[f].memory.role == 'king';
         });
-        if (target || !this.roomNetwork.commandCenter) {
+        if (target || !this.roomNetwork.commandCenter || this.roomNetwork.room.controller.level <= 5) {
             // console.log('spawn king no target');
         } else {
             this.roomNetwork.spawnNetwork.registerCreep({
