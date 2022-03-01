@@ -6,7 +6,7 @@ export enum Priority {
     Low         = 4,
 }
 
-export const reactionTable: IReactionTable = {
+export const ReactionTable: IReactionTable = {
     ["XUH2O"]: ["UH2O", "X"],
     ["XUHO2"]: ["UHO2", "X"],
     ["XKH2O"]: ["KH2O", "X"],
@@ -45,3 +45,55 @@ export const reactionTable: IReactionTable = {
     ["UL"]: ["U", "L"],
     ["G"]: ["ZK", "UL"],
 }
+
+export const ReactionTarget = [
+    // attack
+    { target: "UH", amount: 3000},
+    { target: "UH2O", amount: 3000},
+    { target: "XUH2O", amount: 3000},
+
+    // harvest
+    { target: "UO", amount: 3000},
+    { target: "UHO2", amount: 3000},
+    { target: "XUHO2", amount: 3000},
+
+    // carry
+    { target: "KH", amount: 3000},
+    { target: "KH2O", amount: 3000},
+    { target: "XKH2O", amount: 3000},
+    
+    // ranged
+    { target: "KO", amount: 3000},
+    { target: "KHO2", amount: 3000},
+    { target: "XKHO2", amount: 3000},
+
+    // build
+    { target: "LH", amount: 3000},
+    { target: "LH2O", amount: 3000},
+    { target: "XLH2O", amount: 3000},
+    
+    // heal
+    { target: "LO", amount: 3000},
+    { target: "LHO2", amount: 3000},
+    { target: "XLHO2", amount: 3000},
+
+    // dismantle
+    { target: "ZH", amount: 3000},
+    { target: "ZH2O", amount: 3000},
+    { target: "XZH2O", amount: 3000},
+
+    // move 
+    { target: "ZO", amount: 3000},
+    { target: "ZHO2", amount: 3000},
+    { target: "XZHO2", amount: 3000},
+
+    // upgrade
+    { target: "GH", amount: 3000},
+    { target: "GH2O", amount: 3000},
+    { target: "XGH2O", amount: 3000},
+    
+    // tough
+    { target: "GO", amount: 3000},
+    { target: "GHO2", amount: 3000},
+    { target: "XGHO2", amount: 3000},
+] as { target: ResourceConstant, amount: number}[];

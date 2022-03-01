@@ -92,6 +92,7 @@ interface PosMemory {
 interface LabClusterMemory {
     // lab state
     state: string;
+    index: number;
 
     // bak
     labs: Id<StructureLab>[];

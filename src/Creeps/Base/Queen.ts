@@ -1,4 +1,5 @@
 import { Role } from "Creeps/Role";
+import { TransportRequest } from "Network/TransportNetwork";
 
 export class Queen extends Role {
     spawns: StructureSpawn[];
@@ -201,5 +202,50 @@ export class Queen extends Role {
 
             return ERR_BUSY;
         }
+    }
+
+    // TODO: 处理 lab 任务
+
+    private haveInputTask(): boolean {
+        return this.roomNetwork.transportNetwork.haveInputRequest();
+    }
+
+    private haveOutputTask() {
+        return this.roomNetwork.transportNetwork.haveOutputRequest();
+    }
+
+    private handleInputTask() {
+        // backup request
+        let request = this.roomNetwork.transportNetwork.findHighPriorityInputRequest();
+        
+        if (this.creep.store[request.resourceType] > 0) {
+            if (this.creep.pos.isNearTo(request.target)) {
+                const amount = Math.min(request.amount, this.creep.store[request.resourceType]);
+                this.creep.transfer(request.target, request.resourceType, amount);
+            } else {
+                this.creep.goto(request.target.pos);
+            }
+        } else {
+            let target: StructureStorage | StructureTerminal;
+            
+            if (this.roomNetwork.storage && this.roomNetwork.storage.store[request.resourceType] > 0) {
+                target = this.roomNetwork.storage;
+            } else if (this.roomNetwork.terminal && this.roomNetwork.terminal.store[request.resourceType] > 0) {
+                target = this.roomNetwork.terminal;
+            }
+
+            if (target) {
+                if (this.creep.pos.isNearTo(target)) {
+                    const amount = Math.min(request.amount, this.creep.store.getFreeCapacity(request.resourceType));
+                    this.creep.withdraw(request.target, request.resourceType, amount);
+                } else {
+                    this.creep.goto(target.pos);
+                }
+            }
+        }
+    }
+
+    private handleOutputTask() {
+
     }
 }
