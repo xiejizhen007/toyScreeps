@@ -10,8 +10,8 @@ export class Queen extends Role {
         'idle': 'idle',
         'fillExtension': 'fillExtension',
         'fillTower': 'fillTower',
-        // 'withdraw': 'withdraw',
-        // 'transfer': 'transfer',
+        'handleInput': 'handleInput',
+        'handleOutput': 'handleOutput',
     };
 
     init(): void {
@@ -70,6 +70,10 @@ export class Queen extends Role {
             this.memory.tempTask.type = this.tempTaskType.fillExtension;
         } else if (this.haveFillTower()) {
             this.memory.tempTask.type = this.tempTaskType.fillTower;
+        } else if (this.haveInputTask()) {
+            this.memory.tempTask.type = this.tempTaskType.handleInput;
+        } else if (this.haveOutputTask()) {
+            this.memory.tempTask.type = this.tempTaskType.handleInput;
         } else {
             this.memory.tempTask.type = this.tempTaskType.idle;
         }
@@ -104,9 +108,21 @@ export class Queen extends Role {
                 this.fillTower();
                 break;
 
+            case this.tempTaskType.handleInput:
+                this.handleInputTask();
+                break;
+
+            case this.tempTaskType.handleOutput:
+                this.handleOutputTask();
+                break;
+
             default:
                 this.updateTask();
                 break;
+        }
+
+        if (this.memory.tempTask.type == this.tempTaskType.idle) {
+            this.transferAllToCenter();
         }
     }
 
@@ -246,6 +262,36 @@ export class Queen extends Role {
     }
 
     private handleOutputTask() {
+        let request = this.roomNetwork.transportNetwork.findHighPriorityOutputRequest();
 
+        if (this.creep.store.getFreeCapacity() == 0 || !request) {
+            this.transferAllToCenter();
+        } else {
+            if (this.creep.pos.isNearTo(request.target)) {
+                const amount = Math.min(request.amount, this.creep.store.getFreeCapacity());
+                this.creep.withdraw(request.target, request.resourceType, amount);
+            } else {
+                this.creep.goto(request.target.pos);
+            }
+        }
+    }
+
+    private transferAllToCenter() {
+        if (this.roomNetwork.terminal) {
+            this.transferAllTo(this.roomNetwork.terminal);
+        } else if (this.roomNetwork.storage) {
+            this.transferAllTo(this.roomNetwork.storage);
+        }
+    }
+
+    private transferAllTo(target: StructureStorage | StructureTerminal) {
+        if (this.creep.pos.isNearTo(target)) {
+            for (const resourceType in this.creep.store) {
+                this.creep.transfer(target, resourceType as ResourceConstant);
+                break;
+            }
+        } else {
+            this.creep.goto(target.pos);
+        }
     }
 }
