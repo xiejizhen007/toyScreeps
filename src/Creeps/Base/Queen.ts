@@ -12,6 +12,7 @@ export class Queen extends Role {
         'fillTower': 'fillTower',
         'handleInput': 'handleInput',
         'handleOutput': 'handleOutput',
+        'transferAll': 'transferAll',
     };
 
     init(): void {
@@ -66,6 +67,12 @@ export class Queen extends Role {
     }
     
     private updateTask(): void {
+        if (this.memory.tempTask.type == this.tempTaskType.transferAll) {
+            if (this.creep.store.getUsedCapacity() > 0) {
+                return;
+            }
+        }
+
         if (this.haveFillExtension()) {
             this.memory.tempTask.type = this.tempTaskType.fillExtension;
         } else if (this.haveFillTower()) {
@@ -114,6 +121,10 @@ export class Queen extends Role {
 
             case this.tempTaskType.handleOutput:
                 this.handleOutputTask();
+                break;
+
+            case this.tempTaskType.transferAll:
+                this.transferAllToCenter();
                 break;
 
             default:
@@ -233,6 +244,10 @@ export class Queen extends Role {
     private handleInputTask() {
         // backup request
         let request = this.roomNetwork.transportNetwork.findHighPriorityInputRequest();
+        if (!request) {
+            this.memory.tempTask.type = this.tempTaskType.idle;
+            return;
+        }
         
         if (this.creep.store[request.resourceType] > 0) {
             if (this.creep.pos.isNearTo(request.target)) {
@@ -253,7 +268,7 @@ export class Queen extends Role {
             if (target) {
                 if (this.creep.pos.isNearTo(target)) {
                     const amount = Math.min(request.amount, this.creep.store.getFreeCapacity(request.resourceType));
-                    this.creep.withdraw(request.target, request.resourceType, amount);
+                    this.creep.withdraw(target, request.resourceType, amount);
                 } else {
                     this.creep.goto(target.pos);
                 }
@@ -263,8 +278,17 @@ export class Queen extends Role {
 
     private handleOutputTask() {
         let request = this.roomNetwork.transportNetwork.findHighPriorityOutputRequest();
+        // if (!request) {
+        //     this.memory.tempTask.type = this.tempTaskType.idle;
+        //     return;
+        // }
+
+        if (!request) {
+            console.log(this.room.name + ' no request');
+        }
 
         if (this.creep.store.getFreeCapacity() == 0 || !request) {
+            this.memory.tempTask.type = this.tempTaskType.transferAll;
             this.transferAllToCenter();
         } else {
             if (this.creep.pos.isNearTo(request.target)) {
@@ -277,6 +301,10 @@ export class Queen extends Role {
     }
 
     private transferAllToCenter() {
+        if (this.creep.store.getUsedCapacity() == 0) {
+            this.memory.tempTask.type = this.tempTaskType.idle;
+        }
+
         if (this.roomNetwork.terminal) {
             this.transferAllTo(this.roomNetwork.terminal);
         } else if (this.roomNetwork.storage) {

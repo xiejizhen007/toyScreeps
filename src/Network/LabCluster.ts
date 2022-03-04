@@ -11,7 +11,6 @@ const LabState = {
 }
 
 interface LabClusterMemory {
-
     // lab state
     state: string;
     index: number;
@@ -94,22 +93,6 @@ export class LabCluster {
         }
     }
 
-    private initMemory(): void {
-        if (!this.memory) {
-            this.memory = {
-                state: LabState.idle,
-                index: 0,
-
-                labs: [],
-                reactionLabs: [],
-                productLabs: [],
-                boostLabs: [],
-
-                reaction: null,
-            }
-        }
-    }
-
     private registeLabs(): void {
         this.reactionLabs = _.filter(this.labs, f => {
             let yes = true;
@@ -174,6 +157,7 @@ export class LabCluster {
         // request transport task
         const reaction = this.memory.reaction;
         if (reaction) {
+            // console.log('reaction: ' + reaction.lab1ResourceType + ' + ' + reaction.lab2ResourceType);
             if (lab1.mineralType == reaction.lab1ResourceType && lab2.mineralType == reaction.lab2ResourceType) {
                 this.changeLabStateTo(LabState.working);
             } else {
@@ -184,9 +168,11 @@ export class LabCluster {
                     });
                 } else if (!lab2.mineralType) {
                     this.roomNetwork.transportNetwork.requestInput(lab2, Priority.NormalLow, {
-                        resourceType: reaction.lab1ResourceType,
-                        amount: this.requestLabAmount(lab2, reaction.lab1ResourceType),
+                        resourceType: reaction.lab2ResourceType,
+                        amount: this.requestLabAmount(lab2, reaction.lab2ResourceType),
                     });
+                } else if (lab1.mineralType != reaction.lab1ResourceType || lab2.mineralType != reaction.lab2ResourceType) {
+                    this.changeLabStateTo(LabState.unloading);
                 }
             }
         }
@@ -195,7 +181,10 @@ export class LabCluster {
     private unloadingLab(): void {
         const target = _.find(this.labs, f => f.mineralType);
         if (target) {
-            this.roomNetwork.transportNetwork.requestOutput(target, Priority.NormalLow);
+            // console.log('lab is unloading');
+            this.roomNetwork.transportNetwork.requestOutput(target, Priority.NormalLow, {
+                resourceType: target.mineralType
+            });
         } else {
             this.changeLabStateTo(LabState.loading);
         }
@@ -231,9 +220,11 @@ export class LabCluster {
         this.memory.index = this.memory.index == undefined ? 0 : this.memory.index % n;
 
         const target = ReactionTarget[this.memory.index];
+        // console.log('target ' + target.target + ' ' + this.countResourceAmount(target.target) + ' plan amount: ' + target.amount);
         if (this.countResourceAmount(target.target) < target.amount) {
             // if (ReactionTable[target.target])
             const indexTarget = ReactionTable[target.target];
+            // console.log('原料: ' + indexTarget[0] + ' ' + indexTarget[1]);
             if (this.countResourceAmount(indexTarget[0]) > 0 && this.countResourceAmount(indexTarget[1]) > 0) {
                 this.memory.reaction = {
                     lab1ResourceType: indexTarget[0],
