@@ -1,6 +1,15 @@
 import { Role } from "Creeps/Role";
 import { TransportRequest } from "Network/TransportNetwork";
 
+
+/**
+ * 负责房间内的物流传输
+ * 传输能量，资源等
+ * 
+ * TODO: 处理在执行任务时，清理自身多余的资源
+ * 
+ * TODO: 改变低等级时的逻辑，尤其是没有 storage 的情况下
+ */
 export class Queen extends Role {
     spawns: StructureSpawn[];
     extensions: StructureExtension[];
@@ -231,8 +240,6 @@ export class Queen extends Role {
         }
     }
 
-    // TODO: 处理 lab 任务
-
     private haveInputTask(): boolean {
         return this.roomNetwork.transportNetwork.haveInputRequest();
     }
@@ -241,6 +248,7 @@ export class Queen extends Role {
         return this.roomNetwork.transportNetwork.haveOutputRequest();
     }
 
+    // TODO: 对 request 的备份
     private handleInputTask() {
         // backup request
         let request = this.roomNetwork.transportNetwork.findHighPriorityInputRequest();

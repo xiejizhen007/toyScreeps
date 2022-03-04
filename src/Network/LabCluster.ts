@@ -225,7 +225,7 @@ export class LabCluster {
             // if (ReactionTable[target.target])
             const indexTarget = ReactionTable[target.target];
             // console.log('原料: ' + indexTarget[0] + ' ' + indexTarget[1]);
-            if (this.countResourceAmount(indexTarget[0]) > 0 && this.countResourceAmount(indexTarget[1]) > 0) {
+            if (this.countResourceAmount(indexTarget[0]) > 100 && this.countResourceAmount(indexTarget[1]) > 100) {
                 this.memory.reaction = {
                     lab1ResourceType: indexTarget[0],
                     lab2ResourceType: indexTarget[1],
