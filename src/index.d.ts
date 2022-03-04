@@ -6,19 +6,6 @@ interface CreepBodySetup {
     tail?: BodyPartConstant[];      // 在基础部件上添加尾部部件，如 move, heal
 }
 
-// interface SpawnRequest {
-//     role: string;
-//     setup: CreepBodySetup;
-//     priority: number;
-//     options?: SpawnRequestOptions;
-// }
-
-// // 指定 spawn 或者 dir
-// interface SpawnRequestOptions {
-//     spawn?: StructureSpawn;
-//     directions?: DirectionConstant[];
-// }
-
 interface IReactionTable {
     [targetResourceType: string]: ResourceConstant[];
 }

@@ -138,7 +138,7 @@ export class CreepController {
 
     private spawnUpgrader(): void {
         const target = _.find(this.roomNetwork.memory.myCreeps, f => Game.creeps[f] && Game.creeps[f].memory.role == Roles.upgrader);
-        if (!target) {
+        if (!target && this.roomNetwork.room.controller.level < 8) {
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.upgrader.default,
                 priority: CreepRolePriority.upgrader,

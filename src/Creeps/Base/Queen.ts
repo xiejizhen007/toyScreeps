@@ -73,7 +73,7 @@ export class Queen extends Role {
         } else if (this.haveInputTask()) {
             this.memory.tempTask.type = this.tempTaskType.handleInput;
         } else if (this.haveOutputTask()) {
-            this.memory.tempTask.type = this.tempTaskType.handleInput;
+            this.memory.tempTask.type = this.tempTaskType.handleOutput;
         } else {
             this.memory.tempTask.type = this.tempTaskType.idle;
         }

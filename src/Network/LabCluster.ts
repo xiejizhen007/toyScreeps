@@ -1,3 +1,4 @@
+import { Mem } from "Mem";
 import { Priority, ReactionTable, ReactionTarget } from "setting";
 import { RoomNetwork } from "./RoomNetwork";
 
@@ -8,6 +9,38 @@ const LabState = {
     'working': 'working',
     'boosting': 'boosting',
 }
+
+interface LabClusterMemory {
+
+    // lab state
+    state: string;
+    index: number;
+
+    // bak
+    labs: Id<StructureLab>[];
+    productLabs: Id<StructureLab>[];
+    reactionLabs: Id<StructureLab>[];
+    boostLabs: Id<StructureLab>[];
+
+    reaction: {
+        lab1ResourceType: ResourceConstant;
+        lab2ResourceType: ResourceConstant;
+
+        productResourceType: ResourceConstant;
+    }
+}
+
+const LabClusterMemoryDefaluts: LabClusterMemory = {
+    state: LabState.idle,
+    index: 0,
+
+    labs: [],
+    productLabs: [],
+    reactionLabs: [],
+    boostLabs: [],
+
+    reaction: null
+};
 
 export class LabCluster {
     roomNetwork: RoomNetwork;
@@ -21,14 +54,17 @@ export class LabCluster {
 
     constructor(roomNetwork: RoomNetwork) {
         this.roomNetwork = roomNetwork;
-        this.memory = roomNetwork.memory.networks.lab;
+        this.memory = Mem.wrap(roomNetwork.memory, 'labCluster', LabClusterMemoryDefaluts);
+
+        // this.initMemory();
 
         this.labs = roomNetwork.labs;
     }
 
     init(): void {
-        this.initMemory();
         this.registeLabs();
+
+        this.work();
     }
 
     work(): void {

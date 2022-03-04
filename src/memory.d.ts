@@ -74,7 +74,7 @@ interface RoomNetworkMemory {
     myCreeps?: string[];            // creep name
     networks?: {
         sources?: {[name: Id<Source>]: SourceNetworkMemory};
-        lab?: LabClusterMemory;
+        // lab?: LabClusterMemory;
         pcTasks?: any;
     }
 }
@@ -99,22 +99,22 @@ interface PosMemory {
 }
 
 
-// lab
-interface LabClusterMemory {
-    // lab state
-    state: string;
-    index: number;
+// // lab
+// interface LabClusterMemory {
+//     // lab state
+//     state: string;
+//     index: number;
 
-    // bak
-    labs: Id<StructureLab>[];
-    productLabs: Id<StructureLab>[];
-    reactionLabs: Id<StructureLab>[];
-    boostLabs: Id<StructureLab>[];
+//     // bak
+//     labs: Id<StructureLab>[];
+//     productLabs: Id<StructureLab>[];
+//     reactionLabs: Id<StructureLab>[];
+//     boostLabs: Id<StructureLab>[];
 
-    reaction: {
-        lab1ResourceType: ResourceConstant;
-        lab2ResourceType: ResourceConstant;
+//     reaction: {
+//         lab1ResourceType: ResourceConstant;
+//         lab2ResourceType: ResourceConstant;
 
-        productResourceType: ResourceConstant;
-    }
-}
+//         productResourceType: ResourceConstant;
+//     }
+// }

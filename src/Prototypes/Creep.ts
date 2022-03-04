@@ -17,6 +17,28 @@ Creep.prototype.withdrawFrom = function(target: Structure | Tombstone | Ruin,
     }
 }
 
+Creep.prototype.work = function() {
+    // 根据 memory 记录的任务类型执行相应的任务
+    // switch(this.memory.task)
+    
+}
+
+Creep.prototype.transferTo = function(target: AnyCreep | Structure<StructureConstant>, 
+                                      resourceType: ResourceConstant,
+                                      amount?: number): ScreepsReturnCode {
+    if (!target) {
+        return ERR_INVALID_TARGET;
+    }
+
+    if (this.pos.isNearTo(target)) {
+        this.transfer(target, resourceType, amount);
+    } else {
+        // TODO: goto other room
+        this.goto(target.pos);
+        return ERR_NOT_IN_RANGE;
+    }
+}
+
 export class CreepExtension extends Creep {
     sayHello(): void {
         this.say('hello');
