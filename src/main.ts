@@ -46,6 +46,13 @@ export const loop = errorMapper(() => {
 
     // console.log('role : ' + i);
 
+    for (const pcName in Game.powerCreeps) {
+        const pc = Game.powerCreeps[pcName];
+        if (pc) {
+            pc.work();
+        }
+    }
+
     let cpuEnd = Game.cpu.getUsed();
     
     if (Game.time % 5 == 0) {

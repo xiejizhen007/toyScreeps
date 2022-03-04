@@ -1,9 +1,11 @@
+import { Global } from "Global/Global";
 import { CommandCenter } from "./CommandCenter";
 import { CreepController } from "./CreepController";
 import { DefenceNetwork } from "./DefenceNetwork";
 import { LabCluster } from "./LabCluster";
 import { LinkNetwork } from "./LinkNetwork";
 import { MineSite } from "./MineSite";
+import { PowerCreepTaskQueue } from "./PowerCreepTaskQueue";
 import { SourceNetwork } from "./SourceNetwork";
 import { SpawnNetwork } from "./SpawnNetwork";
 import { TransportNetwork } from "./TransportNetwork";
@@ -35,6 +37,7 @@ export class RoomNetwork {
     
     transportNetwork: TransportNetwork;             // queen
     transportNetworkForTransfer: TransportNetwork;  // transfer
+    powerCreepTaskQueue: PowerCreepTaskQueue;
     labCluster: LabCluster;
     commandCenter: CommandCenter;
 
@@ -44,6 +47,7 @@ export class RoomNetwork {
 
     constructor(room: Room) {
         this.room = room;
+        Global.roomNetworks[room.name] = this;
 
         // this.creepController = new CreepController(this);
         // this.defenceNetwork = new DefenceNetwork(this);
@@ -171,6 +175,7 @@ export class RoomNetwork {
         this.upgradeSite = new UpgradeSite(this, this.room.controller);
         this.transportNetwork = new TransportNetwork();
         this.transportNetworkForTransfer = new TransportNetwork();
+        this.powerCreepTaskQueue = new PowerCreepTaskQueue(this);
         
         if (this.storage) {
             this.commandCenter = new CommandCenter(this, this.storage);

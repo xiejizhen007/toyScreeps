@@ -18,12 +18,26 @@ interface Room {
 
 interface Creep {
     goto(pos: RoomPosition): ScreepsReturnCode;
-    withdrawFrom(target: Structure | Tombstone | Ruin, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;
-
     sayHello(): void;
+
+    // task work
+    work(): void;
+
+    // task type
+    transferTo(target: AnyCreep | Structure<StructureConstant>, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;
+    withdrawFrom(target: Structure | Tombstone | Ruin, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;
 }
 
 interface RoomPosition {
     findClosestByLimitedRange<T>(objects: T[] | RoomPosition[], rangeLimit: number, 
                                 opts?: { filter: any | string; }): T | undefined;
+    
+    getMemory(): PosMemory;
+}
+
+interface PowerCreep {
+    work(): void;
+
+    getTask(): void;
+    keepAlive(): boolean;
 }

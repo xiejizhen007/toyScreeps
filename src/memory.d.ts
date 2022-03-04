@@ -4,10 +4,6 @@ interface Memory {
 }
 
 interface RoomMemory {
-    // _cache?: {
-    //     creeps?: Id<AnyCreep>[];
-    //     structures?: Id<Structure>[];
-    // }
     owner: string;
     tick: number;
 
@@ -23,15 +19,23 @@ interface CreepMemory {
     task?: TaskMemory;
 }
 
+interface PowerCreepMemory {
+    workRoom: string;           // 所驻扎的房间名
+    task?: PowerCreepMemory;    // 执行的任务
+}
+
+interface PowerCreepTaskMemory {
+    type: PowerConstant;
+    target?: Id<Structure<StructureConstant>>;
+}
+
 interface TaskMemory {
     type: string;
     
-    _creep: {
-        name: string;
-    };
+    _creep: string;
 
     _target: {
-        id: string;
+        _id: Id<AnyCreep | Structure>;
         _pos: PosMemory;
     };
 
@@ -40,6 +44,12 @@ interface TaskMemory {
     tick: number;
     options: TaskOptions;
     data: TaskData;
+}
+
+interface TaskSettings {
+    range: number;
+    oneShot: boolean;
+    timeout: number;
 }
 
 interface TaskOptions {
@@ -65,6 +75,7 @@ interface RoomNetworkMemory {
     networks?: {
         sources?: {[name: Id<Source>]: SourceNetworkMemory};
         lab?: LabClusterMemory;
+        pcTasks?: any;
     }
 }
 
