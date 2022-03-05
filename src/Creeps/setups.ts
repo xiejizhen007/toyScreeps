@@ -43,13 +43,13 @@ export const Setups = {
     worker: {
         default: new CreepSetup(Roles.worker, {
             body: [WORK, CARRY, MOVE, MOVE],
-            limit: Infinity,
+            limit: 8,
             ordered: false,
         }),
 
         advanced: new CreepSetup(Roles.worker, {
             body: [WORK, CARRY, MOVE],
-            limit: Infinity,
+            limit: 8,
             ordered: false,
         }),
     },

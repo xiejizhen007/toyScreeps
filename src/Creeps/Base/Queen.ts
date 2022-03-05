@@ -232,7 +232,7 @@ export class Queen extends Role {
 
     private handleInputTask() {
         // backup request
-        let request = this.roomNetwork.transportNetwork.findHighPriorityInputRequest();
+        let request = this.roomNetwork.transportNetwork.findHighPriorityInputRequest(this.pos);
         
         if (this.creep.store[request.resourceType] > 0) {
             if (this.creep.pos.isNearTo(request.target)) {
@@ -262,7 +262,7 @@ export class Queen extends Role {
     }
 
     private handleOutputTask() {
-        let request = this.roomNetwork.transportNetwork.findHighPriorityOutputRequest();
+        let request = this.roomNetwork.transportNetwork.findHighPriorityOutputRequest(this.pos);
 
         if (this.creep.store.getFreeCapacity() == 0 || !request) {
             this.transferAllToCenter();

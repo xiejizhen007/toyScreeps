@@ -94,22 +94,6 @@ export class LabCluster {
         }
     }
 
-    private initMemory(): void {
-        if (!this.memory) {
-            this.memory = {
-                state: LabState.idle,
-                index: 0,
-
-                labs: [],
-                reactionLabs: [],
-                productLabs: [],
-                boostLabs: [],
-
-                reaction: null,
-            }
-        }
-    }
-
     private registeLabs(): void {
         this.reactionLabs = _.filter(this.labs, f => {
             let yes = true;
@@ -149,9 +133,10 @@ export class LabCluster {
                 if (lab.cooldown == 0) {
                     const ret = lab.runReaction(lab1, lab2);
 
-                    if (ret != OK) {
-                        console.log('runReaction return: ' + ret);
-                    }
+                    if (ret == ERR_NOT_ENOUGH_RESOURCES) {
+                        // console.log('runReaction return: ' + ret);
+                        this.changeLabStateTo(LabState.unloading);
+                    } 
                 }
             }
         } else {
