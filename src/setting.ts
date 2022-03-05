@@ -96,4 +96,10 @@ export const ReactionTarget = [
     { target: "GO", amount: 3000},
     { target: "GHO2", amount: 3000},
     { target: "XGHO2", amount: 3000},
+
+    // 基础化合物
+    { target: "OH", amount: 5000},
+    { target: "ZK", amount: 3000},
+    { target: "UL", amount: 3000},
+    { target: "G", amount: 5000},
 ] as { target: ResourceConstant, amount: number}[];

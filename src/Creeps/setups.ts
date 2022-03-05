@@ -57,7 +57,7 @@ export const Setups = {
     harvester: {
         default: new CreepSetup(Roles.harvester, {
             body: [WORK, WORK, CARRY, MOVE],
-            limit: 4,
+            limit: 5,
             ordered: false,
         }),
     },
@@ -70,7 +70,7 @@ export const Setups = {
         }),
 
         advanced: new CreepSetup(Roles.upgrader, {
-            body: [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE],
+            body: [WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE],
             limit: 5,
             ordered: false
         }),
