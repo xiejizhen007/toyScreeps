@@ -39,7 +39,7 @@ export class Transfer extends Role {
 
     private getOutputTask(): void {
         if (!this.isWorking && this.creep.store.getUsedCapacity() == 0) {
-            const req = this.transportNetwork.findHighPriorityOutputRequest();
+            const req = this.transportNetwork.findHighPriorityOutputRequest(this.pos);
             
             if (req) {
                 this.creep.memory.tempTask = {

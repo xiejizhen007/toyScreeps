@@ -46,7 +46,7 @@ export class King extends Role {
     }
 
     private transferActions(): boolean {
-        const request = this.commandCenter.transportNetwork.findHighPriorityInputRequest();
+        const request = this.commandCenter.transportNetwork.findHighPriorityInputRequest(this.pos);
         if (request) {
             // console.log('have transfer request');
             const amount = Math.min(request.amount, this.creep.store.getCapacity());
@@ -65,7 +65,7 @@ export class King extends Role {
     }
 
     private withdrawActions(): boolean {
-        const request = this.commandCenter.transportNetwork.findHighPriorityOutputRequest();
+        const request = this.commandCenter.transportNetwork.findHighPriorityOutputRequest(this.pos);
         if (request) {
             // console.log('target: ' + request.target);
             const amount = Math.min(request.amount, this.creep.store.getCapacity());

@@ -7,26 +7,50 @@ export interface TransportRequest {
     priority: number;
 }
 
-interface TransportRequestOptions {
+export interface TransportRequestOptions {
     resourceType?: ResourceConstant;
     amount?: number;
 }
 
 export class TransportNetwork {
-    input: TransportRequest[];
-    output: TransportRequest[];
+    // input: TransportRequest[];
+    // output: TransportRequest[];
+    input: { [priority: number]: TransportRequest[] };
+    output: { [priority: number]: TransportRequest[] };
 
     constructor() {
-        this.input = [];
-        this.output = [];
+        // this.input = [];
+        // this.output = [];
+        this.input = this.registerQueue();
+        this.output = this.registerQueue();
+    }
+
+    private registerQueue() {
+        const queue: { [priority: number]: any[] } = {};
+        for (const priority in Priority) {
+            queue[priority] = [];
+        }
+        return queue;
+    }
+
+    private haveRequest(queue: {[priority: number]: TransportRequest[]}): boolean {
+        for (const priority in Priority) {
+            if (queue[priority].length > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     haveInputRequest(): boolean {
-        return this.input.length > 0;
+        // return this.input.length > 0;
+        return this.haveRequest(this.input);
     }
 
     haveOutputRequest(): boolean {
-        return this.output.length > 0;
+        // return this.output.length > 0;
+        return this.haveRequest(this.output);
     }
 
     requestInput(target: Structure, priority = Priority.Normal, opts = {} as TransportRequestOptions) {
@@ -47,7 +71,7 @@ export class TransportNetwork {
         };
 
         if (req.amount > 0) {
-            this.input.push(req);
+            this.input[priority].push(req);
         }
     }
 
@@ -69,20 +93,43 @@ export class TransportNetwork {
         };
 
         if (req.amount > 0) {
-            this.output.push(req);
+            // this.output.push(req);
+            this.output[priority].push(req);
         }
     }
 
-    findHighPriorityInputRequest(): TransportRequest | undefined {
-        const minPriority = _.min(this.input, f => f.priority);
-        const ret = _.find(this.input, f => f == minPriority);
-        return ret;
+    findHighPriorityInputRequest(pos: RoomPosition): TransportRequest | undefined {
+        // const minPriority = _.min(this.input, f => f.priority);
+        // const ret = _.find(this.input, f => f == minPriority);
+        // return ret;
+
+        for (const priority in Priority) {
+            const targets = _.map(this.input[priority], m => m.target);
+            const target = pos.findClosestByRange(targets);
+
+            if (target) {
+                return _.find(this.input[priority], f => f.target.id == target.id);
+            }
+        }
+
+        return undefined;
     }
     
-    findHighPriorityOutputRequest(): TransportRequest | undefined {
-        const minPriority = _.min(this.output, f => f.priority);
-        const ret = _.find(this.output, f => f == minPriority);
-        return ret;
+    findHighPriorityOutputRequest(pos: RoomPosition): TransportRequest | undefined {
+        // const minPriority = _.min(this.output, f => f.priority);
+        // const ret = _.find(this.output, f => f == minPriority);
+        // return ret;
+
+        for (const priority in Priority) {
+            const targets = _.map(this.output[priority], m => m.target);
+            const target = pos.findClosestByRange(targets);
+
+            if (target) {
+                return _.find(this.output[priority], f => f.target.id == target.id);
+            }
+        }
+
+        return undefined;
     }
 
     private getInputAmount(target: Structure, resourceType: ResourceConstant): number {

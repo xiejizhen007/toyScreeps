@@ -23,6 +23,9 @@ interface Creep {
     // task work
     work(): void;
 
+
+    tasks: any;
+
     // task type
     transferTo(target: AnyCreep | Structure<StructureConstant>, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;
     withdrawFrom(target: Structure | Tombstone | Ruin, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;

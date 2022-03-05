@@ -1,3 +1,6 @@
+import { Role } from "Creeps/Role";
+import { Global } from "Global/Global";
+
 /**
  * creep 执行的任务
  */
@@ -51,12 +54,12 @@ export abstract class Task {
     /**
      * 由 creep 执行任务
      */
-    set creep(creep: Creep) {
+    set creep(creep: Role) {
         this._creep = creep.name;
     }
 
-    get creep(): Creep {
-        return Game.creeps[this._creep];
+    get creep(): Role {
+        return Global.roles[this._creep];
     }
 
     /**
@@ -83,12 +86,12 @@ export abstract class Task {
         };
     }
 
-    set parent(parent: Task | null) {
-        this._parent = parent ? parent.memory : null;
-        if (this.creep) {
-            // this.creep
-        }
-    }
+    // set parent(parent: Task | null) {
+    //     this._parent = parent ? parent.memory : null;
+    //     if (this.creep) {
+    //         // this.creep
+    //     }
+    // }
 
     // get parent(): Task | null {
 
