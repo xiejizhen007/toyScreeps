@@ -1,14 +1,21 @@
 import { Role } from "Creeps/Role";
 import { Global } from "Global/Global";
+import { initializeTask } from "./Tasks";
 
 /**
  * creep 执行的任务
  */
+
+type TaskTargetType = {
+    id: string;
+    pos: PosMemory;
+}
+
 export abstract class Task {
     type: string;               // task name
     _creep: string;             // creep name
     _target: {
-        _id: Id<AnyCreep | Structure>;      // target id
+        _id: string;                        // target id
         _pos: PosMemory;                    // target pos memory
     };
 
@@ -18,8 +25,10 @@ export abstract class Task {
     settings: TaskSettings;
     options: TaskOptions;
     data: TaskData;
+
+    target: RoomObject;
     
-    constructor(type: string, target: AnyCreep | Structure, options = {} as TaskOptions) {
+    constructor(type: string, target: TaskTargetType, options = {} as TaskOptions) {
         this.type = type;
         this._creep = '';
 
@@ -86,19 +95,47 @@ export abstract class Task {
         };
     }
 
-    // set parent(parent: Task | null) {
-    //     this._parent = parent ? parent.memory : null;
-    //     if (this.creep) {
-    //         // this.creep
-    //     }
-    // }
+    set parent(parent: Task | null) {
+        this._parent = parent ? parent.memory : null;
+        if (this.creep) {
+            this.parent.creep = this.creep;
+        }
+    }
 
-    // get parent(): Task | null {
-
-    // }
+    get parent(): Task | null {
+        return this._parent ? initializeTask(this._parent) : null;
+    }
 
     // get taskQueue(): Task[] {
     //     const taskQueue: Task[] = [this];
     //     let parent = this._parent;
     // }
+
+    abstract isValidTask(): boolean;
+    abstract isValidTarget(): boolean;
+    abstract run(): ScreepsReturnCode;
+
+    work() {
+        if (this.isValidTask() && this.isValidTarget()) {
+            const ret = this.run();
+            console.log(ret);
+            if (ret == OK && this.settings.oneShot) {
+                this.finish();
+            }
+        }
+    }
+
+    fork(newTask: Task) {
+        newTask.parent = this;
+        if (this.creep) {
+            this.creep.task = newTask;
+        }
+        return newTask;
+    }
+
+    finish() {
+        if (this.creep) {
+            this.creep.task = this.parent;
+        }
+    }
 }

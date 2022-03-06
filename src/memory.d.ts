@@ -35,7 +35,7 @@ interface TaskMemory {
     _creep: string;
 
     _target: {
-        _id: Id<AnyCreep | Structure>;
+        _id: string;
         _pos: PosMemory;
     };
 

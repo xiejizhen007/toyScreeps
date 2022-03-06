@@ -1,6 +1,7 @@
 import { Role } from "Creeps/Role";
 import { TaskType } from "Creeps/setting";
 import { Roles } from "Creeps/setups";
+import { Tasks } from "Tasks/Tasks";
 
 export class Harvester extends Role {
     init(): void {
@@ -29,6 +30,7 @@ export class Harvester extends Role {
                 type: 'harveste',
                 target: target.sourceId
             }
+            // this.task = Tasks.harvest(source);
         }
     }
 
@@ -36,6 +38,23 @@ export class Harvester extends Role {
         if (this.creep.spawning) {
             return;
         }
+
+        // const link = this.pos.findClosestByRange(this.roomNetwork.links);
+        // if (link && this.store.getFreeCapacity() == 0) {
+        //     const amount = Math.min(link.store.getFreeCapacity(RESOURCE_ENERGY), this.store[RESOURCE_ENERGY]);
+        //     // this.task = this.task.fork(Tasks.transfer(link, RESOURCE_ENERGY, amount));
+        // }
+
+        // // new task
+        // if (this.task) {
+        //     // console.log(this.task._target._id);
+        //     const target = Game.getObjectById(this.task._target._id as Id<Source> | Id<StructureLink>);
+        //     if (this.pos.isNearTo(target)) {
+        //         this.task.work();
+        //     } else {
+        //         this.creep.goto(target.pos);
+        //     }
+        // }
 
         if (this.creep.memory.tempTask) {
             const source = Game.getObjectById(this.creep.memory.tempTask.target as Id<Source>);
