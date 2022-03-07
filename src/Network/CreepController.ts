@@ -1,3 +1,4 @@
+import { Claimer } from "Creeps/Remote/Claimer";
 import { Harvester } from "Creeps/Base/Harvester";
 import { King } from "Creeps/Base/King";
 import { Miner } from "Creeps/Base/Miner";
@@ -10,6 +11,7 @@ import { Role } from "Creeps/Role";
 import { CreepRolePriority } from "Creeps/setting";
 import { Roles, Setups } from "Creeps/setups";
 import { RoomNetwork } from "./RoomNetwork";
+import { Pioneer } from "Creeps/Remote/Pionner";
 
 export class CreepController {
     roles: Role[];
@@ -62,6 +64,18 @@ export class CreepController {
             else if (creep.memory.role == Roles.transfer) {
                 const role = new Transfer(creep, this.roomNetwork);
                 this.roles.push(role);
+            } 
+
+            else if (creep.memory.role == Roles.claimer) {
+                const role = new Claimer(creep, this.roomNetwork);
+                this.roles.push(role);
+            }
+
+            else if (creep.memory.role == Roles.pionner) {
+                if (this.roomNetwork.colony && this.roomNetwork.colony.target) {
+                    const role = new Pioneer(creep, this.roomNetwork, this.roomNetwork.colony.target);
+                    this.roles.push(role);
+                }
             }
         }
 
@@ -77,6 +91,8 @@ export class CreepController {
         this.spawnMiner();
 
         this.spawnTransfer();
+        this.spawnClaimer();
+        this.spawnPioneer();
         // _.forEach(this.roles, r => r.work());
     }
 
@@ -211,6 +227,40 @@ export class CreepController {
                 setup: Setups.transfer.default,
                 priority: CreepRolePriority.transfer,
             })
+        }
+    }
+
+    private spawnClaimer(): void {
+        if (this.roomNetwork.colony && this.roomNetwork.colony.owner != 'HIM_Xjz') {
+            const target = _.find(this.roomNetwork.memory.myCreeps, f => {
+                return Game.creeps[f] && Game.creeps[f].memory.role == Roles.claimer;
+            });
+
+            if (!target && !this.roomNetwork.colony.owner) {
+                if (Game.time % 3 == 0) {
+                    this.roomNetwork.spawnNetwork.registerCreep({
+                        setup: Setups.claimer.default,
+                        priority: CreepRolePriority.transfer,
+                    })
+                }
+            }
+        }
+    }
+
+    private spawnPioneer(): void {
+        if (this.roomNetwork.colony && this.roomNetwork.colony.level <= 6) {
+            const target = _.find(this.roomNetwork.memory.myCreeps, f => {
+                return Game.creeps[f] && Game.creeps[f].memory.role == Roles.pionner;
+            });
+
+            if (!target) {
+                if (Game.time % 3 == 0) {
+                    this.roomNetwork.spawnNetwork.registerCreep({
+                        setup: Setups.pioneer.default,
+                        priority: CreepRolePriority.transfer,
+                    })
+                }
+            }
         }
     }
 }

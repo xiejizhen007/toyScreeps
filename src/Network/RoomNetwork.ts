@@ -1,4 +1,6 @@
 import { Global } from "Global/Global";
+import { Mem } from "Mem";
+import { Colony } from "./Colony";
 import { CommandCenter } from "./CommandCenter";
 import { CreepController } from "./CreepController";
 import { DefenceNetwork } from "./DefenceNetwork";
@@ -45,6 +47,8 @@ export class RoomNetwork {
     sourceNetworks: {[name: Id<Source>]: SourceNetwork};
     mineSite: MineSite;
 
+    colony: Colony;
+
     constructor(room: Room) {
         this.room = room;
         Global.roomNetworks[room.name] = this;
@@ -88,6 +92,10 @@ export class RoomNetwork {
             this.mineSite.init();
         }
 
+        if (this.colony) {
+            this.colony.init();
+        }
+
         _.forEach(this.sourceNetworks, f => f.init());
 
     }
@@ -107,6 +115,11 @@ export class RoomNetwork {
 
         if (this.mineSite) {
             this.mineSite.work();
+        }
+
+
+        if (this.colony) {
+            this.colony.work();
         }
 
         _.forEach(this.sourceNetworks, f => f.work());
@@ -198,6 +211,17 @@ export class RoomNetwork {
             const extractor = mineral.pos.lookFor(LOOK_STRUCTURES).find(f => f.structureType == STRUCTURE_EXTRACTOR) as StructureExtractor;
             if (extractor) {
                 this.mineSite = new MineSite(this, mineral, extractor);
+            }
+        }
+
+        {
+            // const memory = Mem.wrap(this.memory, 'colony');
+            // if (memory) {
+            //     this.colony = new Colony(this, memory.target);
+            // }
+            const memory = Mem.get(this.memory, 'colony');
+            if (memory && memory.target) {
+                this.colony = new Colony(this, memory.target);
             }
         }
     }

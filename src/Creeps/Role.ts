@@ -115,6 +115,15 @@ export abstract class Role {
         return this.creep.getActiveBodyparts(type);
     }
 
+    goto(pos: RoomObject | RoomPosition) {
+        // pos = pos instanceof RoomObject ? pos.pos;
+        if (pos instanceof RoomObject) {
+            pos = pos.pos;
+        }
+
+        return this.creep.goto(pos);
+    }
+
     harvest(target: Source | Mineral | Deposit) {
         return this.creep.harvest(target);
     }

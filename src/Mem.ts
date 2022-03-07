@@ -10,4 +10,8 @@ export class Mem {
 		}
 		return memory[memName];
 	}
+
+	static get(memory: any, memName: string) {
+		return memory[memName];
+	}
 }

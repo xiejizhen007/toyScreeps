@@ -5,8 +5,15 @@ import { errorMapper } from './modules/errorMapper'
 import './Prototypes/Mount';
 import { mountPrototype } from './Prototypes/Mount';
 
+import './Global/mountGlobal'; 
+
 export const loop = errorMapper(() => {
     // console.log('loop begin -----------------');
+
+    if (Game.cpu.bucket >= 10000) {
+        Game.cpu.generatePixel();
+    }
+
     initMemory();
 
     mountPrototype();
