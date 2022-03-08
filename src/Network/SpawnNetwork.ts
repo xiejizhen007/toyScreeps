@@ -41,16 +41,9 @@ export class SpawnNetwork {
 
                 if (request) {
                     const energy = request.setup.role == Roles.queen ? this.room.energyAvailable : this.room.energyCapacityAvailable;
-                    const body = request.setup.generateBody(energy);
-                    // let ret: ScreepsReturnCode = ERR_NOT_ENOUGH_ENERGY;
-                    // if (this.room.energyAvailable > this.calculatorEnergy(body)) {
-                    //     ret = spawn.spawnCreep(request.setup.generateBody(energy), request.setup.role + Game.time, {
-                    //         memory: {role: request.setup.role, room: this.room.name, isNeeded: false},
-                    //     });
-                    // }
 
                     const ret = spawn.spawnCreep(request.setup.generateBody(energy), request.setup.role + Game.time, {
-                        memory: {role: request.setup.role, room: this.room.name, isNeeded: false},
+                        memory: {role: request.setup.role, room: this.room.name, isNeeded: true},
                     });
 
                     if (ret == OK) {
@@ -68,32 +61,4 @@ export class SpawnNetwork {
         this.requests.push(request);
         return true;
     }
-
-    private calculatorEnergy(body: BodyPartConstant[]): number {
-        return _.sum(body, f => BODYPART_COST[f]);
-    }
-
-    // generateBody(setup: CreepBodySetup, availableEnergy: number = this.room.energyCapacityAvailable): BodyPartConstant[] {
-    //     const maxEnergy = availableEnergy;
-    //     let body: BodyPartConstant[] = [];
-
-    //     const oneCost = _.sum(setup.body, part => BODYPART_COST[part]);
-    //     const loop = _.min([Math.floor(maxEnergy / oneCost), setup.limit, Math.floor(50 / setup.body.length)]);
-
-    //     if (setup.ordered) {
-    //         for (const part of setup.body) {
-    //             for (let i = 0; i < loop; i++) {
-    //                 body.push(part);
-    //             }
-    //         }
-    //     } else {
-    //         for (let i = 0; i < loop; i++) {
-    //             for (const part of setup.body) {
-    //                 body.push(part);
-    //             }
-    //         }
-    //     }
-
-    //     return body;
-    // }
 }

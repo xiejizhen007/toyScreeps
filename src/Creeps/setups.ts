@@ -9,13 +9,16 @@ export const Roles = {
     upgrader: 'upgrader',
     miner: 'miner',
     transfer: 'transfer',
+
+    claimer: 'claimer',
+    pionner: 'pioneer',
 };
 
 export enum RolePriority {
     king,
     queen,
-    worker,
     harvester,
+    worker,
     miner,
 };
 
@@ -88,6 +91,23 @@ export const Setups = {
         default: new CreepSetup(Roles.transfer, {
             body: [CARRY, MOVE],
             limit: Infinity,
+            ordered: false
+        }),
+    },
+
+    // remote 
+    claimer: {
+        default: new CreepSetup(Roles.claimer, {
+            body: [CLAIM, MOVE],
+            limit: 1,
+            ordered: false
+        }),
+    },
+
+    pioneer: {
+        default: new CreepSetup(Roles.pionner, {
+            body: [WORK, CARRY, MOVE, MOVE],
+            limit: 12,
             ordered: false
         }),
     }

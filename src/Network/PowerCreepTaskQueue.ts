@@ -1,8 +1,9 @@
+import { Mem } from "Mem";
 import { RoomNetwork } from "./RoomNetwork";
 
 export type PowerCreepTaskType = {
     type: PowerConstant;
-    target?: Id<Structure<StructureConstant>>;
+    target?: string;
 }
 
 export interface PowerCreepTaskQueueMemory {
@@ -19,11 +20,7 @@ export class PowerCreepTaskQueue {
 
     constructor(roomNetwork: RoomNetwork) {
         this.roomNetwork = roomNetwork;
-        this.memory = roomNetwork.memory.networks.pcTasks;
-
-        if (!this.memory) {
-            this.memory = PowerCreepTaskQueueMemoryDefaluts;
-        }
+        this.memory = Mem.wrap(roomNetwork.memory, 'pcTaskQueue', PowerCreepTaskQueueMemoryDefaluts);
     }
 
     init(): void {

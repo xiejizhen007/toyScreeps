@@ -86,10 +86,10 @@ export class Queen extends Role {
             this.memory.tempTask.type = this.tempTaskType.fillExtension;
         } else if (this.haveFillTower()) {
             this.memory.tempTask.type = this.tempTaskType.fillTower;
-        } else if (this.haveInputTask()) {
-            this.memory.tempTask.type = this.tempTaskType.handleInput;
-        } else if (this.haveOutputTask()) {
-            this.memory.tempTask.type = this.tempTaskType.handleOutput;
+        // } else if (this.haveInputTask()) {
+        //     this.memory.tempTask.type = this.tempTaskType.handleInput;
+        // } else if (this.haveOutputTask()) {
+        //     this.memory.tempTask.type = this.tempTaskType.handleOutput;
         } else {
             this.memory.tempTask.type = this.tempTaskType.idle;
         }
@@ -124,17 +124,17 @@ export class Queen extends Role {
                 this.fillTower();
                 break;
 
-            case this.tempTaskType.handleInput:
-                this.handleInputTask();
-                break;
+            // case this.tempTaskType.handleInput:
+            //     this.handleInputTask();
+            //     break;
 
-            case this.tempTaskType.handleOutput:
-                this.handleOutputTask();
-                break;
+            // case this.tempTaskType.handleOutput:
+            //     this.handleOutputTask();
+            //     break;
 
-            case this.tempTaskType.transferAll:
-                this.transferAllToCenter();
-                break;
+            // case this.tempTaskType.transferAll:
+            //     this.transferAllToCenter();
+            //     break;
 
             default:
                 this.updateTask();

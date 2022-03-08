@@ -1,10 +1,14 @@
 import { Role } from "Creeps/Role";
 import { Mem } from "Mem";
+import { Market } from "Network/Market";
 import { RoomNetwork } from "Network/RoomNetwork";
+import { TerminalNetwork } from "Network/TerminalNetwork";
 
 export class Global {
     static roomNetworks: { [roomName: string]: RoomNetwork } = {};
     static roles: { [name: string]: Role } = {};
+    static terminalNetwork: TerminalNetwork;
+    static market: Market;
 
     /**
      * 从 origin room 发起对 target room 的殖民

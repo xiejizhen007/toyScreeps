@@ -46,8 +46,10 @@ export class Colony {
         if (room && room.controller) {
             this.memory.owner = room.controller.owner ? room.controller.owner.username : "";
             this.memory.level = room.controller.level;
-
-            if (room.controller.my && room.controller.level >= 4) {
+            // const haveSpawn
+            const haveSpawn = room ? room.spawns.length > 0 && room.spawns[0].my : false;
+            
+            if (room.controller.my && haveSpawn) {
                 delete this.memory;
             }
         }

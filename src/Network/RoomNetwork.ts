@@ -74,6 +74,10 @@ export class RoomNetwork {
         this.registerObjects();
         this.registerModules();
 
+        if (this.colony) {
+            this.colony.init();
+        }
+
         this.creepController.init();
         this.defenceNetwork.init();
         this.linkNetwork.init();
@@ -90,10 +94,6 @@ export class RoomNetwork {
         
         if (this.mineSite) {
             this.mineSite.init();
-        }
-
-        if (this.colony) {
-            this.colony.init();
         }
 
         _.forEach(this.sourceNetworks, f => f.init());

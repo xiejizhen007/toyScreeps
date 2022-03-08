@@ -1,12 +1,17 @@
 interface Memory {
     roomNetworks: {[name: string]: RoomNetworkMemory};
     constructionSites: {[name: Id<ConstructionSite>]: ConstructionSiteMemory};
+
+    // global class memory, like terminalNetwork
+    global: {};
 }
 
 interface RoomMemory {
-    owner: string;
-    tick: number;
+    owner: string;              // 房间主人，没有为 ""
+    level: number;
 
+    tick: number;
+    dangerous: boolean;         // 有塔，或者有主动防御
     isOutSource?: boolean;
 }
 
@@ -21,7 +26,7 @@ interface CreepMemory {
 
 interface PowerCreepMemory {
     workRoom: string;           // 所驻扎的房间名
-    task?: PowerCreepMemory;    // 执行的任务
+    task?: PowerCreepTaskMemory;    // 执行的任务
 }
 
 interface PowerCreepTaskMemory {
@@ -97,24 +102,3 @@ interface PosMemory {
     y: number;
     roomName: string;
 }
-
-
-// // lab
-// interface LabClusterMemory {
-//     // lab state
-//     state: string;
-//     index: number;
-
-//     // bak
-//     labs: Id<StructureLab>[];
-//     productLabs: Id<StructureLab>[];
-//     reactionLabs: Id<StructureLab>[];
-//     boostLabs: Id<StructureLab>[];
-
-//     reaction: {
-//         lab1ResourceType: ResourceConstant;
-//         lab2ResourceType: ResourceConstant;
-
-//         productResourceType: ResourceConstant;
-//     }
-// }

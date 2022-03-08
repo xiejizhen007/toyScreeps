@@ -108,7 +108,7 @@ export class CreepController {
                 setup: Setups.queen.default,
                 priority: CreepRolePriority.queen,
             });
-            console.log('spawn queen');
+            // console.log('spawn queen');
         }
     }
 
@@ -148,7 +148,7 @@ export class CreepController {
                 priority: CreepRolePriority.harvester,
             });
 
-            console.log('spawn harvester');
+            // console.log('spawn harvester');
         }
     }
 
@@ -159,7 +159,7 @@ export class CreepController {
                 setup: Setups.upgrader.default,
                 priority: CreepRolePriority.upgrader,
             });
-            console.log('spawn upgrader');
+            // console.log('spawn upgrader');
         }
     }
 
@@ -172,7 +172,7 @@ export class CreepController {
                 setup: Setups.worker.default,
                 priority: CreepRolePriority.worker,
             });
-            console.log('spawn worker');
+            // console.log('spawn worker');
         }
     }
 
@@ -187,7 +187,7 @@ export class CreepController {
                 setup: Setups.king.default,
                 priority: CreepRolePriority.king,
             });
-            console.log('spawn king');
+            // console.log('spawn king');
         }
     }
 
@@ -226,7 +226,7 @@ export class CreepController {
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.transfer.default,
                 priority: CreepRolePriority.transfer,
-            })
+            });
         }
     }
 
@@ -241,24 +241,27 @@ export class CreepController {
                     this.roomNetwork.spawnNetwork.registerCreep({
                         setup: Setups.claimer.default,
                         priority: CreepRolePriority.transfer,
-                    })
+                    });
                 }
             }
         }
     }
 
     private spawnPioneer(): void {
-        if (this.roomNetwork.colony && this.roomNetwork.colony.level <= 6) {
+        if (this.roomNetwork.colony) {
             const target = _.find(this.roomNetwork.memory.myCreeps, f => {
                 return Game.creeps[f] && Game.creeps[f].memory.role == Roles.pionner;
             });
 
-            if (!target) {
+            const room = Game.rooms[this.roomNetwork.colony.target];
+            const haveSpawn = room ? room.spawns.length > 0 && room.spawns[0].my : false;
+
+            if (!target && !haveSpawn) {
                 if (Game.time % 3 == 0) {
                     this.roomNetwork.spawnNetwork.registerCreep({
                         setup: Setups.pioneer.default,
                         priority: CreepRolePriority.transfer,
-                    })
+                    });
                 }
             }
         }
