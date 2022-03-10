@@ -12,7 +12,9 @@ export class TaskTransfer extends Task {
 
     constructor(target: TaskTransferType, resourceType: ResourceConstant, amount?: number, opts = {} as TaskOptions) {
         super(TaskType.transfer, target, opts);
+        
         this.settings.oneShot = true;
+        this.settings.range = 1;
         
         this.data.resourceType = resourceType;
         this.data.amount = amount;
@@ -24,6 +26,21 @@ export class TaskTransfer extends Task {
     }
 
     isValidTarget(): boolean {
+        const amount = this.data.amount || 1;
+        this.target = this.taskTarget as TaskTransferType;
+        const target = this.target;
+
+        if (target instanceof Creep) {
+            return target.store.getFreeCapacity() >= amount;
+        } else if (target instanceof StructureStorage
+            || target instanceof StructureTerminal
+            || target instanceof StructureContainer) {
+            
+            return target.store.getFreeCapacity() >= amount;
+        } else if (target instanceof StructureLab) {
+
+        }
+
         return true;        
     }
 

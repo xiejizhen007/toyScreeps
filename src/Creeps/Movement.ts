@@ -4,9 +4,7 @@ export class Movement {
             pos = pos.pos;
         }
 
-        // pos.findPathTo()
-        
-
         return OK;
     }
+    
 }

@@ -9,6 +9,8 @@ interface Memory {
 interface RoomMemory {
     owner: string;              // 房间主人，没有为 ""
     level: number;
+    sign: string;               // 给房间签名
+    planSign: string;           // 计划的签名
 
     tick: number;
     dangerous: boolean;         // 有塔，或者有主动防御
@@ -22,6 +24,10 @@ interface CreepMemory {
     working?: boolean;
     tempTask?: TempTaskMemory;
     task?: TaskMemory;
+
+    _go?: {                 // 移动缓存
+        
+    };
 }
 
 interface PowerCreepMemory {

@@ -2,6 +2,14 @@ import { Priority } from "setting";
 import { RoomNetwork } from "./RoomNetwork";
 import { TransportNetwork } from "./TransportNetwork";
 
+export interface CommandCenterMemory {
+
+}
+
+export const CommandCenterMemoryDefaults: CommandCenterMemory = {
+    
+}
+
 export class CommandCenter {
     roomNetwork: RoomNetwork;
 

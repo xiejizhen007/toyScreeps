@@ -66,10 +66,15 @@ export abstract class Role {
     }
 
     set task(task: Task | null) {
-        this.memory.task = task ? task.memory : null;
         if (task) {
             task.creep = this;
         }
+
+        this.memory.task = task ? task.memory : null;
+
+        // if (task) {
+        //     task.creep = this;
+        // }
 
         this._task = null;
     }

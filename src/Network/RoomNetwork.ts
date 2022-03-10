@@ -2,6 +2,7 @@ import { Global } from "Global/Global";
 import { Mem } from "Mem";
 import { Colony } from "./Colony";
 import { CommandCenter } from "./CommandCenter";
+import { CreepTasks } from "./CreepAPI";
 import { CreepController } from "./CreepController";
 import { DefenceNetwork } from "./DefenceNetwork";
 import { LabCluster } from "./LabCluster";
@@ -43,6 +44,8 @@ export class RoomNetwork {
     labCluster: LabCluster;
     commandCenter: CommandCenter;
 
+    creepTasks: CreepTasks;     // creep task list
+
     // sourceNetworks: SourceNetwork[];
     sourceNetworks: {[name: Id<Source>]: SourceNetwork};
     mineSite: MineSite;
@@ -52,21 +55,6 @@ export class RoomNetwork {
     constructor(room: Room) {
         this.room = room;
         Global.roomNetworks[room.name] = this;
-
-        // this.creepController = new CreepController(this);
-        // this.defenceNetwork = new DefenceNetwork(this);
-        // this.linkNetwork = new LinkNetwork(this);
-        // this.spawnNetwork = new SpawnNetwork(this);
-        // this.upgradeSite = new UpgradeSite(this, this.room.controller);
-        // this.transportNetwork = new TransportNetwork();
-
-        // this.sourceNetworks = {};
-        // const sources = this.room.find(FIND_SOURCES);
-        // _.forEach(sources, s => {
-        //     let tmp = new SourceNetwork(this, s);
-        //     // this.sourceNetworks.push(tmp);
-        //     this.sourceNetworks[s.id] = tmp;
-        // })
     }
 
     init(): void {

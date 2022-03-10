@@ -34,12 +34,41 @@ const Tasks = {
 
         isValidTarget() {
             const trueAmount = amount || 1;
+            
             return true;            
         },
 
         work() {
             return creep.transfer(target, resourceType, amount);
         }
+    }),
+
+    upgrade: (creep: Creep, target: StructureController): ITasks => ({
+        isValidTask() {
+            return creep.store[RESOURCE_ENERGY] > 0;
+        },
+
+        isValidTarget() {
+            return target && target.my;
+        },
+
+        work() {
+            return creep.upgradeController(target);
+        },
+    }),
+
+    withdraw: (creep: Creep, target: Structure<StructureConstant> | Tombstone | Ruin, resourceType: ResourceConstant, amount?: number): ITasks => ({
+        isValidTask() {
+            return true;
+        },
+
+        isValidTarget() {
+            return true;
+        },
+
+        work() {
+            return creep.withdraw(target, resourceType, amount);
+        },
     }),
 }
 
@@ -63,14 +92,40 @@ Creep.prototype.withdrawFrom = function(target: Structure | Tombstone | Ruin,
 }
 
 Creep.prototype.work = function() {
-    // 根据 memory 记录的任务类型执行相应的任务
-    // switch(this.memory.task)
-    // Tasks.harvest(this, Game.getObjectById('da'));
-    // const task = Tasks;
-    // task['']
+    const task = this.generateTask();
+    if (task) {
+
+    }
 }
 
-Creep.prototype.tasks = Tasks;
+Creep.prototype.generateTask = function() {
+    let task = null;
+    if (this.memory.task) {
+        switch (this.memory.task.type) {
+            case 'harvest':
+                task = Tasks['harvest'];
+                break;
+
+            case 'transfer':
+                task = Tasks['transfer'];
+                break;
+
+            case 'upgrade':
+                task = Tasks['upgrade'];
+                break;
+
+            case 'withdraw':
+                task = Tasks['withdraw'];
+                break;
+
+            default:
+                console.log(this.name + ' have a invalidTask');
+                break;
+        }
+    }
+
+    return task;
+}
 
 Creep.prototype.transferTo = function(target: AnyCreep | Structure<StructureConstant>, 
                                       resourceType: ResourceConstant,
@@ -82,7 +137,6 @@ Creep.prototype.transferTo = function(target: AnyCreep | Structure<StructureCons
     if (this.pos.isNearTo(target)) {
         this.transfer(target, resourceType, amount);
     } else {
-        // TODO: goto other room
         this.goto(target.pos);
         return ERR_NOT_IN_RANGE;
     }

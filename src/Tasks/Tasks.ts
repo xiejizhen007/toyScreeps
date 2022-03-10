@@ -1,6 +1,7 @@
 import { TaskType } from "./setting";
 import { TaskHarvest, TaskHarvestType } from "./Type/harvest";
 import { TaskTransfer, TaskTransferType } from "./Type/transfer";
+import { TaskWithdraw, TaskWithdrawType } from "./Type/withdraw";
 
 export class Tasks {
     static harvest(target: TaskHarvestType) {
@@ -9,6 +10,10 @@ export class Tasks {
 
     static transfer(target: TaskTransferType, resourceType: ResourceConstant, amount?: number) {
         return new TaskTransfer(target, resourceType, amount);
+    }
+
+    static withdraw(target: TaskWithdrawType, resourceType: ResourceConstant, amount?: number) {
+        return new TaskWithdraw(target, resourceType, amount);
     }
 }
 
@@ -30,6 +35,10 @@ export function initializeTask(memory: TaskMemory) {
             break;
         case TaskType.transfer:
             task = new TaskTransfer(target as TaskTransferType, memory.data.resourceType, memory.data.amount);
+            break;
+
+        case TaskType.withdraw:
+            task = new TaskWithdraw(target as TaskWithdrawType, memory.data.resourceType, memory.data.amount);
             break;
         
         default:

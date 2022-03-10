@@ -12,6 +12,7 @@ export const Roles = {
 
     claimer: 'claimer',
     pionner: 'pioneer',
+    test: 'test',
 };
 
 export enum RolePriority {
@@ -110,5 +111,14 @@ export const Setups = {
             limit: 12,
             ordered: false
         }),
-    }
+    },
+
+    // test
+    test: {
+        default: new CreepSetup(Roles.test, {
+            body: [CARRY, MOVE],
+            limit: 2,
+            ordered: false,
+        }),
+    },
 };

@@ -7,7 +7,6 @@ import { TransportRequest } from "Network/TransportNetwork";
  * 传输能量，资源等
  * 
  * TODO: 处理在执行任务时，清理自身多余的资源
- * 
  * TODO: 改变低等级时的逻辑，尤其是没有 storage 的情况下
  */
 export class Queen extends Role {

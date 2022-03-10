@@ -15,9 +15,10 @@ export class Worker extends Role {
     }
 
     work(): void {
+        if (this.upgradeActionWhenDownGrade()) { return; }
         if (this.buildAction()) { return; }
 
-
+        // 最低优先级        
         if (this.upgradeAction()) { return; }
     }
 
@@ -55,9 +56,17 @@ export class Worker extends Role {
         return false;
     }
     
-    private upgradeAction(): boolean {
-        
+    private upgradeActionWhenDownGrade(): boolean {
+        const controller = this.room.controller;
+        if (controller && controller.ticksToDowngrade <= 2000) {
+            this.upgradeAction();
+            return true;
+        }
 
+        return false;
+    }
+
+    private upgradeAction(): boolean {
         if (this.creep.store[RESOURCE_ENERGY] == 0) {
             const link = this.roomNetwork.upgradeSite.link;
             if (link && link.store[RESOURCE_ENERGY] > 0) {
@@ -78,6 +87,7 @@ export class Worker extends Role {
                 }
             }
         }
+
         return true;
     }
 

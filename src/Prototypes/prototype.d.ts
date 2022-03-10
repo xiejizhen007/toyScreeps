@@ -25,6 +25,7 @@ interface Creep {
 
 
     tasks: any;
+    generateTask(): any;
 
     // task type
     transferTo(target: AnyCreep | Structure<StructureConstant>, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;

@@ -106,6 +106,19 @@ export abstract class Task {
         return this._parent ? initializeTask(this._parent) : null;
     }
 
+    set taskTarget(target: any) {
+        if (target && target.id && target.pos) {
+            this._target._id = target.id;
+            this._target._pos = target.pos;
+        }
+    }
+
+    get taskTarget(): RoomObject {
+        if (this._target) {
+            return Game.getObjectById(this._target._id as Id<Creep> | Id<Structure> | Id<Source>);
+        }
+    }
+
     // get taskQueue(): Task[] {
     //     const taskQueue: Task[] = [this];
     //     let parent = this._parent;
@@ -117,8 +130,14 @@ export abstract class Task {
 
     work() {
         if (this.isValidTask() && this.isValidTarget()) {
+            const target = this.taskTarget;
+            if (!this.creep.pos.inRangeTo(target, this.settings.range)) {
+                this.creep.goto(target);
+                return;
+            }
+
             const ret = this.run();
-            console.log(ret);
+            console.log('task return: ' + ret);
             if (ret == OK && this.settings.oneShot) {
                 this.finish();
             }

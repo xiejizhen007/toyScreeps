@@ -6,6 +6,9 @@ import './Prototypes/Mount';
 import { mountPrototype } from './Prototypes/Mount';
 
 import './Global/mountGlobal'; 
+import { TerminalNetwork } from 'Network/TerminalNetwork';
+import { Mem } from 'Mem';
+import { Market } from 'Network/Market';
 
 export const loop = errorMapper(() => {
     // console.log('loop begin -----------------');
@@ -13,6 +16,24 @@ export const loop = errorMapper(() => {
     if (Game.cpu.bucket >= 10000) {
         Game.cpu.generatePixel();
     }
+
+    Memory.global = Mem.wrap(Memory, 'global', {});
+
+    // 创建全局对象
+
+    let terminals: StructureTerminal[] = [];
+    for (const roomName in Game.rooms) {
+        const room = Game.rooms[roomName];
+        if (room && room.terminal && room.terminal.my && room.terminal.isActive()) {
+            terminals.push(room.terminal);
+        }
+    }
+
+    Global.terminalNetwork = new TerminalNetwork(terminals);
+    Global.terminalNetwork.init();
+    Global.terminalNetwork.work();
+
+    Global.market = new Market();
 
     initMemory();
 
@@ -33,6 +54,8 @@ export const loop = errorMapper(() => {
             roomNetwork.init();
             
             roomNetwork.work();
+
+            // Global.terminalNetwork.avgTerminalResource(room.name);
         }
     }
     

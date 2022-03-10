@@ -8,7 +8,7 @@ export class Global {
     static roomNetworks: { [roomName: string]: RoomNetwork } = {};
     static roles: { [name: string]: Role } = {};
     static terminalNetwork: TerminalNetwork;
-    static market: Market;
+    static market: Market;;
 
     /**
      * 从 origin room 发起对 target room 的殖民
@@ -23,5 +23,19 @@ export class Global {
                 target: target
             });
         }
+    }
+
+
+    // terminal 
+    static terminalResourceRequest(room: string, resourceType: ResourceConstant, amount: number, input = true) {
+        this.terminalNetwork.addRequest(room, resourceType, amount, input, false);
+    }
+
+    static terminalRemoveRequest(room: string, resourceType: ResourceConstant) {
+        this.terminalNetwork.removeRequest(room, resourceType);
+    }
+
+    static marketSell(room: string, resourceType: ResourceConstant, amount: number) {
+        this.market.sell(room, resourceType, amount);
     }
 }

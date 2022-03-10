@@ -40,6 +40,14 @@ export class Market {
 
     }
 
+    sell(room: string, resourceType: ResourceConstant, amount: number) {
+        const orders = Game.market.getAllOrders({type: ORDER_BUY, resourceType: resourceType});
+        const maxOrder = _.max(orders, o => o.price);
+
+        const minAmount = _.min([maxOrder.amount, amount]);
+        Game.market.deal(maxOrder.id, minAmount, room);
+    }
+
     registerRequest(type: string,room: string, resourceType: ResourceConstant, amount: number) {
         const targetRoom = Game.rooms[room];
         if (targetRoom && targetRoom.terminal && targetRoom.terminal.my && (type == ORDER_BUY || type == ORDER_SELL)) {
