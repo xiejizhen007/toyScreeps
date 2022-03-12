@@ -167,8 +167,26 @@ export class LabCluster {
                         resourceType: reaction.lab1ResourceType,
                         amount: this.requestLabAmount(lab1, reaction.lab1ResourceType),
                     });
+
+                    this.roomNetwork.logisticsNetwork.registerTask({
+                        source: 'any',
+                        target: lab1.id,
+                        priority: Priority.Normal,
+
+                        resourceType: reaction.lab1ResourceType,
+                        amount: this.requestLabAmount(lab1, reaction.lab1ResourceType),
+                    });
                 } else if (!lab2.mineralType) {
                     this.roomNetwork.transportNetwork.requestInput(lab2, Priority.NormalLow, {
+                        resourceType: reaction.lab2ResourceType,
+                        amount: this.requestLabAmount(lab2, reaction.lab2ResourceType),
+                    });
+                    
+                    this.roomNetwork.logisticsNetwork.registerTask({
+                        source: 'any',
+                        target: lab2.id,
+                        priority: Priority.Normal,
+
                         resourceType: reaction.lab2ResourceType,
                         amount: this.requestLabAmount(lab2, reaction.lab2ResourceType),
                     });
@@ -185,6 +203,15 @@ export class LabCluster {
             // console.log('lab is unloading');
             this.roomNetwork.transportNetwork.requestOutput(target, Priority.NormalLow, {
                 resourceType: target.mineralType
+            });
+
+            this.roomNetwork.logisticsNetwork.registerTask({
+                source: target.id,
+                target: 'any',
+                priority: Priority.Normal,
+
+                resourceType: target.mineralType,
+                amount: target.store[target.mineralType],
             });
         } else {
             this.changeLabStateTo(LabState.loading);

@@ -1,3 +1,4 @@
+import { Priority } from "setting";
 import { RoomNetwork } from "./RoomNetwork";
 
 /**
@@ -30,6 +31,18 @@ export class DefenceNetwork {
         // }
             
         // console.log('towers: ' + this.towers);
+
+        _.forEach(this.towers, t => {
+            if (t.store[RESOURCE_ENERGY] <= 600) {
+                this.roomNetwork.logisticsNetwork.registerTask({
+                    source: 'any',
+                    target: t.id,
+                    priority: Priority.Normal,
+                    resourceType: RESOURCE_ENERGY,
+                    amount: t.store.getFreeCapacity(),
+                });
+            }
+        });
     }
 
     // TODO: defence room and call soldier

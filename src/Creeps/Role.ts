@@ -191,11 +191,38 @@ export abstract class Role {
         return this.creep.transfer(target, resourceType, amount);
     }
 
+    transferTo(target: Creep | PowerCreep | Structure, resourceType: ResourceConstant, amount?: number) {
+        if (target) {
+            if (this.pos.isNearTo(target)) {
+                return this.creep.transfer(target, resourceType, amount);
+            } else {
+                this.goto(target);
+                return ERR_NOT_IN_RANGE;
+            }
+        }
+
+        return ERR_INVALID_TARGET;
+    }
+
     upgradeController(target: StructureController) {
         return this.creep.upgradeController(target);
     }
 
     withdraw(target: Structure | Tombstone | Ruin, resourceType: ResourceConstant, amount?: number) {
         return this.creep.withdraw(target, resourceType, amount);
+    }
+
+    withdrawFrom(target: Structure | Tombstone | Ruin, resourceType: ResourceConstant, amount?: number) {
+        // return this.creep.withdraw(target, resourceType, amount);
+        if (target) {
+            if (this.pos.isNearTo(target)) {
+                return this.creep.withdraw(target, resourceType, amount);
+            } else {
+                this.goto(target);
+                return ERR_NOT_IN_RANGE;
+            }
+        }
+
+        return ERR_INVALID_TARGET;
     }
 }

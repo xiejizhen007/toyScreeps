@@ -1,3 +1,4 @@
+import { Role } from "Creeps/Role";
 import { Mem } from "Mem";
 import { RoomNetwork } from "./RoomNetwork";
 
@@ -12,111 +13,111 @@ export type LogisticsNetworkTarget =
     | Tombstone
 
 export interface LogisticsNetworkRequest {
-    id: string;
-    target: string;                         // target id
-    amount: number;                         // 负数代表输出，正数代表输入
+    source: string;
+    target: string;
+
+    priority: number;
     resourceType: ResourceConstant | 'all';
+    amount: number;
 }
 
 export interface LogisticsNetworkMemory {
-    queue: {
-        request: LogisticsNetworkRequest;
-        creep: string | undefined;
+    taskList: LogisticsNetworkRequest[];
+    // taskList: { [priority: number]: LogisticsNetworkRequest };
+
+    doingList: {
+        creep: Id<Creep>,
+        task: LogisticsNetworkRequest,
     }[];
 }
 
 export const LogisticsNetworkMemoryDefaults: LogisticsNetworkMemory = {
-    queue: [],
+    taskList: [],
+    doingList: []
 };
 
 export interface RequestOptions {
-    amount?: number;
-    resourceType?: ResourceConstant | 'all';
 }
 
 export class LogisticsNetwork {
     memory: LogisticsNetworkMemory;
-    requests: LogisticsNetworkRequest[];
-
     roomNetwork: RoomNetwork;
 
     constructor(roomNetwork: RoomNetwork) {
         this.roomNetwork = roomNetwork;
+
         this.memory = Mem.wrap(roomNetwork.memory, 'logisticsNetwork', LogisticsNetworkMemoryDefaults);
-        this.requests = [];
     }
 
-    requestInput(target: LogisticsNetworkTarget, opts = {} as RequestOptions) {
-        _.defaults(opts, {
-            resourceType: RESOURCE_ENERGY,
-        });
+    get length(): number {
+        return this.memory.taskList.length;
+    }
 
-        if (!opts.amount) {
-            opts.amount = this.getInputAmount(target, opts.resourceType as ResourceConstant);
+    registerTask(task: LogisticsNetworkRequest) {
+        if (this.includeTask(task.target)) {
+            return;
         }
 
-        const requestId = this.requests.length;
-        const req: LogisticsNetworkRequest = {
-            id: requestId.toString(),
-            target: target.id,
-            amount: opts.amount,
-            resourceType: opts.resourceType,
-        };
-
-        this.requests.push(req);
+        this.memory.taskList.push(task);
     }
 
-    requestOutput(target: LogisticsNetworkTarget, opts = {} as RequestOptions) {
-        _.defaults(opts, {
-            resourceType: RESOURCE_ENERGY,
-        });
-
-        if (!opts.amount) {
-            opts.amount = this.getOutputAmount(target, opts.resourceType);
-        }
-
-        opts.amount = -opts.amount;
-        const requestId = this.requests.length;
-        const req: LogisticsNetworkRequest = {
-            id: requestId.toString(),
-            target: target.id,
-            amount: opts.amount,
-            resourceType: opts.resourceType
-        };
-
-        this.requests.push(req);
-    }
-
-    private getInputAmount(target: LogisticsNetworkTarget, resourceType: ResourceConstant) {
-        if (target instanceof Resource || target instanceof Tombstone || target instanceof Ruin) {
-            console.log('resource, ruin, tombstone can\'t request input');
-            return 0;
-        } else if (target instanceof StructureStorage || target instanceof StructureTerminal 
-            || target instanceof StructureContainer || target instanceof StructureFactory) {
-            return target.store.getFreeCapacity();
-        } else if (target instanceof StructureSpawn || target instanceof StructureExtension
-            || target instanceof StructureTower || target instanceof StructureLink) {
-            return target.store.getFreeCapacity(RESOURCE_ENERGY);
+    findAGoodJob(creep: Role) {
+        if (this.memory.taskList.length > 0) {
+            const task = this.memory.taskList.shift();
+            creep.memory.transferTask = task;
+            this.memory.doingList.push({
+                creep: creep.id,
+                task: task,
+            });
+            
+            return true;
         } else {
-            if (target instanceof StructureLab) {
-                if (resourceType == RESOURCE_ENERGY) {
-                    return target.store.getFreeCapacity(RESOURCE_ENERGY);
-                } else if (!target.mineralType || resourceType == target.mineralType) {
-                    return target.store.getFreeCapacity(resourceType);
-                }
-            }
+            creep.memory.transferTask = null;
+
+            return false;
         }
     }
 
-    private getOutputAmount(target: LogisticsNetworkTarget, resourceType: ResourceConstant | 'all') {
-        if (resourceType == 'all') {
-            if (target instanceof Resource) {
-                return target.amount;
-            } else if (target instanceof Tombstone) {
-                return target.store.getUsedCapacity();
-            } else if (target instanceof Ruin) {
-                return target.store.getUsedCapacity();
+    findAGoodJobByStructureType(creep: Role, structureType: string) {
+        const tasks = _.filter(this.memory.taskList, f => {
+            const s = Game.getObjectById(f.target as Id<Structure>);
+            if (s && s.structureType == structureType) {
+                return true;
             }
+        });
+
+        // 转换为对象
+        const objs = _.map(tasks, f => Game.getObjectById(f.target as Id<Structure>));
+        const obj = creep.pos.findClosestByPath(objs);
+
+        if (obj) {
+            // 在当前的任务队列中删除最优任务
+            const task = _.find(this.memory.taskList, f => f.target == obj.id);
+            _.remove(this.memory.taskList, f => f.target == obj.id);
+
+            creep.memory.transferTask = task;
+            this.memory.doingList.push({
+                creep: creep.id,
+                task: task,
+            });
+
+            return true;
+        } else {
+            // 当前类型建筑的任务已经没有了，重新找任务
+            return this.findAGoodJob(creep);
         }
+    }
+
+    removeDoingJob(creep: Role) {
+        creep.memory.transferTask = null;
+        _.remove(this.memory.doingList, f => f.creep == creep.id);
+    }
+
+    private includeTask(target: string) {
+        // return _.find(this.memory.taskList, f => f.target == target) || _.find;
+        const findTarget = _.find(this.memory.taskList, f => f.target == target) 
+            || _.find(this.memory.doingList, f => f.task.target == target);
+        
+        return findTarget != undefined;
     }
 }

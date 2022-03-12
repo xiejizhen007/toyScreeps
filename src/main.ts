@@ -13,9 +13,10 @@ import { Market } from 'Network/Market';
 export const loop = errorMapper(() => {
     // console.log('loop begin -----------------');
 
-    if (Game.cpu.bucket >= 10000) {
-        Game.cpu.generatePixel();
-    }
+
+    // if (Game.cpu.bucket >= 10000) {
+    //     Game.cpu.generatePixel();
+    // }
 
     Memory.global = Mem.wrap(Memory, 'global', {});
 

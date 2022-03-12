@@ -7,6 +7,7 @@ import { CreepController } from "./CreepController";
 import { DefenceNetwork } from "./DefenceNetwork";
 import { LabCluster } from "./LabCluster";
 import { LinkNetwork } from "./LinkNetwork";
+import { LogisticsNetwork } from "./LogisticsNetwork";
 import { MineSite } from "./MineSite";
 import { PowerCreepTaskQueue } from "./PowerCreepTaskQueue";
 import { SourceNetwork } from "./SourceNetwork";
@@ -40,6 +41,7 @@ export class RoomNetwork {
     
     transportNetwork: TransportNetwork;             // queen
     transportNetworkForTransfer: TransportNetwork;  // transfer
+    logisticsNetwork: LogisticsNetwork;
     powerCreepTaskQueue: PowerCreepTaskQueue;
     labCluster: LabCluster;
     commandCenter: CommandCenter;
@@ -177,6 +179,7 @@ export class RoomNetwork {
         this.transportNetwork = new TransportNetwork();
         this.transportNetworkForTransfer = new TransportNetwork();
         this.powerCreepTaskQueue = new PowerCreepTaskQueue(this);
+        this.logisticsNetwork = new LogisticsNetwork(this);
         
         if (this.storage) {
             this.commandCenter = new CommandCenter(this, this.storage);

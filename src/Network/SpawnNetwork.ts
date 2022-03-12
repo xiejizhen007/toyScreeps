@@ -38,6 +38,13 @@ export class SpawnNetwork {
             energyStructure.forEach(f => {
                 if (f.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
                     this.roomNetwork.transportNetwork.requestInput(f, Priority.Normal);
+                    this.roomNetwork.logisticsNetwork.registerTask({
+                        source: 'any',
+                        target: f.id,
+                        priority: Priority.Normal,
+                        resourceType: RESOURCE_ENERGY,
+                        amount: f.store.getFreeCapacity(),
+                    });
                 }
             });
         }

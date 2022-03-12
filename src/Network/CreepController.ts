@@ -13,6 +13,7 @@ import { Roles, Setups } from "Creeps/setups";
 import { RoomNetwork } from "./RoomNetwork";
 import { Pioneer } from "Creeps/Remote/Pionner";
 import { Test } from "Creeps/Base/Test";
+import { Test1 } from "Creeps/Base/Test1";
 
 export class CreepController {
     roles: Role[];
@@ -80,7 +81,7 @@ export class CreepController {
             }
 
             else if (creep.memory.role == Roles.test) {
-                const role = new Test(creep, this.roomNetwork);
+                const role = new Test1(creep, this.roomNetwork);
                 this.roles.push(role);
             }
         }
@@ -100,7 +101,7 @@ export class CreepController {
         this.spawnClaimer();
         this.spawnPioneer();
 
-        if (this.roomNetwork.room.name == 'W15N59' || this.roomNetwork.room.name == 'W15N58') {
+        if (this.roomNetwork.room.name == 'W15N59' || this.roomNetwork.room.name == 'W3N7') {
             this.spawnTest();
         }
         // _.forEach(this.roles, r => r.work());
@@ -284,10 +285,12 @@ export class CreepController {
         if (target) {
             // console.log('spawn king no target');
         } else {
-            this.roomNetwork.spawnNetwork.registerCreep({
-                setup: Setups.test.default,
-                priority: CreepRolePriority.king,
-            });
+            if (Game.time % 3 == 0) {
+                this.roomNetwork.spawnNetwork.registerCreep({
+                    setup: Setups.test.default,
+                    priority: CreepRolePriority.king,
+                });
+            }
             // console.log('spawn king');
         }
     }

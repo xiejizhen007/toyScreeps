@@ -25,6 +25,14 @@ interface CreepMemory {
     tempTask?: TempTaskMemory;
     task?: TaskMemory;
 
+    transferTask?: {
+        source: string;
+        target: string;
+
+        resourceType: ResourceConstant | 'all';
+        amount?: number;
+    }
+
     _go?: {                 // 移动缓存
         
     };
