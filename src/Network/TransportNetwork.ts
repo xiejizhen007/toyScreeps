@@ -54,7 +54,6 @@ export class TransportNetwork {
     }
 
     requestInput(target: Structure, priority = Priority.Normal, opts = {} as TransportRequestOptions) {
-        // this.input.push(target);
         _.defaults(opts, {
             resourceType: RESOURCE_ENERGY
         });
@@ -76,7 +75,6 @@ export class TransportNetwork {
     }
 
     requestOutput(target: Structure, priority = Priority.Normal, opts = {} as TransportRequestOptions) {
-        // this.output.push(target);
         _.defaults(opts, {
             resourceType: RESOURCE_ENERGY
         });
@@ -93,16 +91,11 @@ export class TransportNetwork {
         };
 
         if (req.amount > 0) {
-            // this.output.push(req);
             this.output[priority].push(req);
         }
     }
 
     findHighPriorityInputRequest(pos: RoomPosition): TransportRequest | undefined {
-        // const minPriority = _.min(this.input, f => f.priority);
-        // const ret = _.find(this.input, f => f == minPriority);
-        // return ret;
-
         for (const priority in Priority) {
             const targets = _.map(this.input[priority], m => m.target);
             const target = pos.findClosestByRange(targets);
@@ -116,10 +109,6 @@ export class TransportNetwork {
     }
     
     findHighPriorityOutputRequest(pos: RoomPosition): TransportRequest | undefined {
-        // const minPriority = _.min(this.output, f => f.priority);
-        // const ret = _.find(this.output, f => f == minPriority);
-        // return ret;
-
         for (const priority in Priority) {
             const targets = _.map(this.output[priority], m => m.target);
             const target = pos.findClosestByRange(targets);

@@ -16,3 +16,23 @@ type EnergyStructure =  StructureStorage
                         | StructureTerminal
                         | StructureContainer 
                         | StructureLink;
+
+
+
+
+interface IGlobal {
+    roles: { [creepName: string]: any }             // Role
+    roomNetworks: { [roomName: string]: any }        // RoomNetwork
+
+    terminalNetwork: ITerminalNetwork;
+}
+
+declare var Global: IGlobal;
+
+interface ITerminalNetwork {
+    allTerminals: StructureTerminal[];
+    readyTerminals: StructureTerminal[];
+
+    init(): void;
+    work(): void;
+}
