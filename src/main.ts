@@ -61,7 +61,13 @@ export const loop = errorMapper(() => {
     }
     
     // console.log('room network is still alive');
+    let cpuEnd = Game.cpu.getUsed();
+    
+    if (Game.time % 5 == 0) {
+        console.log('roomNetwork cpu used: ' + (cpuEnd - cpuStart));
+    }
 
+    cpuStart = Game.cpu.getUsed();
     let i = 0;
     for (const role in Global.roles) {
         if (Game.creeps[role]) {
@@ -75,7 +81,10 @@ export const loop = errorMapper(() => {
         }
     }
 
-    // console.log('role : ' + i);
+    cpuEnd = Game.cpu.getUsed();
+    if (Game.time % 5 == 0) {
+        console.log('creep cpu used: ' + (cpuEnd - cpuStart));
+    }
 
     for (const pcName in Game.powerCreeps) {
         const pc = Game.powerCreeps[pcName];
@@ -84,10 +93,10 @@ export const loop = errorMapper(() => {
         }
     }
 
-    let cpuEnd = Game.cpu.getUsed();
     
+    // cpuEnd = Game.cpu.getUsed();
     if (Game.time % 5 == 0) {
-        console.log('cpu used: ' + (cpuEnd - cpuStart));
+        // console.log('all cpu used: ' + (cpuEnd - cpuStart));
     }
 
     // console.log('loop end -----------------');
