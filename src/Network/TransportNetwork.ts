@@ -156,9 +156,11 @@ export class TransportNetwork {
             } else if (resourceType == RESOURCE_ENERGY) {
                 return target.store.getFreeCapacity(RESOURCE_ENERGY);
             }
+        } else if (target instanceof StructureExtension || target instanceof StructureSpawn) {
+            return target.store.getFreeCapacity(RESOURCE_ENERGY);
         }
 
-        console.log('err in get input amount');
+        console.log('err in get input amount, target: ' + target.id);
         return 0;
     }
 

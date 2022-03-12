@@ -119,10 +119,16 @@ export abstract class Task {
         }
     }
 
-    // get taskQueue(): Task[] {
-    //     const taskQueue: Task[] = [this];
-    //     let parent = this._parent;
-    // }
+    get taskQueue(): Task[] {
+        const taskQueue: Task[] = [this];
+        let parent = this.parent;
+        while (parent) {
+            taskQueue.push(parent);
+            parent = parent.parent;
+        }
+
+        return taskQueue;
+    }
 
     abstract isValidTask(): boolean;
     abstract isValidTarget(): boolean;

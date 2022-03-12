@@ -1,5 +1,6 @@
 import { CreepSetup } from "Creeps/CreepSetup";
 import { Roles } from "Creeps/setups";
+import { Priority } from "setting";
 import { RoomNetwork } from "./RoomNetwork";
 
 export interface SpawnRequest {
@@ -17,18 +18,29 @@ export class SpawnNetwork {
     room: Room;
     roomNetwork: RoomNetwork;
     spawns: StructureSpawn[];
+    extensions: StructureExtension[];
     requests: SpawnRequest[];
 
     constructor(roomNetwork: RoomNetwork) {
         this.room = roomNetwork.room;
         this.roomNetwork = roomNetwork;
         this.spawns = _.filter(this.room.structures, f => f.structureType == STRUCTURE_SPAWN && f.isActive) as StructureSpawn[];
-
+        this.extensions = roomNetwork.extensions;
         this.requests = [];
     }
 
     init(): void {
+        // 当前能量是否足够
+        if (this.roomNetwork.room.energyAvailable < this.roomNetwork.room.energyCapacityAvailable) {
+            const energyStructure = (<(StructureSpawn | StructureExtension)[]>[]).concat(this.spawns, this.extensions);
 
+            // energyStrutcure.forEach(f => this.roomNetwork.transportNetwork.requestInput())
+            energyStructure.forEach(f => {
+                if (f.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+                    this.roomNetwork.transportNetwork.requestInput(f, Priority.Normal);
+                }
+            });
+        }
     }
 
     work(): void {

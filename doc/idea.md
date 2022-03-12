@@ -4,8 +4,12 @@
 
 ### task list
 
-基于每个房间设置各角色的任务单，然后 creep 完成对应角色任务单的任务
+```ts
+type task = {
+    source: string;         // 源 id
+    target: string;         // 目标 id
 
-```js
-worker: ['build something', 'repair something'];
+    resourceType: string;   // 资源类型
+    amount: number;         // 需要的数量
+}
 ```

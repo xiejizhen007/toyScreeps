@@ -13,8 +13,11 @@ export class Test extends Role {
 
     work(): void {
         if (this.task) {
-            this.task.work();
-            return;
+            const needClear = this.store[this.task.memory.data.resourceType] != this.store.getUsedCapacity();
+            if (needClear) {
+                this.clear(this);
+                return;
+            }
         }
 
         if (this.transferActions(this)) {}
@@ -22,6 +25,22 @@ export class Test extends Role {
 
         if (this.task) {
             this.task.work();
+        }
+    }
+
+    private clear(creep: Role) {
+        // let target: StructureStorage;
+        const target = creep.roomNetwork.storage;
+        if (target.store.getFreeCapacity() > 0) {
+            // for ()
+            if (creep.pos.isNearTo(target)) {
+                for (const resourceType in creep.store) {
+                    creep.transfer(target, resourceType as ResourceConstant);
+                    break;
+                }
+            } else {
+                creep.goto(target);
+            }
         }
     }
 
@@ -57,10 +76,10 @@ export class Test extends Role {
             const amount = Math.min(request.amount, creep.store.getCapacity());
 
             if (creep.store[request.resourceType] > 0) {
-                if (creep.roomNetwork.storage && creep.roomNetwork.storage.store[request.resourceType] > 0) {
+                if (creep.roomNetwork.storage && creep.roomNetwork.storage.store.getFreeCapacity() > 0) {
                     const minAmount = Math.min(creep.roomNetwork.storage.store[request.resourceType], amount);
                     creep.task = Tasks.transfer(creep.roomNetwork.storage, request.resourceType, minAmount);
-                } else if (creep.roomNetwork.terminal && creep.roomNetwork.terminal.store[request.resourceType] > 0) {
+                } else if (creep.roomNetwork.terminal && creep.roomNetwork.terminal.store.getFreeCapacity() > 0) {
                     const minAmount = Math.min(creep.roomNetwork.terminal.store[request.resourceType], amount);
                     creep.task = Tasks.transfer(creep.roomNetwork.terminal, request.resourceType, minAmount);
                 } else {

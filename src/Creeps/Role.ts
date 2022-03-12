@@ -18,6 +18,7 @@ export abstract class Role {
     hitsMax: number;
     id: Id<Creep>;
     memory: CreepMemory;
+    my: boolean;
     name: string;
     saying: string;
     spawning: boolean;
@@ -37,6 +38,7 @@ export abstract class Role {
         this.hitsMax = creep.hitsMax;
         this.id = creep.id;
         this.memory = creep.memory;
+        this.my = creep.my;
         this.name = creep.name;
         this.saying = creep.saying;
         this.spawning = creep.spawning;
