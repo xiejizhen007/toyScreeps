@@ -3,8 +3,7 @@ import { RoomNetwork } from "Network/RoomNetwork";
 export abstract class Role {
     roomNetwork: RoomNetwork;
 
-    roleName: string;
-
+    role: string;
     creep: Creep;
     pos: RoomPosition;
     nextPos: RoomPosition;
@@ -22,7 +21,7 @@ export abstract class Role {
     store: StoreDefinition;
     ticksToLive: number;
 
-    constructor(creep: Creep, roomNetwork: RoomNetwork) {
+    constructor(creep: Creep) {
         this.creep = creep;
         this.pos = creep.pos;
         this.nextPos = creep.pos;
@@ -40,8 +39,8 @@ export abstract class Role {
         this.store = creep.store;
         this.ticksToLive = creep.ticksToLive;
 
-        this.roomNetwork = roomNetwork;
-        Global.roles[creep.name] = this;
+        this.roomNetwork = Kernal.roomNetworks[creep.memory.room];
+        Kernal.roles[creep.name] = this;
     }
 
     get isWorking(): boolean {

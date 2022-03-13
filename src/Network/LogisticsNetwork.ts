@@ -120,4 +120,10 @@ export class LogisticsNetwork {
         
         return findTarget != undefined;
     }
+
+    clearUselessJob() {
+        if (Game.time % 10 == 0) {
+            this.memory.doingList = [];
+        }
+    }
 }

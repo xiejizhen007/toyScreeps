@@ -34,13 +34,13 @@ export class DefenceNetwork {
 
         _.forEach(this.towers, t => {
             if (t.store[RESOURCE_ENERGY] <= 600) {
-                // this.roomNetwork.logisticsNetwork.registerTask({
-                //     source: 'any',
-                //     target: t.id,
-                //     priority: Priority.Normal,
-                //     resourceType: RESOURCE_ENERGY,
-                //     amount: t.store.getFreeCapacity(),
-                // });
+                this.roomNetwork.logisticsNetwork.registerTask({
+                    source: 'any',
+                    target: t.id,
+                    priority: Priority.Normal,
+                    resourceType: RESOURCE_ENERGY,
+                    amount: t.store.getFreeCapacity(),
+                });
             }
         });
     }

@@ -12,8 +12,6 @@ import { CreepRolePriority } from "Creeps/setting";
 import { Roles, Setups } from "Creeps/setups";
 import { RoomNetwork } from "./RoomNetwork";
 import { Pioneer } from "Creeps/Remote/Pionner";
-import { Test } from "Creeps/Base/Test";
-import { Test1 } from "Creeps/Base/Test1";
 
 export class CreepController {
     roles: Role[];
@@ -26,65 +24,65 @@ export class CreepController {
     }
 
     init(): void {
-        for (const creepName of this.roomNetwork.memory.myCreeps) {
-            const creep = Game.creeps[creepName];
-            if (!creep) {
-                continue;
-            }
+        // for (const creepName of this.roomNetwork.memory.myCreeps) {
+        //     const creep = Game.creeps[creepName];
+        //     if (!creep) {
+        //         continue;
+        //     }
 
-            if (creep.memory.role == 'queen') {
-                const role = new Queen(creep, this.roomNetwork);
-                this.roles.push(role);
-            }
+        //     if (creep.memory.role == 'queen') {
+        //         const role = new Queen(creep, this.roomNetwork);
+        //         this.roles.push(role);
+        //     }
 
-            else if (creep.memory.role == 'harvester') {
-                const role = new Harvester(creep, this.roomNetwork);
-                this.roles.push(role);
-            }
+        //     else if (creep.memory.role == 'harvester') {
+        //         const role = new Harvester(creep, this.roomNetwork);
+        //         this.roles.push(role);
+        //     }
 
-            else if (creep.memory.role == 'upgrader') {
-                const role = new Upgrader(creep, this.roomNetwork);
-                this.roles.push(role);
-            }
+        //     else if (creep.memory.role == 'upgrader') {
+        //         const role = new Upgrader(creep, this.roomNetwork);
+        //         this.roles.push(role);
+        //     }
 
-            else if (creep.memory.role == 'worker') {
-                const role = new Worker(creep, this.roomNetwork);
-                // Worker
-                this.roles.push(role);
-            }
+        //     else if (creep.memory.role == 'worker') {
+        //         const role = new Worker(creep, this.roomNetwork);
+        //         // Worker
+        //         this.roles.push(role);
+        //     }
 
-            else if (creep.memory.role == 'king') {
-                const role = new King(creep, this.roomNetwork);
-                this.roles.push(role);
-            }
+        //     else if (creep.memory.role == 'king') {
+        //         const role = new King(creep, this.roomNetwork);
+        //         this.roles.push(role);
+        //     }
 
-            else if (creep.memory.role == 'miner') {
-                const role = new Miner(creep, this.roomNetwork);
-                this.roles.push(role);
-            }
+        //     else if (creep.memory.role == 'miner') {
+        //         const role = new Miner(creep, this.roomNetwork);
+        //         this.roles.push(role);
+        //     }
 
-            else if (creep.memory.role == Roles.transfer) {
-                const role = new Transfer(creep, this.roomNetwork);
-                this.roles.push(role);
-            } 
+        //     else if (creep.memory.role == Roles.transfer) {
+        //         const role = new Transfer(creep, this.roomNetwork);
+        //         this.roles.push(role);
+        //     } 
 
-            else if (creep.memory.role == Roles.claimer) {
-                const role = new Claimer(creep, this.roomNetwork);
-                this.roles.push(role);
-            }
+        //     else if (creep.memory.role == Roles.claimer) {
+        //         const role = new Claimer(creep, this.roomNetwork);
+        //         this.roles.push(role);
+        //     }
 
-            else if (creep.memory.role == Roles.pionner) {
-                if (this.roomNetwork.colony && this.roomNetwork.colony.target) {
-                    const role = new Pioneer(creep, this.roomNetwork, this.roomNetwork.colony.target);
-                    this.roles.push(role);
-                }
-            }
+        //     else if (creep.memory.role == Roles.pionner) {
+        //         if (this.roomNetwork.colony && this.roomNetwork.colony.target) {
+        //             const role = new Pioneer(creep, this.roomNetwork, this.roomNetwork.colony.target);
+        //             this.roles.push(role);
+        //         }
+        //     }
 
-            else if (creep.memory.role == Roles.test) {
-                const role = new Test1(creep, this.roomNetwork);
-                this.roles.push(role);
-            }
-        }
+        //     else if (creep.memory.role == Roles.test) {
+        //         const role = new Test1(creep, this.roomNetwork);
+        //         this.roles.push(role);
+        //     }
+        // }
 
         // _.forEach(this.roles, r => r.init());
     }
@@ -229,7 +227,7 @@ export class CreepController {
             }
         });
 
-        if (this.roomNetwork.mineSite && this.roomNetwork.mineSite.container) {
+        if (this.roomNetwork.mineSite && this.roomNetwork.mineSite.mineral.mineralAmount > 0) {
             needAmount++;
         }
 

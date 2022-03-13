@@ -51,6 +51,11 @@ export class Queen extends Role {
                 }
 
                 const target = Game.getObjectById(this.memory.transferTask.target as Id<Structure>);
+                if (!target) {
+                    this.logisticsNetwork.removeDoingJob(this);
+                    return;
+                }
+
                 if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
                     this.handleExtension();
                 } else if (target.structureType == STRUCTURE_LAB) {

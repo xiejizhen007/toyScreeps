@@ -55,7 +55,7 @@ export class RoomNetwork {
 
     constructor(room: Room) {
         this.room = room;
-        Global.roomNetworks[room.name] = this;
+        Kernal.roomNetworks[room.name] = this;
     }
 
     init(): void {
@@ -116,6 +116,8 @@ export class RoomNetwork {
         this.linkNetwork.work();
 
         this.clearUselessMemory();
+
+        this.logisticsNetwork.clearUselessJob();
     }
 
     private initMemory(): void {

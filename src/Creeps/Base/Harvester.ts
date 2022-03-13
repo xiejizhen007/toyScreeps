@@ -1,7 +1,6 @@
 import { Role } from "Creeps/Role";
 import { TaskType } from "Creeps/setting";
 import { Roles } from "Creeps/setups";
-import { Tasks } from "Tasks/Tasks";
 
 export class Harvester extends Role {
     init(): void {
