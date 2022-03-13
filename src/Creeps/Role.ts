@@ -1,7 +1,4 @@
-import { Global } from "Global/Global";
 import { RoomNetwork } from "Network/RoomNetwork";
-import { Task } from "Tasks/Task";
-import { initializeTask } from "Tasks/Tasks";
 
 export abstract class Role {
     roomNetwork: RoomNetwork;
@@ -25,8 +22,6 @@ export abstract class Role {
     store: StoreDefinition;
     ticksToLive: number;
 
-    private _task: Task | null;
-    
     constructor(creep: Creep, roomNetwork: RoomNetwork) {
         this.creep = creep;
         this.pos = creep.pos;
@@ -57,28 +52,6 @@ export abstract class Role {
         if (this.creep) {
             this.creep.memory.working = working;
         }
-    }
-
-    get task(): Task {
-        if (!this._task) {
-            this._task = this.memory.task ? initializeTask(this.memory.task) : null;
-        }
-
-        return this._task;
-    }
-
-    set task(task: Task | null) {
-        if (task) {
-            task.creep = this;
-        }
-
-        this.memory.task = task ? task.memory : null;
-
-        // if (task) {
-        //     task.creep = this;
-        // }
-
-        this._task = null;
     }
 
     abstract init(): void;

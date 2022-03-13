@@ -1,5 +1,4 @@
 import { Role } from "Creeps/Role";
-import { Global } from "Global/Global";
 import { CommandCenter } from "Network/CommandCenter";
 import { LinkNetwork } from "Network/LinkNetwork";
 import { Priority } from "setting";
@@ -20,7 +19,7 @@ export class King extends Role {
     work(): void {
         if (this.commandCenter) {
             this.handleLinkRequest();
-            this.handleTerminalRequest();
+            // this.handleTerminalRequest();
             this.moveToPos(this.commandCenter.pos);
             this.tempWork();
         }
@@ -105,16 +104,16 @@ export class King extends Role {
         return false;
     }
 
-    private handleTerminalRequest(): boolean {
-        const req = _.find(Global.terminalNetwork.memory.request, f => f.room == this.room.name && f.input == false);
-        if (req && this.room.terminal && this.room.terminal.my) {
-            this.commandCenter.transportNetwork.requestInput(this.room.terminal, Priority.Normal, {
-                resourceType: req.resourceType,
-                amount: req.amount
-            });
-            return true;
-        }
+    // private handleTerminalRequest(): boolean {
+    //     const req = _.find(Global.terminalNetwork.memory.request, f => f.room == this.room.name && f.input == false);
+    //     if (req && this.room.terminal && this.room.terminal.my) {
+    //         this.commandCenter.transportNetwork.requestInput(this.room.terminal, Priority.Normal, {
+    //             resourceType: req.resourceType,
+    //             amount: req.amount
+    //         });
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 }

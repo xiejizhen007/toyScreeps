@@ -1,6 +1,4 @@
-import { Global } from "Global/Global";
 import { Mem } from "Mem";
-import { Priority } from "setting";
 
 // global use
 export interface TerminalNetworkMemory {
@@ -30,8 +28,9 @@ export const TerminalNetworkMemoryDefault: TerminalNetworkMemory = {
     request: [],
 }
 
-export class TerminalNetwork {
+export class TerminalNetwork implements ITerminalNetwork {
     allTerminals: StructureTerminal[];
+    readyTerminals: StructureTerminal[];
     terminals: StructureTerminal[];
     memory: TerminalNetworkMemory;
 
@@ -40,8 +39,7 @@ export class TerminalNetwork {
         this.terminals = _.clone(terminals);
 
         // 注册 memory 并向全局注册本身
-        this.memory = Mem.wrap(Memory.global, 'terminalNetwork', TerminalNetworkMemoryDefault);
-        Global.terminalNetwork = this;
+        this.memory = Mem.wrap(Memory, 'terminalNetwork', TerminalNetworkMemoryDefault);
     }
 
     /**

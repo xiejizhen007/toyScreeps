@@ -1,4 +1,3 @@
-import { Global } from "Global/Global";
 import { Mem } from "Mem";
 import { Colony } from "./Colony";
 import { CommandCenter } from "./CommandCenter";
