@@ -29,7 +29,6 @@ export class UpgradeSite {
         if (this.link) {
             if (this.link.store[RESOURCE_ENERGY] <= 300) {
                 this.roomNetwork.linkNetwork.registerReceive(this.link);
-                // console.log('upgrade site register link');
             }
             
             return true;

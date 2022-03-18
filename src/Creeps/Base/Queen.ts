@@ -128,6 +128,18 @@ export class Queen extends Role {
                 } else {
                     this.goto(target);
                 }
+            } else if (request.resourceType == 'energy') {
+                // this.logisticsNetwork.removeDoingJob(this);
+                const sources = this.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+                if (sources && sources.resourceType == 'energy') {
+                    if (this.pos.isNearTo(sources)) {
+                        this.pickup(sources);
+                    } else {
+                        this.goto(sources);
+                    }
+                } else {
+                    this.logisticsNetwork.removeDoingJob(this);
+                }
             } else {
                 this.logisticsNetwork.removeDoingJob(this);
             }

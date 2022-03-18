@@ -35,12 +35,15 @@ export class King extends Role {
 
     private tempWork(): void {
         if (this.commandCenter.transportNetwork.haveInputRequest()) {
-            // console.log('transfer');
+            if (this.room.name == 'W17N54')
+                console.log('transfer');
             if (this.transferActions()) { return; }
         }
 
         if (this.commandCenter.transportNetwork.haveOutputRequest()) {
             // console.log('withdraw');
+            if (this.room.name == 'W17N54')
+                console.log('withdraw');
             if (this.withdrawActions()) { return; } 
         }
 
@@ -52,12 +55,20 @@ export class King extends Role {
         if (request) {
             // console.log('have transfer request');
             const amount = Math.min(request.amount, this.creep.store.getCapacity());
-            // console.log('amount: ' + amount);
+            if (this.room.name == 'W17N54') {
+                console.log('amount: ' + amount);
+                console.log('target: ' + request.target);
+            }
+                // console.log('target: ' + request.target);
             if (this.creep.store[request.resourceType] > 0) {
-                const ret = this.creep.transfer(request.target, request.resourceType, amount);
+                const ret = this.creep.transfer(request.target, request.resourceType, Math.min(amount, this.creep.store[request.resourceType]));
                 // console.log('ret: ' + ret);
             } else {
-                this.creep.withdraw(this.storage, request.resourceType, amount);
+                if (this.commandCenter.storage && this.commandCenter.storage.store[request.resourceType] >= amount) {
+                    this.creep.withdraw(this.commandCenter.storage, request.resourceType, amount);
+                } else if (this.commandCenter.terminal && this.commandCenter.terminal.store[request.resourceType] >= amount) {
+                    this.creep.withdraw(this.commandCenter.terminal, request.resourceType, amount);
+                }
             }
 
             return true;

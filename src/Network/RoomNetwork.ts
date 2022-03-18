@@ -155,10 +155,7 @@ export class RoomNetwork {
 
     private registerObjects(): void {
         this.spawns = this.room.spawns;
-        // this.extensions = this.room.extensions;
         this.extensions = _.filter(this.room.structures, f => f.structureType == STRUCTURE_EXTENSION) as StructureExtension[];
-
-        // console.log('roomNetwork ' + this.extensions.length);        
 
         this.storage = this.room.storage;
         this.terminal = this.room.terminal;
@@ -203,17 +200,6 @@ export class RoomNetwork {
             const extractor = mineral.pos.lookFor(LOOK_STRUCTURES).find(f => f.structureType == STRUCTURE_EXTRACTOR) as StructureExtractor;
             if (extractor) {
                 this.mineSite = new MineSite(this, mineral, extractor);
-            }
-        }
-
-        {
-            // const memory = Mem.wrap(this.memory, 'colony');
-            // if (memory) {
-            //     this.colony = new Colony(this, memory.target);
-            // }
-            const memory = Mem.get(this.memory, 'colony');
-            if (memory && memory.target) {
-                this.colony = new Colony(this, memory.target);
             }
         }
     }

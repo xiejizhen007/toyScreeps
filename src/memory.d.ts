@@ -23,7 +23,6 @@ interface CreepMemory {
     isNeeded: boolean;
     working?: boolean;
     tempTask?: TempTaskMemory;
-    task?: TaskMemory;
 
     transferTask?: {
         source: string;
@@ -31,6 +30,18 @@ interface CreepMemory {
 
         resourceType: ResourceConstant | 'all';
         amount?: number;
+    }
+
+    task?: {
+        type: string;       // 任务类型
+        source: string;     // 源 id，物流起源
+        target: string;     // 目标 id，物流目标或者是工作目标
+        pos: RoomPosition;  // 目标位置
+
+        data?: {
+            resourceType: ResourceConstant;
+            amount?: number;
+        };
     }
 
     _go?: {                 // 移动缓存
@@ -46,38 +57,6 @@ interface PowerCreepMemory {
 interface PowerCreepTaskMemory {
     type: PowerConstant;
     target?: Id<Structure<StructureConstant>>;
-}
-
-interface TaskMemory {
-    type: string;
-    
-    _creep: string;
-
-    _target: {
-        _id: string;
-        _pos: PosMemory;
-    };
-
-    _parent: TaskMemory | null;
-
-    tick: number;
-    options: TaskOptions;
-    data: TaskData;
-}
-
-interface TaskSettings {
-    range: number;
-    oneShot: boolean;
-    timeout: number;
-}
-
-interface TaskOptions {
-    nextPos?: PosMemory;
-}
-
-interface TaskData {
-    resourceType?: ResourceConstant;
-    amount?: number;
 }
 
 interface TempTaskMemory {

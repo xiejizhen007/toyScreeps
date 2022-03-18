@@ -141,4 +141,17 @@ export class Worker extends Role {
             return ERR_NOT_IN_RANGE;
         }
     }
+
+    // TODO:
+    // init(): void {
+
+    // }
+
+    // work(): void {
+
+    // }
+
+    // private updateTask(): void {
+        
+    // }
 }
