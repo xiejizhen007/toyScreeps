@@ -11,7 +11,7 @@ import { RoomNetwork } from "Network/RoomNetwork";
 /**
  * 全局对象，缓存对象
  */
-export class _Kernal implements IKernal {
+export class _Kernel implements IKernel {
     roles: { [creepName: string]: any; };
     roomNetworks: { [roomName: string]: any; };
     terminalNetwork: ITerminalNetwork;

@@ -27,7 +27,7 @@ type EnergyStructure =  StructureStorage
 
 
 
-interface IKernal {
+interface IKernel {
     roles: { [creepName: string]: any }             // Role
     roomNetworks: { [roomName: string]: any }        // RoomNetwork
 
@@ -41,7 +41,7 @@ interface IKernal {
     work(): void;
 }
 
-declare var Kernal: IKernal;
+declare var Kernel: IKernel;
 
 interface ITerminalNetwork {
     allTerminals: StructureTerminal[];

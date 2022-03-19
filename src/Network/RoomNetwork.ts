@@ -57,7 +57,7 @@ export class RoomNetwork {
 
     constructor(room: Room) {
         this.room = room;
-        Kernal.roomNetworks[room.name] = this;
+        Kernel.roomNetworks[room.name] = this;
     }
 
     init(): void {

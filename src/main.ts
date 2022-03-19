@@ -1,17 +1,17 @@
-import { _Kernal } from 'Global/Kernal';
+import { _Kernel } from 'Global/Kernel';
 import { errorMapper } from './modules/errorMapper'
 
 import './Prototypes/Mount';
 import './Global/mountGlobal'; 
 
 export const loop = errorMapper(() => {
-    global.Kernal = new _Kernal();
+    global.Kernel = new _Kernel();
 
-    Kernal.build();
+    Kernel.build();
 
     // Game loop
-    Kernal.init();
-    Kernal.work();
+    Kernel.init();
+    Kernel.work();
 
 
     console.log('loop');

@@ -39,8 +39,8 @@ export abstract class Role {
         this.store = creep.store;
         this.ticksToLive = creep.ticksToLive;
 
-        this.roomNetwork = Kernal.roomNetworks[creep.memory.room];
-        Kernal.roles[creep.name] = this;
+        this.roomNetwork = Kernel.roomNetworks[creep.memory.room];
+        Kernel.roles[creep.name] = this;
     }
 
     get isWorking(): boolean {
