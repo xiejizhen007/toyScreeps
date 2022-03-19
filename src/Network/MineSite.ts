@@ -41,6 +41,21 @@ export class MineSite {
             return true;
         }
 
+        if (this.container && this.mineral.mineralAmount == 0 && this.container.store.getUsedCapacity() > 0) {
+            if (this.roomNetwork.storage) {
+                for (const type in this.container.store) {
+                    this.roomNetwork.taskLists.requestCarry({
+                        source: this.container.id,
+                        target: this.roomNetwork.storage.id,
+                        resourceType: type as ResourceConstant,
+                        amount: this.container.store[type],
+                    });
+                }
+            }
+
+            return true;
+        }
+
         return false;
     }
 }
