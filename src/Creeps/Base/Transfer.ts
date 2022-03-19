@@ -1,73 +1,90 @@
 import { Role } from "Creeps/Role";
-import { TransportNetwork } from "Network/TransportNetwork";
+import { TaskLists } from "Network/TaskLists";
 
 /**
- * 负责将采集的能量送回中央
+ * 房间物流
  */
 export class Transfer extends Role {
-    transportNetwork: TransportNetwork;
+    taskLists: TaskLists;
 
     init(): void {
-        this.transportNetwork = this.roomNetwork.transportNetworkForTransfer;
-        this.getOutputTask();
+        this.taskLists = this.roomNetwork.taskLists;
+        
+        if (this.store.getFreeCapacity() == 0) {
+            this.isWorking = true;
+        } else if (this.store.getUsedCapacity() == 0) {
+            this.isWorking = false;
+        }
     }
 
     work(): void {
-        if (this.isWorking) {           // 去 output target 处取物质
-            this.handleOutputTask();
-        } else {                        // 送回中央
-            // if (this.creep.store.getUsedCapacity() == 0) {
-            //     this.isWorking = true;
-            // }
-
-            const storage = this.roomNetwork.storage;
-            const terminal = this.roomNetwork.terminal;
-
-            if (storage) {
-                if (this.creep.pos.isNearTo(storage)) {
-                    for (const resource in this.creep.store) {
-                        const resourceType = resource as ResourceConstant;
-                        this.creep.transfer(storage, resourceType);
-                        break;
-                    }
-                } else {
-                    this.creep.goto(storage.pos);
-                }
-            }
+        if (this.spawning) {
+            return;
         }
-    }
 
-    private getOutputTask(): void {
-        if (!this.isWorking && this.creep.store.getUsedCapacity() == 0) {
-            const req = this.transportNetwork.findHighPriorityOutputRequest(this.pos);
-            
-            if (req) {
-                this.creep.memory.tempTask = {
-                    type: 'transfer',
-                    target: req.target.id,
-                    targetPos: req.target.pos,
-                    resourceType: req.resourceType,
-                    amount: req.amount
+        if (this.ticksToLive < 20) {
+            this.clearBody();
+            return;
+        }
+
+        if (!this.memory.transferTask) {
+            this.roomNetwork.taskLists.findAGoodCarryJob(this);
+        }
+
+        if (this.memory.transferTask) {
+            const request = this.memory.transferTask;
+            if (request.resourceType != 'all' && this.store[request.resourceType] != this.store.getUsedCapacity()) {
+                // 清理自身
+                this.clearBody();
+                return;
+            }
+
+            if (this.isWorking) {
+                // 身上已经有足够的资源了，送去相应的 target 处
+                const target = Game.getObjectById(request.target as Id<Structure>) as StoreStructure;
+                if (!target) {
+                    console.log("err: 当前 creep: " +this.name + "目标丢失");
+                    this.roomNetwork.taskLists.removeDoingJob(this);
+                    return;
                 }
 
-                this.isWorking = true;
-            }
-        }
-    }
-
-    private handleOutputTask() {
-        const target = Game.getObjectById(this.creep.memory.tempTask.target as Id<StructureContainer>);
-        if (target) {
-            if (this.creep.pos.isNearTo(target)) {
-                const resourceType = this.creep.memory.tempTask.resourceType;
-                const amount = Math.min(this.creep.store.getFreeCapacity(), target.store[resourceType]);
-                const ret = this.creep.withdraw(target, resourceType, amount);
+                const amount = Math.min(this.store[request.resourceType], target.store.getFreeCapacity(request.resourceType as ResourceConstant));
+                const ret = this.transferTo(target, request.resourceType as ResourceConstant, amount);
                 if (ret == OK) {
-                    this.isWorking = false;
+                    this.roomNetwork.taskLists.removeDoingJob(this);
+                } else if (ret != ERR_NOT_IN_RANGE) {
+                    
+                } else {
+                    this.roomNetwork.taskLists.removeDoingJob(this);
                 }
             } else {
-                this.creep.goto(target.pos);
-                return ERR_NOT_IN_RANGE;
+                // 获取相应的资源
+                const source = Game.getObjectById(request.source as Id<Structure>) as StoreStructure;
+                const amount = Math.min(this.store.getFreeCapacity(), source.store[request.resourceType]);
+                const ret = this.withdrawFrom(source, request.resourceType as ResourceConstant, amount);
+                if (ret == OK) {
+                    this.isWorking = true;
+                } else if (ret == ERR_NOT_ENOUGH_RESOURCES) {
+                    this.roomNetwork.taskLists.removeDoingJob(this);
+                    this.isWorking = false;
+                }
+            }
+        } else {
+            this.clearBody();
+        }
+    }
+
+    /**
+     * 全身清理 
+     */
+    private clearBody() {
+        if (this.roomNetwork.storage) {
+            for (const type in this.store) {
+                const ret = this.transferTo(this.roomNetwork.storage, type as ResourceConstant);
+                if (ret == ERR_FULL) {
+                    this.drop(type as ResourceConstant);
+                }
+                break;
             }
         }
     }

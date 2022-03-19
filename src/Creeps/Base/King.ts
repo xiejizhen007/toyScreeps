@@ -3,6 +3,9 @@ import { CommandCenter } from "Network/CommandCenter";
 import { LinkNetwork } from "Network/LinkNetwork";
 import { Priority } from "setting";
 
+/**
+ * TODO: 记录当前的任务
+ */
 export class King extends Role {
     commandCenter: CommandCenter;
     linkNetwork: LinkNetwork;
@@ -19,7 +22,6 @@ export class King extends Role {
     work(): void {
         if (this.commandCenter) {
             this.handleLinkRequest();
-            // this.handleTerminalRequest();
             this.moveToPos(this.commandCenter.pos);
             this.tempWork();
         }
@@ -35,15 +37,10 @@ export class King extends Role {
 
     private tempWork(): void {
         if (this.commandCenter.transportNetwork.haveInputRequest()) {
-            if (this.room.name == 'W17N54')
-                console.log('transfer');
             if (this.transferActions()) { return; }
         }
 
         if (this.commandCenter.transportNetwork.haveOutputRequest()) {
-            // console.log('withdraw');
-            if (this.room.name == 'W17N54')
-                console.log('withdraw');
             if (this.withdrawActions()) { return; } 
         }
 
@@ -53,16 +50,21 @@ export class King extends Role {
     private transferActions(): boolean {
         const request = this.commandCenter.transportNetwork.findHighPriorityInputRequest(this.pos);
         if (request) {
-            // console.log('have transfer request');
-            const amount = Math.min(request.amount, this.creep.store.getCapacity());
-            if (this.room.name == 'W17N54') {
-                console.log('amount: ' + amount);
-                console.log('target: ' + request.target);
+            if (this.creep.store[request.resourceType] != this.creep.store.getUsedCapacity()) {
+                // this.creep.transfer(th)
+                for (const type in this.store) {
+                    if (type != request.resourceType) {
+                        this.creep.transfer(this.commandCenter.storage, type as ResourceConstant);
+                        break;
+                    }
+                }
+            
+                return true;
             }
-                // console.log('target: ' + request.target);
+
+            const amount = Math.min(request.amount, this.creep.store.getCapacity());
             if (this.creep.store[request.resourceType] > 0) {
                 const ret = this.creep.transfer(request.target, request.resourceType, Math.min(amount, this.creep.store[request.resourceType]));
-                // console.log('ret: ' + ret);
             } else {
                 if (this.commandCenter.storage && this.commandCenter.storage.store[request.resourceType] >= amount) {
                     this.creep.withdraw(this.commandCenter.storage, request.resourceType, amount);
@@ -80,9 +82,7 @@ export class King extends Role {
     private withdrawActions(): boolean {
         const request = this.commandCenter.transportNetwork.findHighPriorityOutputRequest(this.pos);
         if (request) {
-            // console.log('target: ' + request.target);
             const amount = Math.min(request.amount, this.creep.store.getCapacity());
-            // console.log('amount: ' + amount);
             if (this.creep.store[request.resourceType] < amount) {
                 const minAmount = Math.min(amount, this.creep.store.getFreeCapacity());
                 this.creep.withdraw(request.target, request.resourceType, minAmount);
@@ -114,17 +114,4 @@ export class King extends Role {
         
         return false;
     }
-
-    // private handleTerminalRequest(): boolean {
-    //     const req = _.find(Global.terminalNetwork.memory.request, f => f.room == this.room.name && f.input == false);
-    //     if (req && this.room.terminal && this.room.terminal.my) {
-    //         this.commandCenter.transportNetwork.requestInput(this.room.terminal, Priority.Normal, {
-    //             resourceType: req.resourceType,
-    //             amount: req.amount
-    //         });
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
 }

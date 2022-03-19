@@ -10,7 +10,14 @@ interface IReactionTable {
     [targetResourceType: string]: ResourceConstant[];
 }
 
-type StoreStructure = StructureStorage | StructureTerminal | StructureContainer | StructureLink;
+type StoreStructure = 
+    StructureStorage 
+    | StructureTerminal 
+    | StructureContainer 
+    | StructureLink
+    | StructureSpawn
+    | StructureExtension
+    | StructureLab
 
 type EnergyStructure =  StructureStorage 
                         | StructureTerminal

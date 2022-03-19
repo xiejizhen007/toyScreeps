@@ -11,6 +11,7 @@ import { MineSite } from "./MineSite";
 import { PowerCreepTaskQueue } from "./PowerCreepTaskQueue";
 import { SourceNetwork } from "./SourceNetwork";
 import { SpawnNetwork } from "./SpawnNetwork";
+import { TaskLists } from "./TaskLists";
 import { TransportNetwork } from "./TransportNetwork";
 import { UpgradeSite } from "./UpgradeSite";
 
@@ -46,6 +47,7 @@ export class RoomNetwork {
     commandCenter: CommandCenter;
 
     creepTasks: CreepTasks;     // creep task list
+    taskLists: TaskLists;
 
     // sourceNetworks: SourceNetwork[];
     sourceNetworks: {[name: Id<Source>]: SourceNetwork};
@@ -87,6 +89,7 @@ export class RoomNetwork {
 
         _.forEach(this.sourceNetworks, f => f.init());
 
+        this.taskLists.refresh();
     }
 
     work(): void {
@@ -202,5 +205,7 @@ export class RoomNetwork {
                 this.mineSite = new MineSite(this, mineral, extractor);
             }
         }
+
+        this.taskLists = new TaskLists(this);
     }
 }

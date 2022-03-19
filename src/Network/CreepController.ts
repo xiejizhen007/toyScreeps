@@ -231,6 +231,10 @@ export class CreepController {
             needAmount++;
         }
 
+        if (this.roomNetwork.taskLists.memory.lists.find(f => f.type == 'transfer')) {
+            needAmount++;
+        }
+
         if (needAmount > amount.length && Game.time % 3 == 0) {
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.transfer.default,

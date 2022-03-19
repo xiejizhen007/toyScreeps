@@ -147,7 +147,6 @@ export class LabCluster {
 
     private loadingLab(): void {
         // find target
-        this.getTarget();
         const [lab1, lab2] = this.reactionLabs;
         if (!lab1 || !lab2) {
             console.log('loadingLab: not reaction lab');
@@ -158,60 +157,53 @@ export class LabCluster {
         // request transport task
         const reaction = this.memory.reaction;
         if (reaction) {
-            // console.log('reaction: ' + reaction.lab1ResourceType + ' + ' + reaction.lab2ResourceType);
+            console.log('room ' + this.roomNetwork.room.name + 'reaction: ' + reaction.lab1ResourceType + ' + ' + reaction.lab2ResourceType);
             if (lab1.mineralType == reaction.lab1ResourceType && lab2.mineralType == reaction.lab2ResourceType) {
                 this.changeLabStateTo(LabState.working);
             } else {
                 if (!lab1.mineralType) {
-                    this.roomNetwork.transportNetwork.requestInput(lab1, Priority.NormalLow, {
-                        resourceType: reaction.lab1ResourceType,
-                        amount: this.requestLabAmount(lab1, reaction.lab1ResourceType),
-                    });
+                    const source = this.aGoodSource(reaction.lab1ResourceType);
+                    if (source) {
+                        this.roomNetwork.taskLists.requestCarry({
+                            source: source.id,
+                            target: lab1.id,
+                            resourceType: reaction.lab1ResourceType,
+                            amount: this.requestLabAmount(lab1, reaction.lab1ResourceType),
+                        });
+                    }
 
-                    this.roomNetwork.logisticsNetwork.registerTask({
-                        source: 'any',
-                        target: lab1.id,
-                        priority: Priority.Normal,
-
-                        resourceType: reaction.lab1ResourceType,
-                        amount: this.requestLabAmount(lab1, reaction.lab1ResourceType),
-                    });
                 } else if (!lab2.mineralType) {
-                    this.roomNetwork.transportNetwork.requestInput(lab2, Priority.NormalLow, {
-                        resourceType: reaction.lab2ResourceType,
-                        amount: this.requestLabAmount(lab2, reaction.lab2ResourceType),
-                    });
-                    
-                    this.roomNetwork.logisticsNetwork.registerTask({
-                        source: 'any',
-                        target: lab2.id,
-                        priority: Priority.Normal,
-
-                        resourceType: reaction.lab2ResourceType,
-                        amount: this.requestLabAmount(lab2, reaction.lab2ResourceType),
-                    });
+                    const source = this.aGoodSource(reaction.lab2ResourceType);
+                    if (source) {
+                        this.roomNetwork.taskLists.requestCarry({
+                            source: source.id,
+                            target: lab2.id,
+                            resourceType: reaction.lab2ResourceType,
+                            amount: this.requestLabAmount(lab2, reaction.lab2ResourceType),
+                        });
+                    }
                 } else if (lab1.mineralType != reaction.lab1ResourceType || lab2.mineralType != reaction.lab2ResourceType) {
                     this.changeLabStateTo(LabState.unloading);
                 }
             }
+        } else {
+            this.getTarget();
         }
     }
 
     private unloadingLab(): void {
-        const target = _.find(this.labs, f => f.mineralType);
-        if (target) {
-            // console.log('lab is unloading');
-            this.roomNetwork.transportNetwork.requestOutput(target, Priority.NormalLow, {
-                resourceType: target.mineralType
-            });
-
-            this.roomNetwork.logisticsNetwork.registerTask({
-                source: target.id,
-                target: 'any',
-                priority: Priority.Normal,
-
-                resourceType: target.mineralType,
-                amount: target.store[target.mineralType],
+        if (this.roomNetwork.room.name == 'W3N7') {
+            console.log("room " + this.roomNetwork.room.name + "unloading");
+        }
+        const sources = _.filter(this.labs, f => f.mineralType);
+        if (sources.length) {
+            sources.forEach(f => {
+                this.roomNetwork.taskLists.requestCarry({
+                    source: f.id,
+                    target: this.aGoodTarget().id,
+                    resourceType: f.mineralType,
+                    amount: f.store[f.mineralType]
+                });
             });
         } else {
             this.changeLabStateTo(LabState.loading);
@@ -267,5 +259,32 @@ export class LabCluster {
 
 
         this.memory.index++;
+    }
+
+    /**
+     * 返回 storage 或者 terminal
+     * @param resourceType 请求的资源类型
+     */
+    private aGoodSource(resourceType: ResourceConstant): StructureStorage | StructureTerminal {
+        if (this.roomNetwork.storage && this.roomNetwork.terminal) {
+            return this.roomNetwork.storage.store[resourceType] > this.roomNetwork.terminal.store[resourceType] ?
+                this.roomNetwork.storage : this.roomNetwork.terminal;
+        } else if (this.roomNetwork.storage) {
+            return this.roomNetwork.storage;
+        } else if (this.roomNetwork.terminal) {
+            return this.roomNetwork.terminal;
+        }
+
+        return null;
+    }
+
+    private aGoodTarget(): StructureStorage | StructureTerminal {
+        if (this.roomNetwork.storage) {
+            return this.roomNetwork.storage;
+        } else if (this.roomNetwork.terminal) {
+            return this.roomNetwork.terminal;
+        } 
+
+        return null;
     }
 }
