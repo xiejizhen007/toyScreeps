@@ -1,7 +1,6 @@
 import { Mem } from "Mem";
 import { Colony } from "./Colony";
 import { CommandCenter } from "./CommandCenter";
-import { CreepTasks } from "./CreepAPI";
 import { CreepController } from "./CreepController";
 import { DefenceNetwork } from "./DefenceNetwork";
 import { LabCluster } from "./LabCluster";
@@ -46,7 +45,6 @@ export class RoomNetwork {
     labCluster: LabCluster;
     commandCenter: CommandCenter;
 
-    creepTasks: CreepTasks;     // creep task list
     taskLists: TaskLists;
 
     // sourceNetworks: SourceNetwork[];

@@ -5,7 +5,7 @@ export class Pioneer extends Role {
     target: string;     // 目标房间号
 
     constructor(creep: Creep, roomNetwork: RoomNetwork, target: string) {
-        super(creep, roomNetwork);
+        super(creep);
         this.target = target;
     }
 

@@ -50,6 +50,7 @@ export class King extends Role {
     private transferActions(): boolean {
         const request = this.commandCenter.transportNetwork.findHighPriorityInputRequest(this.pos);
         if (request) {
+            console.log(this.room.name + ' have transfer task');
             if (this.creep.store[request.resourceType] != this.creep.store.getUsedCapacity()) {
                 // this.creep.transfer(th)
                 for (const type in this.store) {
@@ -61,15 +62,19 @@ export class King extends Role {
             
                 return true;
             }
+            
+            // console.log(this.room.name + ' should be transfer ');
 
             const amount = Math.min(request.amount, this.creep.store.getCapacity());
+            
+            console.log(this.room.name + ' resourceType: ' + request.resourceType + ' amount: ' + amount);
             if (this.creep.store[request.resourceType] > 0) {
                 const ret = this.creep.transfer(request.target, request.resourceType, Math.min(amount, this.creep.store[request.resourceType]));
             } else {
-                if (this.commandCenter.storage && this.commandCenter.storage.store[request.resourceType] >= amount) {
-                    this.creep.withdraw(this.commandCenter.storage, request.resourceType, amount);
-                } else if (this.commandCenter.terminal && this.commandCenter.terminal.store[request.resourceType] >= amount) {
-                    this.creep.withdraw(this.commandCenter.terminal, request.resourceType, amount);
+                if (this.commandCenter.storage && this.commandCenter.storage.store[request.resourceType] > 0) {
+                    this.creep.withdraw(this.commandCenter.storage, request.resourceType, Math.min(amount, this.commandCenter.storage.store[request.resourceType]));
+                } else if (this.commandCenter.terminal && this.commandCenter.terminal.store[request.resourceType] > 0) {
+                    this.creep.withdraw(this.commandCenter.terminal, request.resourceType, Math.min(amount, this.commandCenter.terminal.store[request.resourceType]));
                 }
             }
 
