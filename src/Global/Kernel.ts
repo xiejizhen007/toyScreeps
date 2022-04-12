@@ -7,6 +7,7 @@ import { Upgrader } from "Creeps/Base/Upgrader";
 import { Worker } from "Creeps/Base/Worker";
 import { Claimer } from "Creeps/Remote/Claimer";
 import { RoomNetwork } from "Network/RoomNetwork";
+import { TerminalNetwork } from "Network/TerminalNetwork";
 
 /**
  * 全局对象，缓存对象
@@ -26,12 +27,19 @@ export class _Kernel implements IKernel {
     }
 
     build(): void {
+        let terminals = [];
+
         for (const name in Game.rooms) {
             const room = Game.rooms[name];
             if (room && room.controller && room.controller.my) {
                 this.roomNetworks[name] = new RoomNetwork(room);
+                if (room.terminal) {
+                    terminals.push(room.terminal);
+                }
             }
         }
+
+        this.terminalNetwork = new TerminalNetwork(terminals);
 
         for (const creepName in Game.creeps) {
             const creep = Game.creeps[creepName];

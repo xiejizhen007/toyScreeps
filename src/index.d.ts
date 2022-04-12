@@ -47,6 +47,10 @@ interface ITerminalNetwork {
     allTerminals: StructureTerminal[];
     readyTerminals: StructureTerminal[];
 
+    memory: any;
+
     init(): void;
     work(): void;
+    
+    addRequest(room: string, resourceType: ResourceConstant, amount: number, input: boolean, buy: boolean): void;
 }

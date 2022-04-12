@@ -22,6 +22,7 @@ export class King extends Role {
     work(): void {
         if (this.commandCenter) {
             this.handleLinkRequest();
+            this.handleTerminalRequest();
             this.moveToPos(this.commandCenter.pos);
             this.tempWork();
         }
@@ -36,12 +37,12 @@ export class King extends Role {
     }
 
     private tempWork(): void {
-        if (this.commandCenter.transportNetwork.haveInputRequest()) {
-            if (this.transferActions()) { return; }
-        }
-
         if (this.commandCenter.transportNetwork.haveOutputRequest()) {
             if (this.withdrawActions()) { return; } 
+        }
+
+        if (this.commandCenter.transportNetwork.haveInputRequest()) {
+            if (this.transferActions()) { return; }
         }
 
         this.clearResource();
@@ -87,6 +88,17 @@ export class King extends Role {
     private withdrawActions(): boolean {
         const request = this.commandCenter.transportNetwork.findHighPriorityOutputRequest(this.pos);
         if (request) {
+            if (this.creep.store[request.resourceType] != this.creep.store.getUsedCapacity()) {
+                for (const type in this.store) {
+                    if (type != request.resourceType) {
+                        this.creep.transfer(this.commandCenter.storage, type as ResourceConstant);
+                        break;
+                    }
+                }
+            
+                return true;
+            }
+
             const amount = Math.min(request.amount, this.creep.store.getCapacity());
             if (this.creep.store[request.resourceType] < amount) {
                 const minAmount = Math.min(amount, this.creep.store.getFreeCapacity());
@@ -117,6 +129,27 @@ export class King extends Role {
             return true;
         }
         
+        return false;
+    }
+
+    private handleTerminalRequest(): boolean {
+        const req = _.find(Kernel.terminalNetwork.memory.request, f => f.room == this.room.name) as any;
+        if (req && this.room.terminal && this.room.terminal.my) {
+            if (req.input) {
+                this.commandCenter.transportNetwork.requestOutput(this.room.terminal, Priority.Normal, {
+                    resourceType: req.resourceType,
+                    amount: req.amount
+                });
+                return true;
+            } else {
+                this.commandCenter.transportNetwork.requestInput(this.room.terminal, Priority.Normal, {
+                    resourceType: req.resourceType,
+                    amount: req.amount
+                });
+                return true;
+            }
+        }
+
         return false;
     }
 }

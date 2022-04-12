@@ -49,16 +49,6 @@ interface CreepMemory {
     };
 }
 
-interface PowerCreepMemory {
-    workRoom: string;           // 所驻扎的房间名
-    task?: PowerCreepTaskMemory;    // 执行的任务
-}
-
-interface PowerCreepTaskMemory {
-    type: PowerConstant;
-    target?: Id<Structure<StructureConstant>>;
-}
-
 interface TempTaskMemory {
     type: string;
     target?: string;

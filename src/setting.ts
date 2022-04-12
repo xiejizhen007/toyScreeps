@@ -48,58 +48,58 @@ export const ReactionTable: IReactionTable = {
 
 export const ReactionTarget = [
     // attack
-    { target: "UH", amount: 3000},
-    { target: "UH2O", amount: 3000},
-    { target: "XUH2O", amount: 3000},
+    { target: "UH", amount: 5000},
+    { target: "UH2O", amount: 5000},
+    { target: "XUH2O", amount: 10000},
 
     // harvest
-    { target: "UO", amount: 3000},
-    { target: "UHO2", amount: 3000},
-    { target: "XUHO2", amount: 3000},
+    { target: "UO", amount: 5000},
+    { target: "UHO2", amount: 5000},
+    { target: "XUHO2", amount: 10000},
 
     // carry
-    { target: "KH", amount: 3000},
-    { target: "KH2O", amount: 3000},
-    { target: "XKH2O", amount: 3000},
+    { target: "KH", amount: 5000},
+    { target: "KH2O", amount: 5000},
+    { target: "XKH2O", amount: 10000},
     
     // ranged
-    { target: "KO", amount: 3000},
-    { target: "KHO2", amount: 3000},
-    { target: "XKHO2", amount: 3000},
+    { target: "KO", amount: 5000},
+    { target: "KHO2", amount: 5000},
+    { target: "XKHO2", amount: 10000},
 
     // build
-    { target: "LH", amount: 3000},
-    { target: "LH2O", amount: 3000},
-    { target: "XLH2O", amount: 3000},
+    { target: "LH", amount: 5000},
+    { target: "LH2O", amount: 5000},
+    { target: "XLH2O", amount: 10000},
     
     // heal
-    { target: "LO", amount: 3000},
-    { target: "LHO2", amount: 3000},
-    { target: "XLHO2", amount: 3000},
+    { target: "LO", amount: 5000},
+    { target: "LHO2", amount: 5000},
+    { target: "XLHO2", amount: 10000},
 
     // dismantle
-    { target: "ZH", amount: 3000},
-    { target: "ZH2O", amount: 3000},
-    { target: "XZH2O", amount: 3000},
+    { target: "ZH", amount: 5000},
+    { target: "ZH2O", amount: 5000},
+    { target: "XZH2O", amount: 10000},
 
     // move 
-    { target: "ZO", amount: 3000},
-    { target: "ZHO2", amount: 3000},
-    { target: "XZHO2", amount: 3000},
+    { target: "ZO", amount: 5000},
+    { target: "ZHO2", amount: 5000},
+    { target: "XZHO2", amount: 10000},
 
     // upgrade
-    { target: "GH", amount: 3000},
-    { target: "GH2O", amount: 3000},
-    { target: "XGH2O", amount: 3000},
+    { target: "GH", amount: 5000},
+    { target: "GH2O", amount: 5000},
+    { target: "XGH2O", amount: 10000},
     
     // tough
-    { target: "GO", amount: 3000},
-    { target: "GHO2", amount: 3000},
-    { target: "XGHO2", amount: 3000},
+    { target: "GO", amount: 5000},
+    { target: "GHO2", amount: 5000},
+    { target: "XGHO2", amount: 10000},
 
     // 基础化合物
-    { target: "OH", amount: 5000},
-    { target: "ZK", amount: 3000},
-    { target: "UL", amount: 3000},
+    { target: "OH", amount: 10000},
+    { target: "ZK", amount: 5000},
+    { target: "UL", amount: 5000},
     { target: "G", amount: 5000},
 ] as { target: ResourceConstant, amount: number}[];
