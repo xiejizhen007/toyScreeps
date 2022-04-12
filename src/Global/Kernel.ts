@@ -6,6 +6,7 @@ import { Transfer } from "Creeps/Base/Transfer";
 import { Upgrader } from "Creeps/Base/Upgrader";
 import { Worker } from "Creeps/Base/Worker";
 import { Claimer } from "Creeps/Remote/Claimer";
+import { Pioneer } from "Creeps/Remote/Pionner";
 import { RoomNetwork } from "Network/RoomNetwork";
 import { TerminalNetwork } from "Network/TerminalNetwork";
 
@@ -81,6 +82,16 @@ export class _Kernel implements IKernel {
                 const role = new Transfer(creep);
                 this.roles[creepName] = role;
             } 
+
+            else if (creep.memory.role == 'claimer') {
+                const role = new Claimer(creep);
+                this.roles[creepName] = role;
+            }
+
+            else if (creep.memory.role == 'pioneer') {
+                const role = new Pioneer(creep);
+                this.roles[creepName] = role;
+            }
         }
     }
 

@@ -204,6 +204,11 @@ export class RoomNetwork {
             }
         }
 
+        const colonyMem = Mem.get(this.memory, 'colony');
+        if (colonyMem) {
+            this.colony = new Colony(this, colonyMem.target);
+        }
+
         this.taskLists = new TaskLists(this);
     }
 }

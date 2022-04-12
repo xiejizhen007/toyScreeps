@@ -1,5 +1,14 @@
+import { Mem } from "Mem";
+
 global.registerClaimRoom = function(origin: string, target: string) {
     // Global.registerClaimRoom(origin, target);
+    const roomNetwork = Kernel.roomNetworks[origin];
+    if (roomNetwork) {
+        roomNetwork.memory = Mem.wrap(roomNetwork.memory, 'colony', {
+            origin: origin,
+            target: target,
+        });
+    }
 }
 
 global.terminal_addRequest = function(room: string, resourceType: ResourceConstant, amount: number, input = false) {

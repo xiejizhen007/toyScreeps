@@ -34,6 +34,10 @@ export class PowerCreepTaskQueue {
     push(task: PowerCreepTaskType) {
         this.memory.queue.push(task);
     }
+        
+    empty(): boolean {
+        return this.memory.queue.length == 0;
+    }
 
     front(): PowerCreepTaskType {
         return this.memory.queue[0];

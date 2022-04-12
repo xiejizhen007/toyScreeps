@@ -4,10 +4,9 @@ import { RoomNetwork } from "Network/RoomNetwork";
 export class Pioneer extends Role {
     target: string;     // 目标房间号
 
-    constructor(creep: Creep, roomNetwork: RoomNetwork, target: string) {
-        super(creep);
-        this.target = target;
-    }
+    // constructor(creep: Creep) {
+    //     super(creep);
+    // }
 
     init(): void {
         if (this.creep.store.getFreeCapacity() == 0) {
@@ -18,6 +17,15 @@ export class Pioneer extends Role {
     }
 
     work(): void {
+        if (!this.roomNetwork.colony) {
+            // console.log('no colony');
+            return;
+        }
+
+        this.target = this.roomNetwork.colony.target;
+        // console.log('target: ' + this.target);
+        
+
         this.moveExit(this);
 
         if (!this.inTargetRoom(this)) {
@@ -29,7 +37,8 @@ export class Pioneer extends Role {
             if (this.buildAction(this)) {}
             else if (this.upgradeAction(this)) {}
         } else {
-            this.harvestInTargetRoom(this);
+            if (this.withdrawFromStructure(this)) {}
+            else this.harvestInTargetRoom(this);
         }
     }
 
@@ -39,6 +48,17 @@ export class Pioneer extends Role {
 
     private inTargetRoom(creep: Role) {
         return creep.pos.roomName == this.target;
+    }
+
+    private withdrawFromStructure(creep: Role) {
+        if (this.room.storage && this.room.storage.store['energy'] > 0) {
+            const amount = Math.min(this.store.getFreeCapacity(), this.room.storage.store['energy']);
+            this.withdrawFrom(this.room.storage, 'energy', amount);
+        
+            return true;
+        }
+
+        return false;
     }
 
     private harvestInTargetRoom(creep: Role) {

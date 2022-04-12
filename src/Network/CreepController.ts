@@ -267,9 +267,9 @@ export class CreepController {
             });
 
             const room = Game.rooms[this.roomNetwork.colony.target];
-            const haveSpawn = room ? room.spawns.length > 0 && room.spawns[0].my : false;
+            // const haveSpawn = room ? room.spawns.length > 0 && room.spawns[0].my : false;
 
-            if (!target && !haveSpawn) {
+            if (!target) {
                 if (Game.time % 3 == 0) {
                     this.roomNetwork.spawnNetwork.registerCreep({
                         setup: Setups.pioneer.default,
