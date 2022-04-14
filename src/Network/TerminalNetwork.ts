@@ -1,6 +1,25 @@
 import { Mem } from "Mem";
 
-// global use
+// terminal 资源请求的接口
+export interface ITerminalRequest {
+    room: string;
+    resourceType: ResourceConstant;
+    amount: number;
+    input: boolean;         // 获取 true，送出 false
+    tick: number;           // 设置超时
+    buy: boolean;           // 是否允许购买
+    state: {
+        startAmount: number;        // 发出请求时特定资源的数量
+        targetAmount: number;       // 目的数量
+    }
+}
+
+// 每一个房间的基础矿物
+export interface ITerminalMineral {
+    room: string;
+    mineralType: ResourceConstant;
+}
+
 export interface TerminalNetworkMemory {
     queue: {
             origin: string;
@@ -9,30 +28,28 @@ export interface TerminalNetworkMemory {
             amount: number;
     }[];
 
-    request: {
-        room: string;
-        resourceType: ResourceConstant;
-        amount: number;
-        input: boolean;         // 获取 true，送出 false
-        tick: number;           // 设置超时
-        buy: boolean;           // 是否允许购买
-        state: {
-            startAmount: number;        // 发出请求时特定资源的数量
-            targetAmount: number;       // 目的数量
-        }
-    }[];
+    request: ITerminalRequest[];
+
+    minerals: ITerminalMineral[];
 }
 
 export const TerminalNetworkMemoryDefault: TerminalNetworkMemory = {
     queue: [],
     request: [],
+    minerals: [],
 }
 
 export class TerminalNetwork implements ITerminalNetwork {
     allTerminals: StructureTerminal[];
     readyTerminals: StructureTerminal[];
     terminals: StructureTerminal[];
+
+    requests: ITerminalRequest[];
+    minerals: ITerminalMineral[];
+
     memory: TerminalNetworkMemory;
+
+    private TIMEOUT = 5000;
 
     constructor(terminals: StructureTerminal[]) {
         this.allTerminals = _.clone(terminals);
@@ -46,22 +63,33 @@ export class TerminalNetwork implements ITerminalNetwork {
      * 清除请求
      */
     init(): void {
+        this.requests = this.memory.request;
+        this.minerals = this.memory.minerals;
+
         this.memory.request = _.filter(this.memory.request, f => {
+            if (f.tick + this.TIMEOUT > Game.time) {
+                return false;
+            }
+
             const terminal = Game.rooms[f.room].terminal;
             if (terminal) {
                 if (f.input) {
-                    return terminal.store[f.resourceType] > f.state.targetAmount;
-                } else {
                     return terminal.store[f.resourceType] < f.state.targetAmount;
+                } else {
+                    return terminal.store[f.resourceType] > f.state.targetAmount;
                 }
             }
 
-            return false;
         });
     }
 
     work(): void {
         
+    }
+
+    finish(): void {
+        this.memory.request = this.requests;
+        this.memory.minerals = this.minerals;
     }
 
     addResourceShared(room: string, resourceType: ResourceConstant, amount: number) {
@@ -71,6 +99,9 @@ export class TerminalNetwork implements ITerminalNetwork {
     addRequest(room: string, resourceType: ResourceConstant, amount: number, input = true, buy = true) {
         const req = _.find(this.memory.request, f => f.room == room && f.resourceType == resourceType);
         if (!req && Game.rooms[room].terminal) {
+            const startAmount = Game.rooms[room].terminal.store[resourceType];
+            const targetAmount = input ? amount : -amount;
+
             this.memory.request.push({
                 room: room,
                 resourceType: resourceType,
@@ -79,52 +110,14 @@ export class TerminalNetwork implements ITerminalNetwork {
                 tick: Game.time, 
                 buy: buy,
                 state: {
-                    startAmount: Game.rooms[room].terminal.store[resourceType],
-                    targetAmount: Game.rooms[room].terminal.store[resourceType] + amount,
+                    startAmount: startAmount,
+                    targetAmount: startAmount + targetAmount,
                 },
             });
         }
     }
 
     removeRequest(room: string, resourceType: ResourceConstant) {
-        const req = _.find(this.memory.request, f => f.room == room && f.resourceType == resourceType);
+        _.remove(this.memory.request, f => f.room == room && f.resourceType == resourceType);
     }
-
-    // avgTerminalResource(room: string) {
-    //     const roomNetwork = Global.roomNetworks[room];
-    //     if (!roomNetwork) {
-    //         return;
-    //     }
-
-    //     const storage = roomNetwork.storage;
-    //     const terminal = roomNetwork.terminal;
-
-    //     if (storage && terminal) {
-    //         for (const resource in terminal.store) {
-    //             const resourceType = resource as ResourceConstant;
-    //             const terminalAmount = terminal.store[resourceType];
-    //             const storageAmount = storage.store[resourceType];
-
-    //             if (resourceType == 'energy') {
-    //                 if (terminalAmount < 50000 && terminalAmount + storageAmount > 50000) {
-    //                     roomNetwork.commandCenter.transportNetwork.requestInput(terminal, Priority.Normal, {
-    //                         resourceType: resourceType,
-    //                         amount: 50000 - terminalAmount
-    //                     });
-
-    //                     break;
-    //                 }
-    //             } else {
-    //                 if (terminalAmount < 3000 && terminalAmount + storageAmount > 3000) {
-    //                     roomNetwork.commandCenter.transportNetwork.requestInput(terminal, Priority.Normal, {
-    //                         resourceType: resourceType,
-    //                         amount: 3000 - terminalAmount
-    //                     });
-
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 }

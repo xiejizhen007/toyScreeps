@@ -21,14 +21,22 @@ export class PCOperator {
             return;
         }
 
+        // if (this.creep.powers[PWR_GENERATE_OPS].cooldown == 0) {
+        //     this.creep.usePower(PWR_GENERATE_OPS);
+        // }
+
         // console.log("roomNetwork " + this.roomNetwork);
         // console.log("roomNetwork " + this.roomNetwork.pcTaskSystem);
         const task = this.roomNetwork.pcTaskSystem.requests[0];
         if (task) {
             const target = Game.getObjectById(task.target as Id<Structure> | Id<Source>);
             if (target) {
-                if (this.creep.usePower(task.type, target) == ERR_NOT_IN_RANGE) {
+                const ret = this.creep.usePower(task.type, target);
+                    
+                if (ret == ERR_NOT_IN_RANGE) {
                     this.creep.moveTo(target);
+                } else if (ret == OK) {
+                    this.roomNetwork.pcTaskSystem.requests.shift();
                 }
             }
         }

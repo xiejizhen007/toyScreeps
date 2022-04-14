@@ -39,18 +39,19 @@ export class Harvester extends Role {
                 return;
             }
 
-            if (this.creep.store.getFreeCapacity() == 0) {
+            const amount = this.creep.getActiveBodyparts('work') * 2;
+
+            if (this.creep.store.getFreeCapacity() < amount) {
                 if (sourceNetwork.link) {
                     if (this.creep.pos.isNearTo(sourceNetwork.link)) {
                         this.creep.transfer(sourceNetwork.link, RESOURCE_ENERGY);
                     } else {
                         this.creep.goto(sourceNetwork.link.pos);
+                        return;
                     }
-                
-                    return;
+                } else {
+                    this.creep.drop(RESOURCE_ENERGY);
                 }
-
-                this.creep.drop(RESOURCE_ENERGY);
             } 
 
             if (this.creep.pos.isNearTo(source)) {

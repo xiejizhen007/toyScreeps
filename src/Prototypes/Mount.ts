@@ -1,6 +1,5 @@
 import './Room';
 import './Creep';
-import './PowerCreep';
 import './RoomPosition';
 import { CreepExtension } from './Creep';
 

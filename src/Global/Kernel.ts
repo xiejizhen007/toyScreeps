@@ -7,6 +7,7 @@ import { Upgrader } from "Creeps/Base/Upgrader";
 import { Worker } from "Creeps/Base/Worker";
 import { Claimer } from "Creeps/Remote/Claimer";
 import { Pioneer } from "Creeps/Remote/Pionner";
+import { Market } from "Network/Market";
 import { RoomNetwork } from "Network/RoomNetwork";
 import { TerminalNetwork } from "Network/TerminalNetwork";
 import { PCOperator } from "PowerCreeps/PCOperator";
@@ -18,7 +19,9 @@ export class _Kernel implements IKernel {
     roles: { [creepName: string]: any; };
     roomNetworks: { [roomName: string]: any; };
     powerCreeps: { [creepName: string]: any; };
+
     terminalNetwork: ITerminalNetwork;
+    market: IMarket;
 
     constructor() {
         // 构建对象
@@ -104,6 +107,8 @@ export class _Kernel implements IKernel {
                 this.powerCreeps[creepName] = operator;
             }
         }
+
+        this.market = new Market();
     }
 
     refresh(): void {
@@ -144,6 +149,10 @@ export class _Kernel implements IKernel {
         if (this.terminalNetwork) {
             this.terminalNetwork.init();
         }
+
+        if (this.market) {
+            this.market.init();
+        }
     }
 
     work(): void {
@@ -174,6 +183,10 @@ export class _Kernel implements IKernel {
         if (this.terminalNetwork) {
             this.terminalNetwork.work();
         }
+
+        if (this.market) {
+            this.market.work();
+        }
     }
 
     finish(): void {
@@ -183,6 +196,14 @@ export class _Kernel implements IKernel {
             } else {
                 delete this.roles[name];
             }
+        }
+
+        if (this.terminalNetwork) {
+            this.terminalNetwork.finish();
+        }
+
+        if (this.market) {
+            this.market.finish();
         }
     }
 }

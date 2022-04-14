@@ -88,17 +88,19 @@ export class CommandCenter {
                     });
                 } else if (this.powerSpawn.store['power'] <= 2) {
                     if (powerAmount <= 100) {
-                        const orders = Game.market.getAllOrders({
-                            type: ORDER_SELL,
-                            resourceType: 'power',
-                        });
+                        // const orders = Game.market.getAllOrders({
+                        //     type: ORDER_SELL,
+                        //     resourceType: 'power',
+                        // });
 
-                        const sortOrders = _.sortBy(orders, o => o.price);
-                        if (sortOrders.length > 0) {
-                            const amount = Math.min(sortOrders[0].amount, 3000, this.terminal.store.getFreeCapacity());
-                            Game.market.deal(sortOrders[0].id, amount, this.roomNetwork.room.name);
-                            console.log('buy power amount: ' + amount);
-                        }
+                        // const sortOrders = _.sortBy(orders, o => o.price);
+                        // if (sortOrders.length > 0) {
+                        //     const amount = Math.min(sortOrders[0].amount, 3000, this.terminal.store.getFreeCapacity());
+                        //     Game.market.deal(sortOrders[0].id, amount, this.roomNetwork.room.name);
+                        //     console.log('buy power amount: ' + amount);
+                        // }
+                        
+                        Kernel.market.buy(this.roomNetwork.name, 'power', 3000);
                     }
 
                     this.transportNetwork.requestInput(this.powerSpawn, Priority.NormalLow, {

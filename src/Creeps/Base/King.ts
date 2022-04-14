@@ -135,13 +135,15 @@ export class King extends Role {
     private handleTerminalRequest(): boolean {
         const req = _.find(Kernel.terminalNetwork.memory.request, f => f.room == this.room.name) as any;
         if (req && this.room.terminal && this.room.terminal.my) {
-            if (req.input) {
+            if (!req.input) {
+                console.log('terminal output');
                 this.commandCenter.transportNetwork.requestOutput(this.room.terminal, Priority.Normal, {
                     resourceType: req.resourceType,
                     amount: req.amount
                 });
                 return true;
             } else {
+                console.log('terminal input');
                 this.commandCenter.transportNetwork.requestInput(this.room.terminal, Priority.Normal, {
                     resourceType: req.resourceType,
                     amount: req.amount

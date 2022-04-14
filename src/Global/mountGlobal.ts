@@ -11,18 +11,20 @@ global.registerClaimRoom = function(origin: string, target: string) {
     }
 }
 
-global.terminal_addRequest = function(room: string, resourceType: ResourceConstant, amount: number, input = false) {
-    // Global.terminalResourceRequest(room, resourceType, amount, input);
-    Kernel.terminalNetwork.addRequest(room, resourceType, amount, input, false);
+global.terminal_addRequest = function(room: string, resourceType: ResourceConstant, amount: number, input = true, buy = true) {
+    Kernel.terminalNetwork.addRequest(room, resourceType, amount, input, buy);
 }
 
 global.terminal_rmRequest = function(room: string, resourceType: ResourceConstant) {
-    // Global.terminalNetwork.removeRequest(room, resourceType);
+    Kernel.terminalNetwork.removeRequest(room, resourceType);
 }
 
+global._buy = function(room: string, resourceType: ResourceConstant, amount: number, fast: boolean = true) {
+    return Kernel.market.buy(room, resourceType, amount, fast);
+}
 
-global.market_sell = function(room: string, resourceType: ResourceConstant, amount: number) {
-    // Global.marketSell(room, resourceType, amount);
+global._sell = function(room: string, resourceType: ResourceConstant, amount: number, fast: boolean = true) {
+    return Kernel.market.sell(room, resourceType, amount, fast);
 }
 
 /**

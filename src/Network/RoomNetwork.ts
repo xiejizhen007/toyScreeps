@@ -180,6 +180,7 @@ export class RoomNetwork {
 
         // this.links = this.room.links;
         // this.towers = this.room.towers;
+        this.towers = _.filter(this.structures, f => f.structureType == STRUCTURE_TOWER) as StructureTower[];
         this.links = _.filter(this.structures, f => f.structureType == STRUCTURE_LINK) as StructureLink[];
         this.labs = _.filter(this.structures, f => f.structureType == STRUCTURE_LAB) as StructureLab[];
         this.containers = _.filter(this.structures, f => f.structureType == STRUCTURE_CONTAINER) as StructureContainer[];

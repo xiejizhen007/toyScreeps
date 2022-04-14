@@ -30,7 +30,7 @@ export class LogisticsSystem {
     findHighPriorityTask(): LogisticsSystemRequest {
         for (const priority in Priority) {
             if (this.requests[priority].length > 0) {
-                return this.requests[priority][0];
+                return this.requests[priority].shift();
             }
         }
 

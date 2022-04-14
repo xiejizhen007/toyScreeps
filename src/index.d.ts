@@ -1,13 +1,10 @@
-// interface CreepBodySetup {
-//     body: BodyPartConstant[];       // 基础的部件
-//     limit: number;                  // 总部件等于基础部件的 n 倍
-//     ordered?: boolean;              // 是否按顺序 [MOVE, MOVE, CARRY, CARRY] => [MOVE, CARRY, MOVE, CARRY]
-//     head?: BodyPartConstant[];      // 在基础部件上添加头部部件，如 tough
-//     tail?: BodyPartConstant[];      // 在基础部件上添加尾部部件，如 move, heal
-// }
-
+// lab 反应表
 interface IReactionTable {
     [targetResourceType: string]: ResourceConstant[];
+}
+
+interface IFactoryTopProduceTable {
+    [ level: number]: ResourceConstant[];
 }
 
 type StoreStructure = 
@@ -32,6 +29,7 @@ interface IKernel {
     roomNetworks: { [roomName: string]: any }        // RoomNetwork
     powerCreeps: { [creepName: string]: any }       // powerCreep
     terminalNetwork: ITerminalNetwork;
+    market: IMarket;
 
     build(): void;
     refresh(): void;
@@ -51,6 +49,19 @@ interface ITerminalNetwork {
 
     init(): void;
     work(): void;
+    finish(): void;
     
-    addRequest(room: string, resourceType: ResourceConstant, amount: number, input: boolean, buy: boolean): void;
+    addRequest(room: string, resourceType: ResourceConstant, amount: number, input?: boolean, buy?: boolean): void;
+    removeRequest(room: string, resourceType: ResourceConstant);
+}
+
+interface IMarket {
+    memory: any;        // 订单 cache
+
+    init(): void;
+    work(): void;
+    finish(): void;
+
+    buy(room: string, resourceType: ResourceConstant, amount: number, fast?: boolean): number;
+    sell(room: string, resourceType: ResourceConstant, amount: number, fast?: boolean): number;
 }
