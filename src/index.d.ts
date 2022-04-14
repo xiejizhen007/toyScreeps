@@ -7,23 +7,6 @@ interface IFactoryTopProduceTable {
     [ level: number]: ResourceConstant[];
 }
 
-type StoreStructure = 
-    StructureStorage 
-    | StructureTerminal 
-    | StructureContainer 
-    | StructureLink
-    | StructureSpawn
-    | StructureExtension
-    | StructureLab
-
-type EnergyStructure =  StructureStorage 
-                        | StructureTerminal
-                        | StructureContainer 
-                        | StructureLink;
-
-
-
-
 interface IKernel {
     roles: { [creepName: string]: any }             // Role
     roomNetworks: { [roomName: string]: any }        // RoomNetwork
@@ -52,7 +35,7 @@ interface ITerminalNetwork {
     finish(): void;
     
     addRequest(room: string, resourceType: ResourceConstant, amount: number, input?: boolean, buy?: boolean): void;
-    removeRequest(room: string, resourceType: ResourceConstant);
+    removeRequest(room: string, resourceType: ResourceConstant): void;
 }
 
 interface IMarket {

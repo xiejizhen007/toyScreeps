@@ -77,6 +77,10 @@ export class Queen extends Role {
         }
     }
 
+    finish(): void {
+
+    }
+
     // 死亡处理，扔掉手上的任务
     private tickToDie() {
         this.transferToCenter();

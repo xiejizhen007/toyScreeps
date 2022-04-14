@@ -14,4 +14,8 @@ export class Reserver extends Role {
     work(): void {
 
     }
+
+    finish(): void {
+
+    }
 }

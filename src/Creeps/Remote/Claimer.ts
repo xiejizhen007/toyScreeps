@@ -38,6 +38,10 @@ export class Claimer extends Role {
         }
     }
 
+    finish(): void {
+
+    }
+
     private gotoTargetRoom(creep: Role) {
         return creep.goto(new RoomPosition(25, 25, this.target));
     }

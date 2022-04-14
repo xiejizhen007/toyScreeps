@@ -99,9 +99,9 @@ export class CreepController {
         this.spawnClaimer();
         this.spawnPioneer();
 
-        // if (this.roomNetwork.room.name == 'W15N59' || this.roomNetwork.room.name == 'W3N7') {
-        //     this.spawnTest();
-        // }
+        if (this.roomNetwork.room.name == 'W15N59') {
+            // this.spawnTest();
+        }
         // _.forEach(this.roles, r => r.work());
     }
 

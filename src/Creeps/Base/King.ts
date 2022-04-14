@@ -28,6 +28,10 @@ export class King extends Role {
         }
     }
 
+    finish(): void {
+
+    }
+
     private moveToPos(pos: RoomPosition): void {
         if (this.creep.pos.isEqualTo(pos)) {
             return;

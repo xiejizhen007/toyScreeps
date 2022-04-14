@@ -22,6 +22,10 @@ export class Worker extends Role {
         if (this.upgradeAction()) { return; }
     }
 
+    finish(): void {
+
+    }
+
     private registerObjects(): void {
         this.constructionSites = this.roomNetwork.constructionSites;
     }

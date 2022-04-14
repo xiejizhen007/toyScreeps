@@ -2,6 +2,7 @@ import { Harvester } from "Creeps/Base/Harvester";
 import { King } from "Creeps/Base/King";
 import { Miner } from "Creeps/Base/Miner";
 import { Queen } from "Creeps/Base/Queen";
+import { TestTransfer } from "Creeps/Base/Test";
 import { Transfer } from "Creeps/Base/Transfer";
 import { Upgrader } from "Creeps/Base/Upgrader";
 import { Worker } from "Creeps/Base/Worker";
@@ -97,6 +98,10 @@ export class _Kernel implements IKernel {
             else if (creep.memory.role == 'pioneer') {
                 const role = new Pioneer(creep);
                 this.roles[creepName] = role;
+            }
+
+            else if (creep.memory.role == 'test') {
+                this.roles[creepName] = new TestTransfer(creep);
             }
         }
 

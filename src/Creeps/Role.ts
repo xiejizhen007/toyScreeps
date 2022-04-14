@@ -55,6 +55,7 @@ export abstract class Role {
 
     abstract init(): void;
     abstract work(): void;
+    abstract finish(): void;
 
     // role 的具体动作
 

@@ -6,6 +6,7 @@ import { DefenceNetwork } from "./DefenceNetwork";
 import { LabCluster } from "./LabCluster";
 import { LinkNetwork } from "./LinkNetwork";
 import { LogisticsNetwork } from "./LogisticsNetwork";
+import { LogisticsSystem } from "./LogisticsSystem";
 import { MineSite } from "./MineSite";
 import { PCTaskSystem } from "./PCTaskSystem";
 import { SourceNetwork } from "./SourceNetwork";
@@ -45,6 +46,7 @@ export class RoomNetwork {
     transportNetwork: TransportNetwork;             // queen
     transportNetworkForTransfer: TransportNetwork;  // transfer
     logisticsNetwork: LogisticsNetwork;
+    logisticsSystem: LogisticsSystem;
     labCluster: LabCluster;
     commandCenter: CommandCenter;
 
@@ -196,6 +198,7 @@ export class RoomNetwork {
         this.transportNetwork = new TransportNetwork();
         this.transportNetworkForTransfer = new TransportNetwork();
         this.logisticsNetwork = new LogisticsNetwork(this);
+        this.logisticsSystem = new LogisticsSystem();
         
         if (this.storage && this.storage.my) {
             this.commandCenter = new CommandCenter(this, this.storage);

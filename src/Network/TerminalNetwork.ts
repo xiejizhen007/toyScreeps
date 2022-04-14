@@ -14,29 +14,18 @@ export interface ITerminalRequest {
     }
 }
 
-// 每一个房间的基础矿物
-export interface ITerminalMineral {
-    room: string;
-    mineralType: ResourceConstant;
+export interface ITerminalShared {
+    [resourceType: string]: string[];
 }
 
 export interface TerminalNetworkMemory {
-    queue: {
-            origin: string;
-            target: string;
-            resourceType: ResourceConstant;
-            amount: number;
-    }[];
-
     request: ITerminalRequest[];
-
-    minerals: ITerminalMineral[];
+    shareds: ITerminalShared;
 }
 
 export const TerminalNetworkMemoryDefault: TerminalNetworkMemory = {
-    queue: [],
     request: [],
-    minerals: [],
+    shareds: {},
 }
 
 export class TerminalNetwork implements ITerminalNetwork {
@@ -45,11 +34,11 @@ export class TerminalNetwork implements ITerminalNetwork {
     terminals: StructureTerminal[];
 
     requests: ITerminalRequest[];
-    minerals: ITerminalMineral[];
+    shareds: ITerminalShared;
 
     memory: TerminalNetworkMemory;
 
-    private TIMEOUT = 5000;
+    private TIMEOUT = 1000;
 
     constructor(terminals: StructureTerminal[]) {
         this.allTerminals = _.clone(terminals);
@@ -64,7 +53,7 @@ export class TerminalNetwork implements ITerminalNetwork {
      */
     init(): void {
         this.requests = this.memory.request;
-        this.minerals = this.memory.minerals;
+        this.shareds = this.memory.shareds;
 
         this.memory.request = _.filter(this.memory.request, f => {
             if (f.tick + this.TIMEOUT > Game.time) {
@@ -89,11 +78,27 @@ export class TerminalNetwork implements ITerminalNetwork {
 
     finish(): void {
         this.memory.request = this.requests;
-        this.memory.minerals = this.minerals;
+        this.memory.shareds = this.shareds;
     }
 
-    addResourceShared(room: string, resourceType: ResourceConstant, amount: number) {
-        
+    /**
+     * 声明当前可以分享某一类资源
+     * @param room 分享资源的房间
+     * @param resourceType 类型
+     */
+    addResourceShared(room: string, resourceType: ResourceConstant) {
+        if (!_.find(this.shareds, f => f.includes(room))) {
+            this.shareds[resourceType].push(room);
+        }
+    }
+
+    /**
+     * 某一房间取消物资分享
+     * @param room 
+     * @param resourceType 
+     */
+    removeResourceShared(room: string, resourceType: ResourceConstant) {
+        _.remove(this.shareds[resourceType], f => f == room);
     }
 
     addRequest(room: string, resourceType: ResourceConstant, amount: number, input = true, buy = true) {

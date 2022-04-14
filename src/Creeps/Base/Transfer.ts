@@ -1,5 +1,6 @@
 import { Role } from "Creeps/Role";
 import { TaskLists } from "Network/TaskLists";
+import { StoreStructure } from "types";
 
 /**
  * 房间物流
@@ -72,6 +73,10 @@ export class Transfer extends Role {
         } else {
             this.clearBody();
         }
+    }
+
+    finish(): void {
+
     }
 
     /**

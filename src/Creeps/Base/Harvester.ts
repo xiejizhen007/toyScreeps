@@ -65,4 +65,8 @@ export class Harvester extends Role {
             }
         }
     }
+
+    finish(): void {
+
+    }
 }

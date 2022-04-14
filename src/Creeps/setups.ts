@@ -117,7 +117,7 @@ export const Setups = {
     test: {
         default: new CreepSetup(Roles.test, {
             body: [CARRY, MOVE],
-            limit: 8,
+            limit: 4,
             ordered: false,
         }),
     },

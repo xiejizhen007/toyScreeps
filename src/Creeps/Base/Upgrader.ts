@@ -29,6 +29,10 @@ export class Upgrader extends Role {
         }
     }
 
+    finish(): void {
+
+    }
+
     private getEnergy(): ScreepsReturnCode {
         let energy: Structure | Resource;
 

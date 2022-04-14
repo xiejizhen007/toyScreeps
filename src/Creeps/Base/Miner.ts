@@ -36,6 +36,10 @@ export class Miner extends Role {
         }
     }
 
+    finish(): void {
+
+    }
+
     private timeToDie(): boolean {
         if (this.creep.ticksToLive < 3) {
             if (this.creep.store.getUsedCapacity() > 0) {

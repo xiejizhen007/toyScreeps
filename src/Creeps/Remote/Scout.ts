@@ -14,4 +14,8 @@ export class Scout extends Role {
     work(): void {
         
     }
+
+    finish(): void {
+
+    }
 }
