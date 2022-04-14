@@ -24,3 +24,14 @@ global.terminal_rmRequest = function(room: string, resourceType: ResourceConstan
 global.market_sell = function(room: string, resourceType: ResourceConstant, amount: number) {
     // Global.marketSell(room, resourceType, amount);
 }
+
+/**
+ * 
+ * @param room powerCreep 驻扎的房间
+ * @param name powerCreep 的名字
+ */
+global.setPC = function(room: string, name: string) {
+    if (Kernel.roomNetworks[room]) {
+        Kernel.roomNetworks[room].pcTaskSystem.setPC(name);
+    }
+}

@@ -7,7 +7,7 @@ import { LabCluster } from "./LabCluster";
 import { LinkNetwork } from "./LinkNetwork";
 import { LogisticsNetwork } from "./LogisticsNetwork";
 import { MineSite } from "./MineSite";
-import { PowerCreepTaskQueue } from "./PowerCreepTaskQueue";
+import { PCTaskSystem } from "./PCTaskSystem";
 import { SourceNetwork } from "./SourceNetwork";
 import { SpawnNetwork } from "./SpawnNetwork";
 import { TaskLists } from "./TaskLists";
@@ -15,15 +15,19 @@ import { TransportNetwork } from "./TransportNetwork";
 import { UpgradeSite } from "./UpgradeSite";
 
 export class RoomNetwork {
-    room: Room;
+    room: Room;         // 所在房间
+    name: string;       // 房间名
     memory: RoomNetworkMemory;
 
+    // 房间内的建筑
+    structures: Structure[];
     spawns: StructureSpawn[];
     extensions: StructureExtension[];
 
     storage: StructureStorage;
     terminal: StructureTerminal;
     factory: StructureFactory;
+    powerSpawn: StructurePowerSpawn;
 
     links: StructureLink[];
     labs: StructureLab[];
@@ -41,9 +45,10 @@ export class RoomNetwork {
     transportNetwork: TransportNetwork;             // queen
     transportNetworkForTransfer: TransportNetwork;  // transfer
     logisticsNetwork: LogisticsNetwork;
-    powerCreepTaskQueue: PowerCreepTaskQueue;
     labCluster: LabCluster;
     commandCenter: CommandCenter;
+
+    pcTaskSystem: PCTaskSystem;
 
     taskLists: TaskLists;
 
@@ -55,6 +60,7 @@ export class RoomNetwork {
 
     constructor(room: Room) {
         this.room = room;
+        this.name = room.name;
         Kernel.roomNetworks[room.name] = this;
     }
 
@@ -88,6 +94,7 @@ export class RoomNetwork {
         _.forEach(this.sourceNetworks, f => f.init());
 
         this.taskLists.refresh();
+        this.pcTaskSystem.init();
     }
 
     work(): void {
@@ -119,6 +126,11 @@ export class RoomNetwork {
         this.clearUselessMemory();
 
         this.logisticsNetwork.clearUselessJob();
+        this.pcTaskSystem.work();
+    }
+
+    finish(): void {
+        this.pcTaskSystem.finish();
     }
 
     private initMemory(): void {
@@ -155,17 +167,22 @@ export class RoomNetwork {
     }
 
     private registerObjects(): void {
-        this.spawns = this.room.spawns;
-        this.extensions = _.filter(this.room.structures, f => f.structureType == STRUCTURE_EXTENSION) as StructureExtension[];
+        this.structures = this.room.structures;
+
+        // this.spawns = this.room.spawns;
+        this.spawns = _.filter(this.structures, f => f.structureType == STRUCTURE_SPAWN) as StructureSpawn[];
+        this.extensions = _.filter(this.structures, f => f.structureType == STRUCTURE_EXTENSION) as StructureExtension[];
 
         this.storage = this.room.storage;
         this.terminal = this.room.terminal;
         this.factory = this.room.factory;
+        this.powerSpawn = _.find(this.structures, f => f.structureType == STRUCTURE_POWER_SPAWN) as StructurePowerSpawn;
 
-        this.links = this.room.links;
-        this.towers = this.room.towers;
-        this.labs = _.filter(this.room.structures, f => f.structureType == STRUCTURE_LAB) as StructureLab[];
-        this.containers = _.filter(this.room.structures, f => f.structureType == STRUCTURE_CONTAINER) as StructureContainer[];
+        // this.links = this.room.links;
+        // this.towers = this.room.towers;
+        this.links = _.filter(this.structures, f => f.structureType == STRUCTURE_LINK) as StructureLink[];
+        this.labs = _.filter(this.structures, f => f.structureType == STRUCTURE_LAB) as StructureLab[];
+        this.containers = _.filter(this.structures, f => f.structureType == STRUCTURE_CONTAINER) as StructureContainer[];
         this.constructionSites = this.room.constructionSites;
     }
 
@@ -177,14 +194,13 @@ export class RoomNetwork {
         this.upgradeSite = new UpgradeSite(this, this.room.controller);
         this.transportNetwork = new TransportNetwork();
         this.transportNetworkForTransfer = new TransportNetwork();
-        this.powerCreepTaskQueue = new PowerCreepTaskQueue(this);
         this.logisticsNetwork = new LogisticsNetwork(this);
         
-        if (this.storage) {
+        if (this.storage && this.storage.my) {
             this.commandCenter = new CommandCenter(this, this.storage);
         }
 
-        if (this.room.controller && this.room.controller.level >= 6) {
+        if (this.room.controller.level >= 6) {
             this.labCluster = new LabCluster(this);
         }
 
@@ -210,5 +226,6 @@ export class RoomNetwork {
         }
 
         this.taskLists = new TaskLists(this);
+        this.pcTaskSystem = new PCTaskSystem(this);
     }
 }

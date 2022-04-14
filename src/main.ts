@@ -16,6 +16,7 @@ export const loop = errorMapper(() => {
     // Game loop
     Kernel.init();
     Kernel.work();
+    Kernel.finish();
 
 
     console.log('loop');

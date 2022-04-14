@@ -221,15 +221,15 @@ export class CreepController {
         
         // 需要的数量
         let needAmount = 0;
-        _.forEach(this.roomNetwork.sourceNetworks, s => {
-            if (s.container && !s.link) {
-                needAmount++;
-            }
-        });
+        // _.forEach(this.roomNetwork.sourceNetworks, s => {
+        //     if (s.container && !s.link) {
+        //         needAmount++;
+        //     }
+        // });
 
-        if (this.roomNetwork.mineSite && this.roomNetwork.mineSite.mineral.mineralAmount > 0) {
-            needAmount++;
-        }
+        // if (this.roomNetwork.mineSite && this.roomNetwork.mineSite.mineral.mineralAmount > 0) {
+        //     needAmount++;
+        // }
 
         if (this.roomNetwork.taskLists.memory.lists.find(f => f.type == 'transfer')) {
             needAmount++;

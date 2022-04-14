@@ -72,6 +72,15 @@ export class SourceNetwork {
                 amount: this.container.store[RESOURCE_ENERGY]
             });
 
+            if (this.roomNetwork.storage) {
+                this.roomNetwork.taskLists.requestCarry({
+                    source: this.container.id,
+                    target: this.roomNetwork.storage.id,
+                    resourceType: 'energy',
+                    amount: this.container.store['energy']
+                });
+            }
+
             return true;
         }
 

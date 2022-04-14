@@ -47,9 +47,6 @@ RoleWork 主要携带 `WORK`，负责采集能量，采集矿物，升级等等�
 
 房间内的物流系统，向房间内各模块提供资源调度的接口。
 
-```ts
-class LogisticSystem {
-    insert(task);
-    remove(task);
-}
-```
+#### PCTaskSystem
+
+PowerCreep 的任务系统。能够根据当前驻扎在房间内的 powerCreep 的能量进行任务的发布。

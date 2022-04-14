@@ -9,6 +9,7 @@ import { Claimer } from "Creeps/Remote/Claimer";
 import { Pioneer } from "Creeps/Remote/Pionner";
 import { RoomNetwork } from "Network/RoomNetwork";
 import { TerminalNetwork } from "Network/TerminalNetwork";
+import { PCOperator } from "PowerCreeps/PCOperator";
 
 /**
  * 全局对象，缓存对象
@@ -16,12 +17,14 @@ import { TerminalNetwork } from "Network/TerminalNetwork";
 export class _Kernel implements IKernel {
     roles: { [creepName: string]: any; };
     roomNetworks: { [roomName: string]: any; };
+    powerCreeps: { [creepName: string]: any; };
     terminalNetwork: ITerminalNetwork;
 
     constructor() {
         // 构建对象
         this.roles = {};
         this.roomNetworks = {};
+        this.powerCreeps = {};
 
         // TODO
         // this.terminalNetwork = new TerminalNetwork([]);
@@ -93,6 +96,14 @@ export class _Kernel implements IKernel {
                 this.roles[creepName] = role;
             }
         }
+
+        for (const creepName in Game.powerCreeps) {
+            const pc = Game.powerCreeps[creepName];
+            if (pc && pc.ticksToLive) {
+                const operator = new PCOperator(pc);
+                this.powerCreeps[creepName] = operator;
+            }
+        }
     }
 
     refresh(): void {
@@ -122,6 +133,14 @@ export class _Kernel implements IKernel {
             }
         }
 
+        for (const name in this.powerCreeps) {
+            if (this.powerCreeps[name]) {
+                this.powerCreeps[name].init();
+            } else {
+                delete this.powerCreeps[name];
+            }
+        }
+
         if (this.terminalNetwork) {
             this.terminalNetwork.init();
         }
@@ -143,9 +162,27 @@ export class _Kernel implements IKernel {
                 delete this.roles[name];
             }
         }
+        
+        for (const name in this.powerCreeps) {
+            if (this.powerCreeps[name]) {
+                this.powerCreeps[name].work();
+            } else {
+                delete this.powerCreeps[name];
+            }
+        }
 
         if (this.terminalNetwork) {
             this.terminalNetwork.work();
+        }
+    }
+
+    finish(): void {
+        for (const name in this.roles) {
+            if (this.roles[name] && this.roles[name].finish) {
+                this.roles[name].finish();
+            } else {
+                delete this.roles[name];
+            }
         }
     }
 }

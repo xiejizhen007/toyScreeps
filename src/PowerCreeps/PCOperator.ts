@@ -1,14 +1,15 @@
-import { PowerCreepTaskQueue } from "Network/PowerCreepTaskQueue";
+// import { PCTaskSystem } from "Network/PCTaskSystem";
 import { RoomNetwork } from "Network/RoomNetwork";
 
 export class PCOperator {
     creep: PowerCreep;
     roomNetwork: RoomNetwork;
-    pcTaskQueue: PowerCreepTaskQueue;
+    // pcTaskSystem: PCTaskSystem;
 
-    constructor(_creep: PowerCreep) {
-        this.creep = _creep;
-        // this.creep.memory.workRoom
+    constructor(creep: PowerCreep) {
+        this.creep = creep;
+        this.roomNetwork = Kernel.roomNetworks[creep.room.name];
+        // this.pcTaskSystem = Kernel.roomNetworks[creep.room.name].pcTaskSystem;
     }
 
     init(): void {
@@ -18,6 +19,18 @@ export class PCOperator {
     work(): void {
         if (this.keepAlive()) {
             return;
+        }
+
+        // console.log("roomNetwork " + this.roomNetwork);
+        // console.log("roomNetwork " + this.roomNetwork.pcTaskSystem);
+        const task = this.roomNetwork.pcTaskSystem.requests[0];
+        if (task) {
+            const target = Game.getObjectById(task.target as Id<Structure> | Id<Source>);
+            if (target) {
+                if (this.creep.usePower(task.type, target) == ERR_NOT_IN_RANGE) {
+                    this.creep.moveTo(target);
+                }
+            }
         }
     }
 
@@ -42,10 +55,6 @@ export class PCOperator {
     }
 
     private setTask() {
-        const task = this.pcTaskQueue.front();
-        if (task) {
-            this.creep.memory.target = task.target;
-            this.creep.memory.power = task.type;
-        }
+    
     }
 }

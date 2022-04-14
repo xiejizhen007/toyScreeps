@@ -30,15 +30,15 @@ type EnergyStructure =  StructureStorage
 interface IKernel {
     roles: { [creepName: string]: any }             // Role
     roomNetworks: { [roomName: string]: any }        // RoomNetwork
-
+    powerCreeps: { [creepName: string]: any }       // powerCreep
     terminalNetwork: ITerminalNetwork;
-
 
     build(): void;
     refresh(): void;
     
     init(): void;
     work(): void;
+    finish(): void;
 }
 
 declare var Kernel: IKernel;
