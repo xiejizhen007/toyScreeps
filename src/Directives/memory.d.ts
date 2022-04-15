@@ -1,0 +1,4 @@
+interface FlagMemory {
+    tick: number;
+    
+}

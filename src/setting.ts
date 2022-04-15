@@ -103,3 +103,25 @@ export const ReactionTarget = [
     { target: "UL", amount: 5000},
     { target: "G", amount: 5000},
 ] as { target: ResourceConstant, amount: number}[];
+
+export const OPERATOR_POWER_COST = {
+    [PWR_GENERATE_OPS]:         { resourceType: 'ops', amount: 0},
+    [PWR_OPERATE_SPAWN]:        { resourceType: 'ops', amount: 100},
+    [PWR_OPERATE_TOWER]:        { resourceType: 'ops', amount: 10},
+    [PWR_OPERATE_STORAGE]:      { resourceType: 'ops', amount: 100},
+    [PWR_OPERATE_LAB]:          { resourceType: 'ops', amount: 10},
+    [PWR_OPERATE_EXTENSION]:    { resourceType: 'ops', amount: 2},
+    [PWR_OPERATE_OBSERVER]:     { resourceType: 'ops', amount: 10},
+    [PWR_OPERATE_TERMINAL]:     { resourceType: 'ops', amount: 100},
+    [PWR_DISRUPT_SPAWN]:        { resourceType: 'ops', amount: 10},
+    [PWR_DISRUPT_TOWER]:        { resourceType: 'ops', amount: 10},
+    [PWR_DISRUPT_SOURCE]:       { resourceType: 'ops', amount: 100},
+    [PWR_SHIELD]:               { resourceType: 'energy', amount: 100},
+    [PWR_REGEN_SOURCE]:         { resourceType: 'ops', amount: 0},
+    [PWR_REGEN_MINERAL]:        { resourceType: 'ops', amount: 0},
+    [PWR_DISRUPT_TERMINAL]:     { resourceType: 'ops', amount: 50},     // 1 级 的时候
+    [PWR_OPERATE_POWER]:        { resourceType: 'ops', amount: 200},
+    [PWR_FORTIFY]:              { resourceType: 'ops', amount: 5},
+    [PWR_OPERATE_CONTROLLER]:   { resourceType: 'ops', amount: 200},
+    [PWR_OPERATE_FACTORY]:      { resourceType: 'ops', amount: 100},
+} as { [power: number]: { resourceType: ResourceConstant, amount: number} };

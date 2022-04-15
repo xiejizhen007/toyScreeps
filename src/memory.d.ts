@@ -8,13 +8,24 @@ interface Memory {
 
 interface RoomMemory {
     owner: string;              // 房间主人，没有为 ""
-    level: number;
+    level: number;              // 空房间为 0
     sign: string;               // 给房间签名
-    planSign: string;           // 计划的签名
 
-    tick: number;
+    tick: number;               // 信息更新时的时间
     dangerous: boolean;         // 有塔，或者有主动防御
     isOutSource?: boolean;
+
+    power?: {
+        amount: number;         // power bank 中 power 数量
+        decay: number;          // 还剩多久消失
+        hits: number;           // 当前血量
+    };
+
+    deposit?: {
+        resourceType: DepositConstant;      // 类型
+        decay: number;
+        cooldown: number;       // last cooldown
+    }
 }
 
 interface CreepMemory {

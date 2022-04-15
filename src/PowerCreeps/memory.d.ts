@@ -5,6 +5,5 @@ interface PowerCreepMemory {
 
     // backup
     keepAlive: Id<StructurePowerSpawn>;     // the power spawn id
-    target: string;                         // task target, like source, lab, etc... set null when no task
-    power: PowerConstant;                   // power type, like regenerate source...
+    task: any;      //
 }

@@ -11,6 +11,9 @@ interface IKernel {
     roles: { [creepName: string]: any }             // Role
     roomNetworks: { [roomName: string]: any }        // RoomNetwork
     powerCreeps: { [creepName: string]: any }       // powerCreep
+
+    directives: { [flagName: string]: any }             // order
+
     terminalNetwork: ITerminalNetwork;
     market: IMarket;
 

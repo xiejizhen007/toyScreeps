@@ -55,20 +55,19 @@ export class TerminalNetwork implements ITerminalNetwork {
         this.requests = this.memory.request;
         this.shareds = this.memory.shareds;
 
-        this.memory.request = _.filter(this.memory.request, f => {
-            if (f.tick + this.TIMEOUT > Game.time) {
-                return false;
+        _.remove(this.memory.request, f => {
+            if (f.tick + this.TIMEOUT < Game.time) {
+                return true;
             }
 
             const terminal = Game.rooms[f.room].terminal;
             if (terminal) {
                 if (f.input) {
-                    return terminal.store[f.resourceType] < f.state.targetAmount;
+                    return terminal.store[f.resourceType] >= f.state.targetAmount;
                 } else {
-                    return terminal.store[f.resourceType] > f.state.targetAmount;
+                    return terminal.store[f.resourceType] <= f.state.targetAmount;
                 }
             }
-
         });
     }
 
@@ -76,6 +75,9 @@ export class TerminalNetwork implements ITerminalNetwork {
         
     }
 
+    /**
+     * 收尾工作
+     */
     finish(): void {
         this.memory.request = this.requests;
         this.memory.shareds = this.shareds;
@@ -99,6 +101,21 @@ export class TerminalNetwork implements ITerminalNetwork {
      */
     removeResourceShared(room: string, resourceType: ResourceConstant) {
         _.remove(this.shareds[resourceType], f => f == room);
+    }
+
+    /**
+     * 向 terminal network 申请资源
+     */
+    addResourceRequest(terminal: StructureTerminal, resourceType: ResourceConstant, amount: number,
+                       buy: boolean = true) {
+        // 
+    }
+    
+    /**
+     * 撤销资源的申请
+     */
+    removeResourceRequest(terminal: StructureTerminal, resourceType: ResourceConstant) {
+
     }
 
     addRequest(room: string, resourceType: ResourceConstant, amount: number, input = true, buy = true) {

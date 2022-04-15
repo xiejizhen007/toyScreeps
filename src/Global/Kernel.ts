@@ -20,21 +20,21 @@ export class _Kernel implements IKernel {
     roles: { [creepName: string]: any; };
     roomNetworks: { [roomName: string]: any; };
     powerCreeps: { [creepName: string]: any; };
+    directives: { [flagName: string]: any; };
 
     terminalNetwork: ITerminalNetwork;
     market: IMarket;
 
     constructor() {
         // 构建对象
-        this.roles = {};
-        this.roomNetworks = {};
-        this.powerCreeps = {};
-
-        // TODO
-        // this.terminalNetwork = new TerminalNetwork([]);
     }
 
     build(): void {
+        this.roles = {};
+        this.roomNetworks = {};
+        this.powerCreeps = {};
+        this.directives = {};
+
         let terminals = [];
 
         for (const name in Game.rooms) {

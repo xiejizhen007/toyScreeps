@@ -101,6 +101,10 @@ export class Market implements IMarket {
                 }
             }
         } else {
+            if (Game.market.credits <= 100000) {
+                return ERR_NOT_ENOUGH_RESOURCES;
+            }
+
             let orders = Game.market.getAllOrders({type: 'buy', resourceType: resourceType});
             orders = _.sortBy(orders, f => -f.price);
             const price = orders.length > 0 ? orders[0].price : Game.market.getHistory(resourceType)[0].avgPrice;

@@ -73,33 +73,32 @@ export class CommandCenter {
         }
 
         if (this.powerSpawn && this.storage && this.terminal && this.powerSpawn.pos.isNearTo(this.pos)) {
+
+            let needEnergyAmount = 50;
+            let needPowerAmount = 1;
+
+            if (this.powerSpawn.effects && this.powerSpawn.effects.find(f => f.effect == PWR_OPERATE_POWER)) {
+                const effect = this.powerSpawn.effects.find(f => f.effect == PWR_OPERATE_POWER) as any;
+                needPowerAmount += effect.level;
+                needEnergyAmount *= needPowerAmount;
+            }
+
             // run powerSpawn
-            if (this.powerSpawn.store['energy'] >= 50 && this.powerSpawn.store['power'] >= 1) {
+            if (this.powerSpawn.store['energy'] >= needEnergyAmount && this.powerSpawn.store['power'] >= needPowerAmount) {
                 this.powerSpawn.processPower();
             }
+
 
             const centerAmount = this.storage.store['energy'] + this.terminal.store['energy'];
             const powerAmount = this.storage.store['power'] + this.terminal.store['power'];
             if (centerAmount >= 100000) {
-                if (this.powerSpawn.store['energy'] <= 100) {
+                if (this.powerSpawn.store['energy'] <= needEnergyAmount + 50) {
                     this.transportNetwork.requestInput(this.powerSpawn, Priority.NormalLow, {
                         resourceType: 'energy',
                         amount: this.powerSpawn.store.getFreeCapacity('energy')
                     });
-                } else if (this.powerSpawn.store['power'] <= 2) {
+                } else if (this.powerSpawn.store['power'] <= needPowerAmount + 1) {
                     if (powerAmount <= 100) {
-                        // const orders = Game.market.getAllOrders({
-                        //     type: ORDER_SELL,
-                        //     resourceType: 'power',
-                        // });
-
-                        // const sortOrders = _.sortBy(orders, o => o.price);
-                        // if (sortOrders.length > 0) {
-                        //     const amount = Math.min(sortOrders[0].amount, 3000, this.terminal.store.getFreeCapacity());
-                        //     Game.market.deal(sortOrders[0].id, amount, this.roomNetwork.room.name);
-                        //     console.log('buy power amount: ' + amount);
-                        // }
-                        
                         Kernel.market.buy(this.roomNetwork.name, 'power', 3000);
                     }
 
@@ -108,6 +107,8 @@ export class CommandCenter {
                         amount: Math.min(this.powerSpawn.store.getFreeCapacity('power'), powerAmount),
                     });
                 }
+            } else {
+                Kernel.market.buy(this.roomNetwork.name, 'energy', Math.min(this.terminal.store.getFreeCapacity(), 50000), false);
             }
         }
     }

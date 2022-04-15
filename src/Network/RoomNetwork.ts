@@ -20,6 +20,8 @@ export class RoomNetwork {
     name: string;       // 房间名
     memory: RoomNetworkMemory;
 
+    flags: Flag[];
+
     // 房间内的建筑
     structures: Structure[];
     spawns: StructureSpawn[];
@@ -169,6 +171,8 @@ export class RoomNetwork {
     }
 
     private registerObjects(): void {
+        this.flags = [];
+
         this.structures = this.room.structures;
 
         // this.spawns = this.room.spawns;

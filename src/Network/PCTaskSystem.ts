@@ -68,6 +68,16 @@ export class PCTaskSystem {
                 });
             }
         }
+
+        if (this.pc.powers[PWR_OPERATE_POWER] && this.pc.powers[PWR_OPERATE_POWER].cooldown == 0) {
+            const spawn = this.roomNetwork.powerSpawn;
+            if (spawn && !this.requests.find(f => f.target == spawn.id)) {
+                this.requests.push({
+                    type: PWR_OPERATE_POWER,
+                    target: spawn.id,
+                });
+            }
+        }
     }
 
     finish(): void {
