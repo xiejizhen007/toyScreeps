@@ -17,12 +17,12 @@ interface IKernel {
     market: IMarket;
     observer: IObserver;
 
-    build(): void;
-    refresh(): void;
+    build(): void;                  // 实例化各个对象
+    refresh(): void;                // 刷新对象，防止对象失效
     
-    init(): void;
-    work(): void;
-    finish(): void;
+    init(): void;                   // 各模块的初始化
+    work(): void;                   // 各模块的相关工作
+    finish(): void;                 // 收尾工作
 }
 
 declare var Kernel: IKernel;

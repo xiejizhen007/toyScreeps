@@ -56,7 +56,7 @@ export class CommandCenter {
     work(): void {
         if (this.observer) {
             if (this.roomNetwork.name == 'W15N59') {
-                this.registerObserver('W20N60');
+                this.registerObserver('W10N54');
                 if (this.checkRoom) {
                     Kernel.observer.registerObserver(this.checkRoom);
                     this.observer.observeRoom(this.checkRoom);
@@ -71,13 +71,13 @@ export class CommandCenter {
 
     private registerPowerBank() {
         if (Kernel.observer.powers.length > 0) {
-            const first = Kernel.observer.powers[0];
-            const pos = new RoomPosition(first.pos.x, first.pos.y, first.pos.roomName);
-            const flagInPos = pos.lookFor(LOOK_FLAGS);
-            const flag = flagInPos.length > 0 ? flagInPos[0] : Game.flags[DirectivePower.create(pos)];
-            if (flag) {
-                const power = new DirectivePower(flag, this.roomNetwork);
-            }
+            // const first = Kernel.observer.powers[0];
+            // const pos = new RoomPosition(first.pos.x, first.pos.y, first.pos.roomName);
+            // const flagInPos = pos.lookFor(LOOK_FLAGS);
+            // const flag = flagInPos.length > 0 ? flagInPos[0] : Game.flags[DirectivePower.create(pos)];
+            // if (flag) {
+            //     const power = new DirectivePower(flag, this.roomNetwork);
+            // }
         }
     }
 

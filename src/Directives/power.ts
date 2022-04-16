@@ -7,12 +7,12 @@ export class DirectivePower extends Directive {
     static color = COLOR_RED;
 	static secondaryColor = COLOR_YELLOW;
 
-    constructor(flag: Flag, roomNetwork: RoomNetwork) {
-        super(flag, roomNetwork);
+    constructor(flag: Flag) {
+        super(flag);
     }
 
     init(): void {
-        
+
     }
 
     work(): void {

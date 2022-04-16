@@ -26,6 +26,8 @@ interface CreepMemory {
     working?: boolean;
     tempTask?: TempTaskMemory;
 
+    flag?: string;              // 需要处理的 flag 名字
+
     transferTask?: {
         source: string;
         target: string;
@@ -62,8 +64,9 @@ interface PowerCreepMemory {
 }
 
 interface FlagMemory {
-    tick?: number;
-    room?: string;
+    tick?: number;          // 设置时的 tick
+    room?: string;          // room network
+    name?: string;          // 设置的 flag name，比如说挖 power
 }
 
 interface TempTaskMemory {
