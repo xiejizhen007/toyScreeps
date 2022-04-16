@@ -2,6 +2,10 @@ import { Role } from "Creeps/Role";
 import { RoomNetwork } from "Network/RoomNetwork";
 
 export abstract class Directive {
+    static directiveName: string;           // 指令的类型，比如说 'harvest'
+    static color: ColorConstant;
+    static secondaryColor: ColorConstant;
+
     name: string;                   // flag name
     pos: RoomPosition;              // flag position
     room: Room | undefined;         // flag room
@@ -15,11 +19,10 @@ export abstract class Directive {
         this.pos = flag.pos;
         this.room = flag.room;
         this.memory = flag.memory;
-
         this.roles = {};
         this.roomNetwork = roomNetwork;
-        roomNetwork.flags.push(flag);
 
+        Kernel.observer.registerDirective(this);
         Kernel.directives[flag.name] = this;
     }
 
@@ -45,4 +48,18 @@ export abstract class Directive {
     abstract init(): void;
     abstract work(): void;
     abstract finish(): void;
+
+    static create(pos: RoomPosition) {
+        let flagName = this.directiveName + Game.time.toString();
+        if (Game.flags[flagName]) {
+            return ERR_NAME_EXISTS;
+        }
+
+        const result = pos.createFlag(flagName, this.color, this.secondaryColor);
+        if (result == flagName) {
+            console.log("create flag: " + flagName + " in pos: " + pos);
+        }
+
+        return result;
+    }
 }

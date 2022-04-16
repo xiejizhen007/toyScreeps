@@ -11,11 +11,11 @@ interface IKernel {
     roles: { [creepName: string]: any }             // Role
     roomNetworks: { [roomName: string]: any }        // RoomNetwork
     powerCreeps: { [creepName: string]: any }       // powerCreep
-
-    directives: { [flagName: string]: any }             // order
+    directives: { [flagName: string]: any }         // directives
 
     terminalNetwork: ITerminalNetwork;
     market: IMarket;
+    observer: IObserver;
 
     build(): void;
     refresh(): void;
@@ -50,4 +50,18 @@ interface IMarket {
 
     buy(room: string, resourceType: ResourceConstant, amount: number, fast?: boolean): number;
     sell(room: string, resourceType: ResourceConstant, amount: number, fast?: boolean): number;
+}
+
+interface IObserver {
+    powers: PowerBankInfo[];
+    deposits: DepositInfo[];
+
+    init(): void;
+    work(): void;
+    finish(): void;
+    refresh(): void;
+
+    registerDirective(directive: any): void;
+    removeDirective(directive: any): void;
+    registerObserver(room: string): void;
 }

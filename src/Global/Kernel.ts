@@ -12,6 +12,7 @@ import { Market } from "Network/Market";
 import { RoomNetwork } from "Network/RoomNetwork";
 import { TerminalNetwork } from "Network/TerminalNetwork";
 import { PCOperator } from "PowerCreeps/PCOperator";
+import { Observer } from "./Observer";
 
 /**
  * 全局对象，缓存对象
@@ -24,6 +25,7 @@ export class _Kernel implements IKernel {
 
     terminalNetwork: ITerminalNetwork;
     market: IMarket;
+    observer: IObserver;
 
     constructor() {
         // 构建对象
@@ -114,6 +116,7 @@ export class _Kernel implements IKernel {
         }
 
         this.market = new Market();
+        this.observer = new Observer();
     }
 
     refresh(): void {
@@ -125,6 +128,10 @@ export class _Kernel implements IKernel {
             if (!Game.creeps[name]) {
                 delete Memory.creeps[name];
             }
+        }
+
+        if (this.observer) {
+            this.observer.init();
         }
 
         for (const name in this.roomNetworks) {
@@ -158,6 +165,7 @@ export class _Kernel implements IKernel {
         if (this.market) {
             this.market.init();
         }
+
     }
 
     work(): void {
@@ -192,6 +200,10 @@ export class _Kernel implements IKernel {
         if (this.market) {
             this.market.work();
         }
+
+        if (this.observer) {
+            this.observer.work();
+        }
     }
 
     finish(): void {
@@ -209,6 +221,10 @@ export class _Kernel implements IKernel {
 
         if (this.market) {
             this.market.finish();
+        }
+
+        if (this.observer) {
+            this.observer.finish();
         }
     }
 }

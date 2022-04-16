@@ -15,17 +15,8 @@ interface RoomMemory {
     dangerous: boolean;         // 有塔，或者有主动防御
     isOutSource?: boolean;
 
-    power?: {
-        amount: number;         // power bank 中 power 数量
-        decay: number;          // 还剩多久消失
-        hits: number;           // 当前血量
-    };
-
-    deposit?: {
-        resourceType: DepositConstant;      // 类型
-        decay: number;
-        cooldown: number;       // last cooldown
-    }
+    powers: PowerBankInfo[];
+    deposits: DepositInfo[];
 }
 
 interface CreepMemory {
@@ -58,6 +49,21 @@ interface CreepMemory {
     _go?: {                 // 移动缓存
         
     };
+}
+
+interface PowerCreepMemory {
+    role: string;       // Operator, Commander, Executor
+    baseRoom: string;   // origin room
+    workRoom: string;   // work room name
+
+    // backup
+    keepAlive: Id<StructurePowerSpawn>;     // the power spawn id
+    task: any;      //
+}
+
+interface FlagMemory {
+    tick?: number;
+    room?: string;
 }
 
 interface TempTaskMemory {
@@ -95,4 +101,30 @@ interface PosMemory {
     x: number;
     y: number;
     roomName: string;
+}
+
+// power bank 的信息
+interface PowerBankInfo {
+    id: Id<StructurePowerBank>;
+    amount: number;         // power 数量
+    decay: number;          // 还有多久消失
+    hits: number;           // 当前血量
+    pos: RoomPosition;
+    tick: number;
+}
+
+// deposit 的信息
+interface DepositInfo {
+    id: Id<Deposit>
+    cooldown: number;       // 上一次的冷却时间
+    decay: number;          // 距离消失还有多久
+    depositType: DepositConstant;
+    pos: RoomPosition;
+    tick: number;
+}
+
+// 需要视野的房间，以及下发时的时间
+interface ObserverInfo {
+    tick: number;
+    room: string;
 }

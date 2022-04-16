@@ -1,3 +1,4 @@
+import { DirectivePower } from "Directives/power"
 import { Priority } from "setting";
 import { RoomNetwork } from "./RoomNetwork";
 import { TransportNetwork } from "./TransportNetwork";
@@ -22,6 +23,7 @@ export class CommandCenter {
     observer?: StructureObserver;
     powerSpawn?: StructurePowerSpawn;
     pos: RoomPosition;
+    checkRoom?: string;             // 需要检查视野的房间
 
     transportNetwork: TransportNetwork;
 
@@ -31,13 +33,13 @@ export class CommandCenter {
         this.storage = storage;
         this.pos = new RoomPosition(storage.pos.x + 1, storage.pos.y, storage.pos.roomName);
         this.terminal = roomNetwork.room.terminal;
-        // this.factory = _.find(this.roomNetwork.room.structures, f => f.structureType == STRUCTURE_FACTORY) as StructureFactory;
         this.factory = roomNetwork.room.factory;
-        // this.powerSpawn = 
         this.powerSpawn = _.find(this.roomNetwork.room.structures, f => f.structureType == STRUCTURE_POWER_SPAWN) as StructurePowerSpawn;
+        this.observer = _.find(this.roomNetwork.room.structures, f => f.structureType == STRUCTURE_OBSERVER) as StructureObserver;
         
         this.spawn = storage.pos.findClosestByLimitedRange(this.roomNetwork.spawns, 2);
         this.link = storage.pos.findClosestByLimitedRange(this.roomNetwork.links, 2);
+        this.checkRoom = undefined;
 
         this.transportNetwork = new TransportNetwork;
     }
@@ -45,10 +47,38 @@ export class CommandCenter {
     init(): void {
         this.registerLinkRequests();
         this.registerRequests();
+
+        if (this.roomNetwork.name == 'W15N59') {
+            this.registerPowerBank();
+        }
     }
 
     work(): void {
-        
+        if (this.observer) {
+            if (this.roomNetwork.name == 'W15N59') {
+                this.registerObserver('W20N60');
+                if (this.checkRoom) {
+                    Kernel.observer.registerObserver(this.checkRoom);
+                    this.observer.observeRoom(this.checkRoom);
+                }
+            }
+        }
+    }
+
+    registerObserver(room: string) {
+        this.checkRoom = room;
+    }
+
+    private registerPowerBank() {
+        if (Kernel.observer.powers.length > 0) {
+            const first = Kernel.observer.powers[0];
+            const pos = new RoomPosition(first.pos.x, first.pos.y, first.pos.roomName);
+            const flagInPos = pos.lookFor(LOOK_FLAGS);
+            const flag = flagInPos.length > 0 ? flagInPos[0] : Game.flags[DirectivePower.create(pos)];
+            if (flag) {
+                const power = new DirectivePower(flag, this.roomNetwork);
+            }
+        }
     }
 
     private registerLinkRequests(): void {
