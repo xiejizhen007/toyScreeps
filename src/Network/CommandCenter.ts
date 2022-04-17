@@ -53,7 +53,7 @@ export class CommandCenter {
         this.registerLinkRequests();
         this.registerRequests();
 
-        this.registerPowerBank();
+        // this.registerPowerBank();
     }
 
     work(): void {

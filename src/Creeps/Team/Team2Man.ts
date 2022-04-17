@@ -7,12 +7,12 @@ export interface Team2ManMemory {
 export class Team2Man {
     static id: number;
     memory: Team2ManMemory;
-    roles: Role[];
+    role0: Role;
+    role1: Role;
 
     constructor(role0: Role, role1: Role) {
-        this.roles = [];
-        this.roles.push(role0);
-        this.roles.push(role1);
+        this.role0 = role0;
+        this.role1 = role1;
     }
 
     init(): void {}

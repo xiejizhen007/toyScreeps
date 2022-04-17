@@ -1,4 +1,5 @@
 import { Directive } from "Directives/Directive";
+import { DirectivePower } from "Directives/power";
 import { Mem } from "Mem";
 import { freeLocationIn } from "modules/tools";
 import { isHighWay } from "types";
@@ -65,14 +66,15 @@ export class Observer implements IObserver {
     finish(): void {
         _.forEach(this.directives, f => f.finish());        
         // 更新房间信息
-        _.forEach(this.observerRoom, f => this.updateRoomState(f.room));
+        _.forEach(this.observerRoom, f => this.updateRoomState(f));
 
         this.memory.powers = this.powers;
         this.memory.deposits = this.deposits;
         this.memory.observerRoom = this.observerRoom;
     }
 
-    updateRoomState(roomName: string) {
+    updateRoomState(info: {tick: number, room: string, base: string}) {
+        const roomName = info.room;
         const room = Game.rooms[roomName];
         if (!room) {
             return;
@@ -114,6 +116,9 @@ export class Observer implements IObserver {
                         tick: Game.time,
                         freeLocation: freeLocation,
                     });
+
+                    // 创建挖 power 的命令
+                    DirectivePower.createByRoom(f.pos, info.base);
                 });
             }
 
@@ -123,14 +128,27 @@ export class Observer implements IObserver {
                     if (this.deposits.find(p => p.id == f.id)) {
                         return;
                     }
+                    
+                    const freeLocation = freeLocationIn(f.pos);
+                    
+                    room.memory.deposits.push({
+                        id: f.id,
+                        pos: f.pos,
+                        decay: f.ticksToDecay,
+                        tick: Game.time,
+                        freeLocation: freeLocation,
+                        depositType: f.depositType,
+                        cooldown: f.lastCooldown,
+                    });
 
                     this.deposits.push({
                         id: f.id,
-                        cooldown: f.lastCooldown,
-                        decay: f.ticksToDecay,
-                        depositType: f.depositType,
                         pos: f.pos,
+                        decay: f.ticksToDecay,
                         tick: Game.time,
+                        freeLocation: freeLocation,
+                        depositType: f.depositType,
+                        cooldown: f.lastCooldown,
                     });
                 });
             }

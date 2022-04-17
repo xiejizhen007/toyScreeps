@@ -25,9 +25,17 @@ export class PCOperator {
             return;
         }
 
+        if (this.enablePower()) {
+            return;
+        }
+
         if (this.needToClear()) {
             this.transferToCenter();
             return;
+        }
+
+        if (this.creep.powers[PWR_GENERATE_OPS].level >= 1 && this.creep.powers[PWR_GENERATE_OPS].cooldown == 0) {
+            this.creep.usePower(PWR_GENERATE_OPS);
         }
 
         if (this.task) {
@@ -43,13 +51,9 @@ export class PCOperator {
                     
                 if (ret == ERR_NOT_IN_RANGE) {
                     this.creep.moveTo(target);
-                } else if (ret == OK) {
+                } else if (ret == OK || ret == ERR_TIRED) {
                     this.roomNetwork.pcTaskSystem.requests.shift();
                 }
-            }
-        } else {
-            if (this.creep.powers[PWR_GENERATE_OPS].level >= 1 && this.creep.powers[PWR_GENERATE_OPS].cooldown == 0) {
-                this.creep.usePower(PWR_GENERATE_OPS);
             }
         }
     }
@@ -67,6 +71,17 @@ export class PCOperator {
                 if (this.creep.renew(spawn) == ERR_NOT_IN_RANGE) {
                     this.creep.moveTo(spawn);
                 }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private enablePower(): boolean {
+        if (!this.roomNetwork.room.controller.isPowerEnabled) {
+            if (this.creep.enableRoom(this.roomNetwork.room.controller) == ERR_NOT_IN_RANGE) {
+                this.creep.moveTo(this.roomNetwork.room.controller);
             }
             return true;
         }

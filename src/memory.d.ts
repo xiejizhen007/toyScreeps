@@ -126,6 +126,7 @@ interface DepositInfo {
     depositType: DepositConstant;
     pos: RoomPosition;
     tick: number;
+    freeLocation: number;   // 空闲的位置
 }
 
 // 需要视野的房间，以及下发时的时间

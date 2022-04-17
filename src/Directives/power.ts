@@ -44,16 +44,17 @@ export class DirectivePower extends Directive {
         const pb_heal = _.filter(this.roomNetwork.memory.myCreeps, f => Game.creeps[f] && Game.creeps[f].memory.role == 'pb_heal');
         const pb_transfer = _.filter(this.roomNetwork.memory.myCreeps, f => Game.creeps[f] && Game.creeps[f].memory.role == 'pb_transfer');
 
-        // 当前能打出的最高伤害
-        // let maxHits = this.memory.power.tick * 500;
+        // 一个攻击 creep 一直攻击 pb，直到 pb 消失造成的最大生命值
+        let maxHits = this.memory.power.decay * 500;
+        // 一个攻击 creep 一生最大造成的血量，200t 用来走路
+        let oneMaxHits = 1300 * 500;
 
         // 总共需要的小队数量
-        // const team_num = Math.ceil(2000000 / maxHits);
-        // console.log(team_num);
+        let team_num = Math.ceil(this.memory.power.hits / oneMaxHits);
+        console.log('team_num: ' + team_num);
 
-        // console.log(pb_attack.length);
-
-        if (pb_attack.length < this.memory.power.freeLocation) {
+        // 当前还有空余位置，并且没超过需要的小队上限时
+        if (pb_attack.length < this.memory.power.freeLocation && this.memory.num < team_num) {
             let num = 0;
             _.forEach(pb_attack, f => {
                 const creep = Game.creeps[f];
@@ -77,7 +78,7 @@ export class DirectivePower extends Directive {
             }
         }
 
-        if (pb_heal.length < pb_attack.length && Game.time % 3 == 0) {
+        if (pb_heal.length < pb_attack.length && Game.time % 3 == 1) {
             console.log('need a pb_heal');
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.pb.pb_heal.default,
@@ -91,7 +92,8 @@ export class DirectivePower extends Directive {
         if (Game.rooms[this.pos.roomName]) {
             const pb = this.pos.lookFor(LOOK_STRUCTURES)[0] as StructurePowerBank;
             if (pb && pb.hits <= 600000) {
-                const wish = Math.ceil(this.memory.power.amount / 1600);
+                // 避免最后一个拿的太少
+                const wish = Math.ceil(this.memory.power.amount / 1800);
                 if (pb_transfer.length < wish && Game.time % 3 == 0) {
                     console.log('need a pb_transfer');
                     this.roomNetwork.spawnNetwork.registerCreep({

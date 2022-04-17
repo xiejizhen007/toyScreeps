@@ -78,6 +78,16 @@ export class PCTaskSystem {
                 });
             }
         }
+
+        if (this.canUsePower(PWR_OPERATE_EXTENSION)) {
+            const room = this.roomNetwork.room;
+            if (room.energyAvailable != room.energyCapacityAvailable) {
+                this.requests.push({
+                    type: PWR_OPERATE_EXTENSION,
+                    target: this.roomNetwork.terminal.id,
+                });
+            }
+        }
     }
 
     finish(): void {
@@ -86,5 +96,13 @@ export class PCTaskSystem {
 
     public setPC(name: string) {
         this.memory.pcName = name;
+    }
+
+    private canUsePower(power: PowerConstant) {
+        if (this.pc.powers[power] && this.pc.powers[power].cooldown == 0) {
+            return true;
+        }
+
+        return false;
     }
 }
