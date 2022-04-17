@@ -82,11 +82,22 @@ export class Observer implements IObserver {
             console.log(roomName + ' is high way');
             const banks = room.structures.filter(f => f.structureType == STRUCTURE_POWER_BANK) as StructurePowerBank[];
             // console.log('banks? ' + banks.length);
+            room.memory.powers = [];
+            room.memory.deposits = [];
             if (banks.length) {
                 banks.forEach(f => {
                     if (this.powers.find(p => p.id == f.id)) {
                         return;
                     }
+                    
+                    room.memory.powers.push({
+                        id: f.id,
+                        amount: f.power,
+                        pos: f.pos,
+                        decay: f.ticksToDecay,
+                        hits: f.hits,
+                        tick: Game.time,
+                    });
 
                     this.powers.push({
                         id: f.id,

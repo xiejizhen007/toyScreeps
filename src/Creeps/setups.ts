@@ -121,4 +121,30 @@ export const Setups = {
             ordered: false,
         }),
     },
+
+    pb: {
+        pb_attack: {
+            default: new CreepSetup('pb_attack', {
+                body: [MOVE, ATTACK],
+                limit: 25,
+                ordered: true
+            })
+        },
+        
+        pb_heal: {
+            default: new CreepSetup('pb_heal', {
+                body: [MOVE, HEAL],
+                limit: 25,
+                ordered: true
+            })
+        },
+
+        pb_transfer: {
+            default: new CreepSetup('pb_transfer', {
+                body: [CARRY, CARRY, MOVE],
+                limit: Infinity,
+                ordered: false
+            })
+        }
+    }
 };

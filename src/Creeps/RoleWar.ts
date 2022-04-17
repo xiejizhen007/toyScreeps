@@ -6,11 +6,9 @@ export interface RoleWarMemory extends CreepMemory {
 
 export abstract class RoleWar extends Role {
     memory: RoleWarMemory;
-    flag: Flag;
 
-    constructor(creep: Creep, flag: Flag) {
+    constructor(creep: Creep) {
         super(creep);
-        this.flag = flag;
     }
 
     abstract init(): void;
@@ -23,5 +21,16 @@ export abstract class RoleWar extends Role {
 
     set underAttack(state: boolean) {
         this.memory.underAttack = state;
+    }
+
+    standbyTo(pos: RoomObject | RoomPosition, range: number = 1) {
+        pos = pos instanceof RoomObject ? pos.pos : pos;
+
+        if (this.pos.inRangeTo(pos, range)) {
+            return true;
+        } else {
+            this.goto(pos);
+            return false;
+        }
     }
 }

@@ -7,7 +7,11 @@ import { Transfer } from "Creeps/Base/Transfer";
 import { Upgrader } from "Creeps/Base/Upgrader";
 import { Worker } from "Creeps/Base/Worker";
 import { Claimer } from "Creeps/Remote/Claimer";
+import { PBAttack } from "Creeps/Remote/PBAttack";
+import { PBHeal } from "Creeps/Remote/PBHeal";
+import { PBTransfer } from "Creeps/Remote/PBTrasfer";
 import { Pioneer } from "Creeps/Remote/Pionner";
+import { DirectiveType } from "Directives/types";
 import { Market } from "Network/Market";
 import { RoomNetwork } from "Network/RoomNetwork";
 import { TerminalNetwork } from "Network/TerminalNetwork";
@@ -50,6 +54,12 @@ export class _Kernel implements IKernel {
         }
 
         this.terminalNetwork = new TerminalNetwork(terminals);
+        this.market = new Market();
+        this.observer = new Observer();
+
+        for (const name in Game.flags) {
+            const directive = DirectiveType(Game.flags[name]);
+        }
 
         for (const creepName in Game.creeps) {
             const creep = Game.creeps[creepName];
@@ -105,6 +115,18 @@ export class _Kernel implements IKernel {
             else if (creep.memory.role == 'test') {
                 this.roles[creepName] = new TestTransfer(creep);
             }
+
+            else if (creep.memory.role == 'pb_attack') {
+                this.roles[creepName] = new PBAttack(creep);
+            }
+            
+            else if (creep.memory.role == 'pb_heal') {
+                this.roles[creepName] = new PBHeal(creep);
+            }
+            
+            else if (creep.memory.role == 'pb_teansfer') {
+                this.roles[creepName] = new PBTransfer(creep);
+            }
         }
 
         for (const creepName in Game.powerCreeps) {
@@ -114,9 +136,6 @@ export class _Kernel implements IKernel {
                 this.powerCreeps[creepName] = operator;
             }
         }
-
-        this.market = new Market();
-        this.observer = new Observer();
     }
 
     refresh(): void {

@@ -65,13 +65,15 @@ export class RoomNetwork {
     constructor(room: Room) {
         this.room = room;
         this.name = room.name;
+
+        this.initMemory();
+        this.registerObjects();
+        this.registerModules();
+
         Kernel.roomNetworks[room.name] = this;
     }
 
     init(): void {
-        this.initMemory();
-        this.registerObjects();
-        this.registerModules();
 
         if (this.colony) {
             this.colony.init();

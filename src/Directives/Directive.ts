@@ -42,7 +42,9 @@ export abstract class Directive {
         }
 
         Kernel.observer.registerDirective(this);
-        Kernel.directives[this.name] = this;
+        Kernel.directives[flag.name] = this;
+
+        console.log(Kernel.directives[flag.name].pos);
     }
 
     get flag() {
@@ -70,7 +72,7 @@ export abstract class Directive {
 
     static create(pos: RoomPosition, opts: DirectiveCreationOptions = {}) {
         let flagName = this.directiveName + Game.time.toString();
-        if (Game.flags[flagName]) {
+        if (Game.flags[flagName] || pos.lookFor(LOOK_FLAGS).length > 0) {
             return ERR_NAME_EXISTS;
         }
 
@@ -82,5 +84,9 @@ export abstract class Directive {
         }
 
         return result;
+    }
+
+    static createByRoom(pos: RoomPosition, room: string) {
+        return this.create(pos, {room: room});
     }
 }

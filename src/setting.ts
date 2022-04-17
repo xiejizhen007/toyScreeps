@@ -1,9 +1,10 @@
 export enum Priority {
-    High        = 0,
-    NormalHigh  = 1,
-    Normal      = 2,
-    NormalLow   = 3,
-    Low         = 4,
+    Now         = 0,
+    High        = 1,
+    NormalHigh  = 2,
+    Normal      = 3,
+    NormalLow   = 4,
+    Low         = 5,
 }
 
 export const ReactionTable: IReactionTable = {

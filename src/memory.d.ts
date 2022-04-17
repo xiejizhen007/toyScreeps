@@ -67,6 +67,7 @@ interface FlagMemory {
     tick?: number;          // 设置时的 tick
     room?: string;          // room network
     name?: string;          // 设置的 flag name，比如说挖 power
+    roles?: { [name: string]: string }      // 为该 flag 服务的 creep name
 }
 
 interface TempTaskMemory {

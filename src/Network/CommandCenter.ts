@@ -1,10 +1,13 @@
 import { DirectivePower } from "Directives/power"
+import { Mem } from "Mem";
+import { decodePosMemory } from "modules/tools";
 import { Priority } from "setting";
 import { RoomNetwork } from "./RoomNetwork";
 import { TransportNetwork } from "./TransportNetwork";
 
 export interface CommandCenterMemory {
-
+    tick?: number;           // 下发命令时的 tick
+    checkRoom?: string;      // 需要 ob 的房间
 }
 
 export const CommandCenterMemoryDefaults: CommandCenterMemory = {
@@ -13,6 +16,7 @@ export const CommandCenterMemoryDefaults: CommandCenterMemory = {
 
 export class CommandCenter {
     roomNetwork: RoomNetwork;
+    memory: CommandCenterMemory;
 
     storage?: StructureStorage;
     terminal?: StructureTerminal;
@@ -29,6 +33,7 @@ export class CommandCenter {
 
     constructor(roomNetwork: RoomNetwork, storage: StructureStorage) {
         this.roomNetwork = roomNetwork;
+        this.memory = Mem.wrap(roomNetwork.memory, 'commandCenter', CommandCenterMemoryDefaults);
 
         this.storage = storage;
         this.pos = new RoomPosition(storage.pos.x + 1, storage.pos.y, storage.pos.roomName);
@@ -55,29 +60,39 @@ export class CommandCenter {
 
     work(): void {
         if (this.observer) {
-            if (this.roomNetwork.name == 'W15N59') {
-                this.registerObserver('W10N54');
-                if (this.checkRoom) {
-                    Kernel.observer.registerObserver(this.checkRoom);
-                    this.observer.observeRoom(this.checkRoom);
-                }
-            }
+            // if (this.roomNetwork.name == 'W15N59') {
+            //     if (Game.time % 5 == 0) {
+            //         this.registerObserver('W14N60');
+                    if (this.checkRoom) {
+                        Kernel.observer.registerObserver(this.checkRoom);
+                        this.observer.observeRoom(this.checkRoom);
+                    }
+
+            //         console.log('ob room: W14N60');
+            //     }
+
+            // }
         }
     }
 
     registerObserver(room: string) {
+        console.log('need to ob: ' + room);
         this.checkRoom = room;
+        this.memory.checkRoom = room;
+        this.memory.tick = Game.time;
+        Kernel.observer.registerObserver(this.checkRoom);
+        this.observer.observeRoom(this.checkRoom);
     }
 
     private registerPowerBank() {
-        if (Kernel.observer.powers.length > 0) {
-            // const first = Kernel.observer.powers[0];
-            // const pos = new RoomPosition(first.pos.x, first.pos.y, first.pos.roomName);
-            // const flagInPos = pos.lookFor(LOOK_FLAGS);
-            // const flag = flagInPos.length > 0 ? flagInPos[0] : Game.flags[DirectivePower.create(pos)];
-            // if (flag) {
-            //     const power = new DirectivePower(flag, this.roomNetwork);
-            // }
+        if (Game.time == this.memory.tick + 1) {
+            const room = Game.rooms[this.memory.checkRoom];
+            if (room && room.memory.powers) {
+                room.memory.powers.forEach(f => {
+                    const pos = decodePosMemory(f.pos);
+                    DirectivePower.createByRoom(pos, this.roomNetwork.name);
+                });
+            }
         }
     }
 

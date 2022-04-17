@@ -12,6 +12,7 @@ export interface SpawnRequest {
 export interface SpawnRequestOptions {
     spawn?: StructureSpawn;
     dir?: DirectionConstant[];
+    flag?: string;      // flag 的名字
 };
 
 export class SpawnNetwork {
@@ -57,12 +58,16 @@ export class SpawnNetwork {
                 const minPriority = _.min(this.requests, f => f.priority);
                 const request = _.find(this.requests, f => f.priority == minPriority.priority);
                 // console.log('i am free ' + spawn);
+                // _.defaults(request.opts, {
+                //     flag: undefined,
+                // });
 
                 if (request) {
                     const energy = request.setup.role == Roles.queen ? this.room.energyAvailable : this.room.energyCapacityAvailable;
+                    const flag = request.opts ? request.opts.flag : undefined;
 
                     const ret = spawn.spawnCreep(request.setup.generateBody(energy), request.setup.role + Game.time, {
-                        memory: {role: request.setup.role, room: this.room.name, isNeeded: true},
+                        memory: {role: request.setup.role, room: this.room.name, isNeeded: true, flag: flag},
                     });
 
                     if (ret == OK) {

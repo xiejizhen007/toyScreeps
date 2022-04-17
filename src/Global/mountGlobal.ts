@@ -27,6 +27,16 @@ global._sell = function(room: string, resourceType: ResourceConstant, amount: nu
     return Kernel.market.sell(room, resourceType, amount, fast);
 }
 
+global._ob = function(room: string, obRoom: string) {
+    const roomNetwork = Kernel.roomNetworks[room];
+    if (roomNetwork) {
+        roomNetwork.commandCenter.registerObserver(obRoom);
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * 
  * @param room powerCreep 驻扎的房间
