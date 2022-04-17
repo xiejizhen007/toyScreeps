@@ -13,11 +13,19 @@ export class PBTransfer extends RoleCarry {
     constructor(creep: Creep) {
         super(creep);
         this.flag = Kernel.directives[creep.memory.flag];
-        this.flag.roles[this.name] = this;
+        if (this.flag) {
+            this.flag.roles[this.name] = this;
+        }
     }
 
     init(): void {
-        this.standbyTo(this.flag.pos, 5);
+        if (!this.memory.finish) {
+            this.standbyTo(this.flag.pos, 5);
+        }
+
+        if (this.store.getUsedCapacity() > 0) {
+            this.memory.finish = true;
+        }
     }
 
     work(): void {
@@ -34,19 +42,16 @@ export class PBTransfer extends RoleCarry {
     }
 
     finish(): void {
-
-        if (this.memory.finish) {
+        if (this.memory.finish && this.store.getUsedCapacity() == 0) {
             console.log('pb_transfer ' + this.name + ' finish his job');
-            // this.suicide();
+            this.suicide();
             return;
         }
 
         // 回家咯
         if (this.store.getUsedCapacity() > 0) {
-            if (this.transferResource(this.roomNetwork.storage, 'power') == OK) {
-                // this.suicide();
-                this.memory.finish = true;
-            }
+            this.transferResource(this.roomNetwork.storage, 'power');
+            console.log('应该回家才对');
         }
     }
 }

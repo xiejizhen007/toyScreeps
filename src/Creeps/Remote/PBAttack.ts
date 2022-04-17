@@ -50,7 +50,7 @@ export class PBAttack extends RoleWar {
     finish(): void {
         if (this.memory.finish) {
             console.log('pb_attacker ' + this.name + ' finish his job');
-            // this.suicide();
+            this.suicide();
             return;
         }
     }

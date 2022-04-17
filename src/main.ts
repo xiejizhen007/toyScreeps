@@ -5,7 +5,7 @@ import './Prototypes/Mount';
 import './Global/mountGlobal'; 
 
 export const loop = errorMapper(() => {
-    if (Game.cpu.bucket >= 10000) {
+    if (Game.cpu.bucket >= 10000 && Game.cpu.generatePixel) {
         Game.cpu.generatePixel();
     }
 

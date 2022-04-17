@@ -53,35 +53,27 @@ export class CommandCenter {
         this.registerLinkRequests();
         this.registerRequests();
 
-        if (this.roomNetwork.name == 'W15N59') {
-            this.registerPowerBank();
-        }
+        this.registerPowerBank();
     }
 
     work(): void {
-        if (this.observer) {
-            // if (this.roomNetwork.name == 'W15N59') {
-            //     if (Game.time % 5 == 0) {
-            //         this.registerObserver('W14N60');
-                    if (this.checkRoom) {
-                        Kernel.observer.registerObserver(this.checkRoom);
-                        this.observer.observeRoom(this.checkRoom);
-                    }
 
-            //         console.log('ob room: W14N60');
-            //     }
-
-            // }
-        }
     }
 
     registerObserver(room: string) {
-        console.log('need to ob: ' + room);
+        // console.log('need to ob: ' + room);
         this.checkRoom = room;
         this.memory.checkRoom = room;
         this.memory.tick = Game.time;
-        Kernel.observer.registerObserver(this.checkRoom);
+        Kernel.observer.registerObserver(this.roomNetwork.name, this.checkRoom);
         this.observer.observeRoom(this.checkRoom);
+
+        // if (this.observer) {
+        //     if (this.checkRoom) {
+        //         Kernel.observer.registerObserver(this.checkRoom);
+        //         this.observer.observeRoom(this.checkRoom);
+        //     }
+        // }
     }
 
     private registerPowerBank() {

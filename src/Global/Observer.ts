@@ -1,5 +1,6 @@
 import { Directive } from "Directives/Directive";
 import { Mem } from "Mem";
+import { freeLocationIn } from "modules/tools";
 import { isHighWay } from "types";
 
 export interface ObserverMemory {
@@ -9,6 +10,7 @@ export interface ObserverMemory {
     observerRoom: {
         tick: number;
         room: string;
+        base: string;
     }[],
 }
 
@@ -28,6 +30,7 @@ export class Observer implements IObserver {
     observerRoom: {
         tick: number;
         room: string;
+        base: string;
     }[];
 
     constructor() {
@@ -89,6 +92,8 @@ export class Observer implements IObserver {
                     if (this.powers.find(p => p.id == f.id)) {
                         return;
                     }
+
+                    const freeLocation = freeLocationIn(f.pos);
                     
                     room.memory.powers.push({
                         id: f.id,
@@ -97,6 +102,7 @@ export class Observer implements IObserver {
                         decay: f.ticksToDecay,
                         hits: f.hits,
                         tick: Game.time,
+                        freeLocation: freeLocation,
                     });
 
                     this.powers.push({
@@ -106,6 +112,7 @@ export class Observer implements IObserver {
                         decay: f.ticksToDecay,
                         hits: f.hits,
                         tick: Game.time,
+                        freeLocation: freeLocation,
                     });
                 });
             }
@@ -140,11 +147,12 @@ export class Observer implements IObserver {
         _.remove(this.directives, r => r.name == directive.name);
     }
 
-    registerObserver(room: string): void {
+    registerObserver(base: string, room: string): void {
         if (!_.find(this.observerRoom, f => f.room == room)) {
             this.observerRoom.push({
                 tick: Game.time,
                 room: room,
+                base: base,
             });
         }
     }

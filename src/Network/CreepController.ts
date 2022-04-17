@@ -110,13 +110,18 @@ export class CreepController {
         const target = _.find(this.roomNetwork.memory.myCreeps, f => {
             return Game.creeps[f] && Game.creeps[f].memory.role == 'queen';
         });
-        if (target) {
+
+        const queen = Game.creeps[target];
+        if (!queen || (queen.ticksToLive < queen.body.length * 3 && queen.memory.isNeeded)) {
             // console.log('have queen');
-        } else {
             this.roomNetwork.spawnNetwork.registerCreep({
                 setup: Setups.queen.default,
                 priority: CreepRolePriority.queen,
             });
+
+            if (queen) {
+                queen.memory.isNeeded = false;
+            }
             // console.log('spawn queen');
         }
     }

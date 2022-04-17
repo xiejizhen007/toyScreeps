@@ -115,6 +115,7 @@ interface PowerBankInfo {
     hits: number;           // 当前血量
     pos: RoomPosition;
     tick: number;
+    freeLocation: number;   // 空闲的位置
 }
 
 // deposit 的信息

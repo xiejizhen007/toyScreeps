@@ -63,5 +63,5 @@ interface IObserver {
 
     registerDirective(directive: any): void;
     removeDirective(directive: any): void;
-    registerObserver(room: string): void;
+    registerObserver(base: string, room: string): void;
 }

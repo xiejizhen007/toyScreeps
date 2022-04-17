@@ -62,8 +62,9 @@ export class PBHeal extends RoleWar {
     }
 
     finish(): void {
-        if (this.memory.finish) {
+        if (!this.flag) {
             console.log('pb_healer ' + this.name + ' finish his job');
+            this.suicide();
             return;
         }
     }

@@ -124,7 +124,7 @@ export class _Kernel implements IKernel {
                 this.roles[creepName] = new PBHeal(creep);
             }
             
-            else if (creep.memory.role == 'pb_teansfer') {
+            else if (creep.memory.role == 'pb_transfer') {
                 this.roles[creepName] = new PBTransfer(creep);
             }
         }
