@@ -33,7 +33,20 @@ export class DirectivePower extends Directive {
     }
 
     finish(): void {
-        if (Game.time > this.memory.power.decay + this.memory.power.tick || (Game.rooms[this.pos.roomName] && this.pos.lookFor(LOOK_STRUCTURES).length == 0)) {
+        if (Game.rooms[this.pos.roomName]) {
+            const bank = this.pos.lookFor(LOOK_STRUCTURES)[0];
+            const ruin = this.pos.lookFor(LOOK_RUINS)[0];
+            const resource = this.pos.lookFor(LOOK_RESOURCES)[0];
+
+            if (!bank && !resource && !ruin) {
+                this.remove();
+                return;
+            }
+        }
+
+
+        
+        if (Game.time > this.memory.power.decay + this.memory.power.tick) {
             this.remove();
             console.log('删除 flag: ' + this.name);
         }

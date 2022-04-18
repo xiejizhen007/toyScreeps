@@ -19,8 +19,12 @@ export class PBTransfer extends RoleCarry {
     }
 
     init(): void {
-        if (!this.memory.finish) {
-            this.standbyTo(this.flag.pos, 5);
+        if (this.flag) {
+
+            if (!this.memory.finish) {
+                this.standbyTo(this.flag.pos, 5);
+            }
+
         }
 
         if (this.store.getUsedCapacity() > 0) {
