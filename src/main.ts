@@ -5,9 +5,9 @@ import './Prototypes/Mount';
 import './Global/mountGlobal'; 
 
 export const loop = errorMapper(() => {
-    if (Game.cpu.bucket >= 10000 && Game.cpu.generatePixel) {
-        Game.cpu.generatePixel();
-    }
+    // if (Game.cpu.bucket >= 10000 && Game.cpu.generatePixel) {
+    //     Game.cpu.generatePixel();
+    // }
 
     global.Kernel = new _Kernel();
 

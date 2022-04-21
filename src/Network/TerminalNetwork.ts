@@ -1,4 +1,5 @@
 import { Mem } from "Mem";
+import { RoomNetwork } from "./RoomNetwork";
 
 // terminal 资源请求的接口
 export interface ITerminalRequest {
@@ -21,11 +22,52 @@ export interface ITerminalShared {
 export interface TerminalNetworkMemory {
     request: ITerminalRequest[];
     shareds: ITerminalShared;
+
+    inputs: ITerminalInput[];
+    outputs: ITerminalOutput[];
+    rtr: ITerminalRoomToRoom[];
+}
+
+// 资源需求表
+export interface ITerminalInput {
+    room: string;
+    resourceType: ResourceConstant;
+    amount: number;
+}
+
+// 资源分享表
+export interface ITerminalOutput {
+    room: string;
+    resourceType: ResourceConstant;
+    amount?: number;
+}
+
+// 定向房间资源表
+export interface ITerminalRoomToRoom {
+    origin: string;
+    target: string;
+    resourceType: ResourceConstant;
+    amount: number;
 }
 
 export const TerminalNetworkMemoryDefault: TerminalNetworkMemory = {
     request: [],
     shareds: {},
+
+    inputs: [],
+    outputs: [],
+    rtr: [],
+}
+
+export function roomOf(terminal: StructureTerminal): RoomNetwork {
+    return Kernel.roomNetworks[terminal.room.name];
+}
+
+export function isBaseMineral(resourceType: ResourceConstant) {
+    return resourceType == 'X' || resourceType == 'O' ||
+           resourceType == 'H' || resourceType == 'L' ||
+           resourceType == 'K' || resourceType == 'Z' ||
+           resourceType == 'U';
 }
 
 export class TerminalNetwork implements ITerminalNetwork {
@@ -38,14 +80,49 @@ export class TerminalNetwork implements ITerminalNetwork {
 
     memory: TerminalNetworkMemory;
 
+    readyToSend: StructureTerminal[];
+    readyToReceived: StructureTerminal[];
+
+    inputRequests: ITerminalInput[];            // 资源请求
+    outputRequests: ITerminalOutput[];          // 资源分享
+    rtrRequests: ITerminalRoomToRoom[];         // 房到房分享
+
     private TIMEOUT = 1000;
+
+    static setting = {
+        // 平衡房间物资
+        equalize: {
+            resources: [
+                'energy',
+                'power',
+                'O',
+                'H',
+                'K',
+                'L',
+                'Z',
+                'U',
+                'X',
+            ] as ResourceConstant[],
+            maxEnergySendSize: 25000,
+            maxMineralSendSize: 5000,
+        },
+    };
+
 
     constructor(terminals: StructureTerminal[]) {
         this.allTerminals = _.clone(terminals);
         this.terminals = _.clone(terminals);
+        this.readyTerminals = _.filter(terminals, t => t.cooldown == 0);
+
+        this.readyToSend = [];
+        this.readyToReceived = [];
 
         // 注册 memory 并向全局注册本身
-        this.memory = Mem.wrap(Memory, 'terminalNetwork', TerminalNetworkMemoryDefault);
+        const memory = Mem.wrap(Memory, 'terminalNetwork', TerminalNetworkMemoryDefault) as TerminalNetworkMemory;
+        this.memory = memory;
+        this.inputRequests = memory.inputs;
+        this.outputRequests = memory.outputs;
+        this.rtrRequests = memory.rtr;
     }
 
     /**
@@ -106,9 +183,37 @@ export class TerminalNetwork implements ITerminalNetwork {
     /**
      * 向 terminal network 申请资源
      */
-    addResourceRequest(terminal: StructureTerminal, resourceType: ResourceConstant, amount: number,
-                       buy: boolean = true) {
-        // 
+    requestResource(receiver: StructureTerminal, resourceType: ResourceConstant, amount: number,
+                    buy: boolean = true) {
+        amount = Math.max(amount, TERMINAL_MIN_SEND);
+        // 在无冷却的终端中找到合适的发送者
+        const possibleSenders = _.filter(this.readyTerminals, 
+                                         terminal => terminal.store[resourceType] > amount &&
+                                                     this.readyToSend.includes(terminal) &&
+                                                     terminal.id != receiver.id);
+        // 从合适的发送者中找资源最多的
+        const sender = _.max(possibleSenders, t => t.store[resourceType]);
+        if (sender) {
+            const msg = sender.room.name + " transfer " + resourceType + " to " + receiver.room.name;
+            this.transfer(sender, receiver, resourceType, amount, msg);
+        } else {
+            // 也许要记录这个资源请求
+            if (!_.find(this.inputRequests, f => f.room == receiver.room.name && f.resourceType == resourceType)) {
+                this.inputRequests.push({
+                    room: receiver.room.name,
+                    resourceType: resourceType,
+                    amount: amount
+                });
+            }
+        }
+    }
+
+    // 平衡资源
+    private equalize(resourceType: ResourceConstant, terminals = this.terminals) {
+        const maxSendSize = resourceType == 'energy' ? TerminalNetwork.setting.equalize.maxEnergySendSize :
+                                                       TerminalNetwork.setting.equalize.maxMineralSendSize;
+        const terminalsByResource = _.sortBy(terminals, t => t.store[resourceType] || 0);
+        
     }
     
     /**
@@ -141,5 +246,20 @@ export class TerminalNetwork implements ITerminalNetwork {
 
     removeRequest(room: string, resourceType: ResourceConstant) {
         _.remove(this.memory.request, f => f.room == room && f.resourceType == resourceType);
+    }
+
+
+    private transfer(sender: StructureTerminal, receiver: StructureTerminal, resourceType: ResourceConstant,
+                     amount: number, description?: string) {
+        // 能量花费
+        const cost = Game.market.calcTransactionCost(amount, sender.room.name, receiver.room.name);
+        const ret = sender.send(resourceType, amount, receiver.room.name, description);
+        if (ret == OK) {
+            this.readyToSend.push(sender);
+            this.readyToReceived.push(receiver);
+            _.remove(this.readyTerminals, t => t.id == sender.id);
+        }
+
+        return ret;
     }
 }

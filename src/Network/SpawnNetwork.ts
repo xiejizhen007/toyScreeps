@@ -63,8 +63,11 @@ export class SpawnNetwork {
                 // });
 
                 if (request) {
-                    const energy = request.setup.role == Roles.queen ? this.room.energyAvailable : this.room.energyCapacityAvailable;
+                    let energy = request.setup.role == Roles.queen ? this.room.energyAvailable : this.room.energyCapacityAvailable;
                     const flag = request.opts ? request.opts.flag : undefined;
+                    if (this.room.controller.level <= 4) {
+                        energy = this.room.energyAvailable;
+                    }
 
                     const ret = spawn.spawnCreep(request.setup.generateBody(energy), request.setup.role + Game.time, {
                         memory: {role: request.setup.role, room: this.room.name, isNeeded: true, flag: flag},

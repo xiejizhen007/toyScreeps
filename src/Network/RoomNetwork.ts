@@ -19,6 +19,7 @@ export class RoomNetwork {
     room: Room;         // 所在房间
     name: string;       // 房间名
     memory: RoomNetworkMemory;
+    store: StoreDefinition;
 
     flags: Flag[];
 
@@ -237,5 +238,8 @@ export class RoomNetwork {
 
         this.taskLists = new TaskLists(this);
         this.pcTaskSystem = new PCTaskSystem(this);
+    }
+
+    private getAllStore() {
     }
 }
