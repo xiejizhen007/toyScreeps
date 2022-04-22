@@ -13,6 +13,12 @@ export const Roles = {
     claimer: 'claimer',
     pionner: 'pioneer',
     test: 'test',
+
+    pb: {
+        pb_transfer: 'pb_transfer',
+        pb_heal: 'pb_heal',
+        pb_attack: 'pb_attack',
+    },
 };
 
 export enum RolePriority {

@@ -1,4 +1,5 @@
 import { RoleWar } from "Creeps/RoleWar";
+import { Roles } from "Creeps/setups";
 import { DirectivePower } from "Directives/power";
 
 export interface PBAttackMemory extends CreepMemory {
@@ -33,7 +34,17 @@ export class PBAttack extends RoleWar {
                 const pb = this.flag.pos.lookFor(LOOK_STRUCTURES)[0] as StructurePowerBank;
                 if (pb && this.getActiveBodyParts('attack') * 15 < this.hits) {
                     // 血量高于攻击 pb 反弹的伤害时就攻击 pb
-                    this.attack(pb);
+                    if (pb.hits <= 10000) {
+                        // pb 快炸了，等 transfer 到附近了在攻击
+                        const transfers = _.filter(this.flag.roles, f => f.memory.role == Roles.pb.pb_transfer);
+                        if (_.filter(transfers, t => t.pos.inRangeTo(pb, 5)).length == transfers.length) {
+                            this.attack(pb);
+                        } else {
+                            console.log('pb_transfer 快来啊');
+                        }
+                    } else {
+                        this.attack(pb);
+                    }
                     return;
                 }
 

@@ -104,7 +104,7 @@ export class DirectivePower extends Directive {
 
         if (Game.rooms[this.pos.roomName]) {
             const pb = this.pos.lookFor(LOOK_STRUCTURES)[0] as StructurePowerBank;
-            if (pb && pb.hits <= 600000) {
+            if (pb && pb.hits <= 400000) {
                 // 避免最后一个拿的太少
                 const wish = Math.ceil(this.memory.power.amount / 1800);
                 if (pb_transfer.length < wish && Game.time % 3 == 0) {
