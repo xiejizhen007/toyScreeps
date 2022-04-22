@@ -48,9 +48,17 @@ interface CreepMemory {
         };
     }
 
-    _go?: {                 // 移动缓存
-        
-    };
+    _go?: MoveData;         // 移动缓存
+}
+
+interface MoveData {
+    state: MoveState;
+    path: string;
+}
+
+interface MoveState {
+    now: RoomPosition;      // 当前位置
+    last: RoomPosition;     // 上一个位置，如果与当前位置相同，说明卡住了
 }
 
 interface PowerCreepMemory {

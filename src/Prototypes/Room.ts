@@ -2,27 +2,28 @@
 Object.defineProperty(Room.prototype, 'creeps', {
     get() {
         if (!this._creeps) {
-            this._creeps = this.find(FIND_CREEPS);
+            this._creeps = this.find(FIND_MY_CREEPS);
         }
         return this._creeps;
     },
     configurable: true,
 });
 
-Object.defineProperty(Room.prototype, 'myCreeps', {
-    get() {
-        if (!this._myCreeps) {
-            this._myCreeps = _.filter(this.creeps as Creep[], f => f.my);
-        }
-        return this._myCreeps;
-    },
-    configurable: true,
-});
+// Object.defineProperty(Room.prototype, 'myCreeps', {
+//     get() {
+//         if (!this._myCreeps) {
+//             this._myCreeps = _.filter(this.creeps as Creep[], f => f.my);
+//         }
+//         return this._myCreeps;
+//     },
+//     configurable: true,
+// });
 
 Object.defineProperty(Room.prototype, 'enemies', {
     get() {
         if (!this._enemies) {
-            this._enemies = _.filter(this.creeps as Creep[], f => !f.my);
+            // this._enemies = _.filter(this.creeps as Creep[], f => !f.my);
+            this._enemies = this.find(FIND_HOSTILE_CREEPS);
         }
         return this._enemies;
     },

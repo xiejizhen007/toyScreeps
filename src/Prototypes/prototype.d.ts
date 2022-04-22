@@ -1,6 +1,6 @@
 interface Room {
     creeps: Creep[];
-    myCreeps: Creep[];
+    // myCreeps: Creep[];
     enemies: Creep[];
 
     structures: Structure[];
@@ -17,19 +17,7 @@ interface Room {
 }
 
 interface Creep {
-    goto(pos: RoomPosition): ScreepsReturnCode;
-    sayHello(): void;
 
-    // task work
-    work(): void;
-
-
-    tasks: any;
-    generateTask(): any;
-
-    // task type
-    transferTo(target: AnyCreep | Structure<StructureConstant>, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;
-    withdrawFrom(target: Structure | Tombstone | Ruin, resourceType: ResourceConstant, amount?: number): ScreepsReturnCode;
 }
 
 interface RoomPosition {

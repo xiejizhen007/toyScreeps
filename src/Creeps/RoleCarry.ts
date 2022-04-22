@@ -49,7 +49,7 @@ export abstract class RoleCarry extends Role {
     standbyTo(pos: RoomObject | RoomPosition, range: number = 1) {
         pos = pos instanceof RoomObject ? pos.pos : pos;
 
-        if (this.pos.inRangeTo(pos, range)) {
+        if (this.pos.inRangeTo(pos, range) && !this.inExit()) {
             return true;
         } else {
             this.goto(pos);

@@ -19,7 +19,7 @@ export class Upgrader extends Role {
             if (this.creep.pos.inRangeTo(this.roomNetwork.upgradeSite.controller, 3)) {
                 this.creep.upgradeController(this.roomNetwork.upgradeSite.controller);
             } else {
-                this.creep.goto(this.roomNetwork.upgradeSite.controller.pos);
+                this.goto(this.roomNetwork.upgradeSite.controller.pos);
             }
         } else {
             const ret = this.getEnergy();
@@ -51,12 +51,12 @@ export class Upgrader extends Role {
         if (energy) {
             // console.log('energy: ' + energy);
             if (energy instanceof Structure) {
-                return this.creep.withdrawFrom(energy, RESOURCE_ENERGY);
+                return this.withdrawFrom(energy, RESOURCE_ENERGY);
             } else {
                 if (this.creep.pos.isNearTo(energy)) {
                     return this.creep.pickup(energy);
                 } else {
-                    this.creep.goto(energy.pos);
+                    this.goto(energy.pos);
                     return ERR_NOT_IN_RANGE;
                 }
             }

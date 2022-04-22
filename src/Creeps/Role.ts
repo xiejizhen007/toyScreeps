@@ -101,7 +101,7 @@ export abstract class Role {
             pos = pos.pos;
         }
 
-        return this.creep.goto(pos);
+        return this.creep.moveTo(pos);
     }
 
     harvest(target: Source | Mineral | Deposit) {
@@ -197,5 +197,11 @@ export abstract class Role {
         }
 
         return ERR_INVALID_TARGET;
+    }
+
+
+    // 功能性函数
+    inExit(): boolean {
+        return this.pos.x == 0 || this.pos.x == 49 || this.pos.y == 0 || this.pos.y == 49;
     }
 }

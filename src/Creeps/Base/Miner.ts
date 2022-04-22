@@ -30,7 +30,7 @@ export class Miner extends Role {
                 if (this.creep.pos.isEqualTo(this.mineSite.container) && this.mineSite.extractor.cooldown == 0) {
                     this.creep.harvest(this.mineral);
                 } else {
-                    this.creep.goto(this.mineSite.container.pos);
+                    this.goto(this.mineSite.container.pos);
                 }
             }        
         }

@@ -1,7 +1,6 @@
 import './Room';
 import './Creep';
 import './RoomPosition';
-import { CreepExtension } from './Creep';
 
 /**
  * 把 obj2 的原型合并到 obj1 的原型上
@@ -23,5 +22,5 @@ export const assignPrototype = function(obj1: {[key: string]: any}, obj2: {[key:
 }
 
 export function mountPrototype(): void {
-    assignPrototype(Creep, CreepExtension);
+    // assignPrototype(Creep, CreepExtension);
 }

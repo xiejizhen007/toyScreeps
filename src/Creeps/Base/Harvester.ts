@@ -46,7 +46,7 @@ export class Harvester extends Role {
                     if (this.creep.pos.isNearTo(sourceNetwork.link)) {
                         this.creep.transfer(sourceNetwork.link, RESOURCE_ENERGY);
                     } else {
-                        this.creep.goto(sourceNetwork.link.pos);
+                        this.goto(sourceNetwork.link.pos);
                         return;
                     }
                 } else {
@@ -58,9 +58,9 @@ export class Harvester extends Role {
                 this.creep.harvest(source);
             } else {
                 if (sourceNetwork.container) {
-                    this.creep.goto(sourceNetwork.container.pos);
+                    this.goto(sourceNetwork.container.pos);
                 } else {
-                    this.creep.goto(source.pos);
+                    this.goto(source.pos);
                 }
             }
         }

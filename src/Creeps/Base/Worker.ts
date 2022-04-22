@@ -41,9 +41,9 @@ export class Worker extends Role {
                 let target = Game.getObjectById(this.creep.memory.tempTask.target as Id<ConstructionSite>);
                 if (target) {
                     if (this.creep.pos.inRangeTo(target, 3)) {
-                        this.creep.build(target);
+                        this.build(target);
                     } else {
-                        this.creep.goto(target.pos);
+                        this.goto(target.pos);
                     }
                 } else {
                     target = this.creep.pos.findClosestByRange(this.constructionSites);
@@ -87,7 +87,7 @@ export class Worker extends Role {
                 if (this.creep.pos.inRangeTo(controller, 3)) {
                     this.creep.upgradeController(controller);
                 } else {
-                    this.creep.goto(controller.pos);
+                    this.goto(controller.pos);
                 }
             }
         }
@@ -114,12 +114,12 @@ export class Worker extends Role {
         if (target instanceof StructureStorage || target instanceof StructureTerminal 
             || target instanceof StructureContainer) {
             const minAmount = Math.min(target.store[resourceType], this.creep.store.getFreeCapacity(), amount);
-            return this.creep.withdrawFrom(target, resourceType, minAmount);
+            return this.withdrawFrom(target, resourceType, minAmount);
         } else if (target instanceof Resource) {
             if (this.creep.pos.isNearTo(target)) {
                 this.creep.pickup(target);
             } else {
-                this.creep.goto(target.pos);
+                this.goto(target.pos);
             }
         }
         return OK;
@@ -141,7 +141,7 @@ export class Worker extends Role {
                 this.creep.withdraw(target, resourceType, minAmount);
             }
         } else {
-            this.creep.goto(target.pos);
+            this.goto(target.pos);
             return ERR_NOT_IN_RANGE;
         }
     }

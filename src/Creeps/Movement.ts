@@ -43,7 +43,32 @@ export class Movement {
             maxRoom: 16,
         });
 
+        if (!creep.memory._go) {
+            creep.memory._go = {} as MoveData;
+        }
+
+        const moveData = creep.memory._go as MoveData;
+
+        if (this.isStuck(moveData.state)) {
+
+        }
+
+        
         return OK;
+    }
+
+    // 当前是否卡住了
+    static isStuck(state: MoveState) {
+        if (state) {
+            return this.isEqualPos(state.now, state.last);
+        }
+
+        return false;
+    }
+
+    // 是否在相同坐标
+    private static isEqualPos(pos1: any, pos2: any) {
+        return pos1.x == pos2.x && pos1.y == pos2.y;
     }
     
     // // a 的优先级大于 b

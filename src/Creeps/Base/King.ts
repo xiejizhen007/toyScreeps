@@ -36,7 +36,7 @@ export class King extends Role {
         if (this.creep.pos.isEqualTo(pos)) {
             return;
         } else {
-            this.creep.goto(pos);
+            this.goto(pos);
         }
     }
 
