@@ -1,0 +1,7 @@
+interface Creep {
+
+}
+
+interface CreepMemory {
+    
+}

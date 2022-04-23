@@ -1,0 +1,7 @@
+interface Flag {
+
+}
+
+interface FlagMemory {
+
+}

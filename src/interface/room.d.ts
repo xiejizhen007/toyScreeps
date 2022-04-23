@@ -1,0 +1,7 @@
+interface Room {
+
+}
+
+interface RoomMemory {
+
+}
